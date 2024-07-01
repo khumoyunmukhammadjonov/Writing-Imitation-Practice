@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Imitation Practice</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #eef2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 30px;
+            color: #4CAF50;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            margin-top: 15px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 17px;
+            font-family: 'Arial', sans-serif;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 9px 18px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 17px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #reload-button {
+            background-color: #999;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 17px;
+            text-align: center;
+            height: 24px;
+        }
+
+        #practice-section {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            textarea {
+                height: 100px;
+            }
+        }
+
+        #original-sentence {
+            text-align: center;
+            font-size: 19px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 90px;
+            cursor: text;
+            color: #333;
+        }
+
+        .completed-message {
+            text-align: center;
+            font-size: 21px;
+            font-weight: bold;
+            margin: 30px 0;
+            padding: 15px;
+            background-color: #e0ffe0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333; /* Set text color to black */
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-bar-fill {
+            height: 20px;
+            width: 0;
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            transition: width 0.4s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #highlight-button {
+        display: none;
+        position: absolute;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 4px 8px; /* Adjust padding to make the button smaller */
+        border-radius: 4px;
+        cursor: pointer;
+        z-index: 1000;
+        top: 5px;
+        font-size: 14px; /* Adjust font size */
+    }
+
+        .icon-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #show-original-icon {
+            display: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin-left: 10px;
+            color: #4CAF50;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #4CAF50;
+            text-align: center;
+        }
+
+        .modal-body {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .modal-footer button {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Writing Imitation Practice</h1>
+        <textarea id="article-input" placeholder="Paste your article here..." onkeydown="if(event.keyCode===13){event.preventDefault();processArticle();}"></textarea>
+        <div class="button-container">
+            <button onclick="processArticle()" id="start-button">Start Practice</button>
+        </div>
+        <div id="practice-section">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+            <div id="original-sentence" onmouseup="showHighlightButton(event)"></div>
+            <textarea id="user-input" placeholder="Write the sentence from memory..." onkeydown="handleKeyDown(event)" oninput="hideOriginalSentence()"></textarea>
+            <div class="button-container">
+                <div class="icon-container">
+                    <button id="check-button" onclick="checkText()">Check</button>
+                    <span id="show-original-icon" onclick="showOriginalSentence()">&#128065;</span>
+                </div>
+                <button id="reload-button">Restart</button>
+            </div>
+            <p id="result"></p>
+        </div>
+    </div>
+    <button id="highlight-button" onclick="searchHighlightedWord()">Search</button>
+
+    <!-- Modal Structure -->
+<div id="rules-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">Welcome to Writing Imitation Practice!</div>
+        <div class="modal-body">
+            <p>Here are the essentials:</p>
+            <ol>
+                <li>Paste your article in the text area and click "Start Practice".</li>
+                <li>Try to rewrite the displayed sentence from memory.</li>
+                <li>Press "Enter" or click "Check" to compare your input.</li>
+                <li>Progress is tracked via the progress bar.</li>
+            </ol>
+            <p><strong>Shortcuts:</strong></p>
+            <ul>
+                <li><strong>Enter:</strong> Check your input.</li>
+                <li><strong>Alt:</strong> Reveal the original sentence temporarily.</li>
+            </ul>
+            <p>Copying the original sentence is disabled. For more detailed instructions, please refer to the video tutorial.</p>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal()">Got it!</button>
+        </div>
+    </div>
+</div>
+
+    <script>
+        let sentences = [];
+        let currentSentenceIndex = 0;
+        let selectedWord = '';
+        const highlightButton = document.getElementById('highlight-button');
+        
+        function processArticle() {
+            let articleInput = document.getElementById("article-input").value;
+            sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
+            if (sentences && sentences.length > 0) {
+                currentSentenceIndex = 0;
+                updateProgressBar();
+                showSentence();
+                document.getElementById("practice-section").style.display = "block";
+                document.getElementById("start-button").classList.add("hidden");
+                document.getElementById("article-input").classList.add("hidden");
+            } else {
+                alert("Please paste a valid article.");
+            }
+        }
+
+        function showSentence() {
+            if (currentSentenceIndex < sentences.length) {
+                document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
+                document.getElementById("original-sentence").style.color = "#333"; // Ensure the text color is correct
+                document.getElementById("user-input").value = "";
+                document.getElementById("result").innerText = "";
+                updateProgressBar();
+            } else {
+                showCompletionMessage();
+            }
+        }
+
+        function showCompletionMessage() {
+            const originalSentenceElement = document.getElementById("original-sentence");
+            originalSentenceElement.innerText = "Congratulations! You've completed the practice.";
+            originalSentenceElement.classList.add('completed-message');
+            originalSentenceElement.style.color = "#333"; // Set text color to black
+            document.getElementById("user-input").style.display = "none";
+            document.getElementById("check-button").style.display = "none";
+            document.getElementById("show-original-icon").style.display = "none";
+            document.getElementById("result").innerText = "";
+        }
+
+        function normalizeText(text) {
+            return text
+                .replace(/’/g, "'") // Right single quotation mark
+                .replace(/‘/g, "'") // Left single quotation mark
+                .replace(/“/g, '"') // Left double quotation mark
+                .replace(/”/g, '"') // Right double quotation mark
+                .replace(/‐/g, '-') // Hyphen
+                .replace(/–/g, '-') // En dash
+                .replace(/—/g, '-') // Em dash
+                .replace(/\u00A0/g, ' ') // Non-breaking space
+                .replace(/…/g, '...'); // Ellipsis
+        }
+
+        function checkText() {
+            const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
+            const userInput = normalizeText(document.getElementById("user-input").value.trim());
+            const result = document.getElementById("result");
+
+            const originalWords = originalSentence.split(' ');
+            const userWords = userInput.split(' ');
+
+            let correctWords = "";
+            for (let i = 0; i < userWords.length; i++) {
+                if (userWords[i] === originalWords[i]) {
+                    correctWords += userWords[i] + ' ';
+                }
+            }
+
+            if (userInput === originalSentence) {
+                result.innerText = "Perfect! You matched the original text exactly.";
+                result.style.color = "green";
+                currentSentenceIndex++;
+                setTimeout(() => {
+                    result.innerText = ""; // Clear the result message
+                    showSentence();
+                }, 1000);
+            } else {
+                result.innerText = "Keep going, you're getting closer!";
+                result.style.color = "red";
+                document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
+            }
+
+            updateProgressBar(); // Ensure the progress bar updates after checking the text
+        }
+
+        function updateProgressBar() {
+            const progressBarFill = document.getElementById("progress-bar-fill");
+            const progress = (currentSentenceIndex / sentences.length) * 100;
+            progressBarFill.style.width = progress + "%";
+            progressBarFill.innerText = Math.round(progress) + "%";
+        }
+
+        function showHighlightButton(event) {
+            const selection = window.getSelection().toString().trim();
+            if (selection) {
+                selectedWord = selection;
+                const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+                highlightButton.style.top = (rect.bottom + window.scrollY) + 'px';
+                highlightButton.style.left = (rect.left + window.scrollX) + 'px';
+                highlightButton.style.display = 'block';
+            }
+        }
+
+        function searchHighlightedWord() {
+            const selectedWord = window.getSelection().toString().trim();
+            if (selectedWord) {
+                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
+                window.open(searchQuery, '_blank');
+            }
+        }
+
+        // Prevent default right-click context menu
+        window.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+        });
+
+        function restartPractice() {
+            window.location.reload(); // This will reload the page to reset the state
+        }
+
+        document.getElementById("reload-button").addEventListener("click", restartPractice);
+
+        function hideOriginalSentence() {
+            const originalSentenceElement = document.getElementById("original-sentence");
+            originalSentenceElement.style.color = "#f0f0f0";
+            document.getElementById("show-original-icon").style.display = "inline";
+        }
+
+        function showOriginalSentence() {
+            const originalSentenceElement = document.getElementById("original-sentence");
+            originalSentenceElement.style.color = "#333"; // Restore original color
+            document.getElementById("show-original-icon").style.display = "none";
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!highlightButton.contains(event.target)) {
+                highlightButton.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('copy', function (event) {
+            const originalSentenceElement = document.getElementById("original-sentence");
+            const selection = window.getSelection();
+            if (selection.containsNode(originalSentenceElement, true)) {
+                event.preventDefault();
+                alert("Copying the original sentence is not allowed!");
+            }
+        });
+
+        function handleKeyDown(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkText();
+            } else if (event.key === "Alt") {
+                event.preventDefault();
+                showOriginalSentence();
+            }
+        }
+
+        // Modal control functions
+        function closeModal() {
+            document.getElementById("rules-modal").style.display = "none";
+        }
+
+        window.onload = function() {
+            document.getElementById("rules-modal").style.display = "flex";
+        }
+    </script>
+</body>
+</html>
