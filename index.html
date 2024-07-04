@@ -246,25 +246,25 @@
     </div>
     <button id="highlight-button" onclick="searchHighlightedWord()">Search</button>
 
-     <!-- Modal Structure -->
+    <!-- Modal Structure -->
 <div id="rules-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">Welcome to Writing Imitation Practice!</div>
         <div class="modal-body">
-            <p>Here are the essentials:</p>
+            <p>How it works:</p>
             <ol>
-                <li>Paste your article in the text area and click "Start Practice".</li>
-                <li>Try to rewrite the displayed sentence from memory.</li>
+                <li>Paste your article and click "Start Practice".</li>
+                <li>Rewrite the displayed sentence from memory.</li>
                 <li>Press "Enter" or click "Check" to compare your input.</li>
-                <li>Progress is tracked via the progress bar.</li>
+                <li>Progress is shown via the progress bar.</li>
             </ol>
             <p><strong>Shortcuts:</strong></p>
             <ul>
                 <li><strong>Enter:</strong> Check your input.</li>
-                <li><strong>Alt:</strong> Reveal the original sentence temporarily.</li>
+                <li><strong>Alt:</strong> Temporarily reveal the original sentence.</li>
             </ul>
-            <p><strong>For more detailed instructions, please refer to the video tutorial.</strong></p>
-            <p>If you have any questions, feel free to contact me: <a href="mailto:kmukhammadjonov685@gmail.com">kmukhammadjonov685@gmail.com</a></p>
+            <p>For full instructions, watch the video tutorial.</p>
+            <p>Contact: <a href="mailto:kmukhammadjonov685@gmail.com">kmukhammadjonov685@gmail.com</a></p>
         </div>
         <div class="modal-footer">
             <button onclick="closeModal()">Got it!</button>
@@ -278,171 +278,185 @@
         let selectedWord = '';
         const highlightButton = document.getElementById('highlight-button');
         
-        function processArticle() {
-            let articleInput = document.getElementById("article-input").value;
-            sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
-            if (sentences && sentences.length > 0) {
-                currentSentenceIndex = 0;
-                updateProgressBar();
-                showSentence();
-                document.getElementById("practice-section").style.display = "block";
-                document.getElementById("start-button").classList.add("hidden");
-                document.getElementById("article-input").classList.add("hidden");
-            } else {
-                alert("Please paste a valid article.");
-            }
+       function processArticle() {
+    let articleInput = document.getElementById("article-input").value;
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
+    if (sentences && sentences.length > 0) {
+        currentSentenceIndex = 0;
+        updateProgressBar();
+        showSentence();
+        document.getElementById("practice-section").style.display = "block";
+        document.getElementById("start-button").classList.add("hidden");
+        document.getElementById("article-input").classList.add("hidden");
+    } else {
+        alert("Please paste a valid article.");
+    }
+}
+
+function showSentence() {
+    if (currentSentenceIndex < sentences.length) {
+        document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
+        document.getElementById("original-sentence").style.color = "#333"; // Ensure the text color is correct
+        document.getElementById("user-input").value = "";
+        document.getElementById("result").innerText = "";
+        updateProgressBar();
+    } else {
+        showCompletionMessage();
+    }
+}
+
+function showCompletionMessage() {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    originalSentenceElement.innerText = "Congratulations! You've completed the practice.";
+    originalSentenceElement.classList.add('completed-message');
+    originalSentenceElement.style.color = "#333"; // Set text color to black
+    document.getElementById("user-input").style.display = "none";
+    document.getElementById("check-button").style.display = "none";
+    document.getElementById("show-original-icon").style.display = "none";
+    document.getElementById("result").innerText = "";
+}
+
+function normalizeText(text) {
+    return text
+        .replace(/’/g, "'") // Right single quotation mark
+        .replace(/‘/g, "'") // Left single quotation mark
+        .replace(/“/g, '"') // Left double quotation mark
+        .replace(/”/g, '"') // Right double quotation mark
+        .replace(/‐/g, '-') // Hyphen
+        .replace(/–/g, '-') // En dash
+        .replace(/—/g, '-') // Em dash
+        .replace(/\u00A0/g, ' ') // Non-breaking space
+        .replace(/…/g, '...'); // Ellipsis
+}
+
+function checkText() {
+    const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
+    const userInput = normalizeText(document.getElementById("user-input").value.trim());
+    const result = document.getElementById("result");
+
+    const originalWords = originalSentence.split(' ');
+    const userWords = userInput.split(' ');
+
+    let correctWords = "";
+    let incorrectWordFound = false;
+    let incorrectWord = "";
+
+    for (let i = 0; i < userWords.length; i++) {
+        if (userWords[i] === originalWords[i]) {
+            correctWords += userWords[i] + ' ';
+        } else {
+            incorrectWordFound = true;
+            incorrectWord = userWords[i];
+            break;
         }
+    }
 
-        function showSentence() {
-            if (currentSentenceIndex < sentences.length) {
-                document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
-                document.getElementById("original-sentence").style.color = "#333"; // Ensure the text color is correct
-                document.getElementById("user-input").value = "";
-                document.getElementById("result").innerText = "";
-                updateProgressBar();
-            } else {
-                showCompletionMessage();
-            }
-        }
+    if (userInput === originalSentence) {
+        result.innerText = "Perfect! You matched the original text exactly.";
+        result.style.color = "green";
+        currentSentenceIndex++;
+        setTimeout(() => {
+            result.innerText = ""; // Clear the result message
+            showSentence();
+        }, 1000);
+    } else if (incorrectWordFound) {
+        result.innerHTML = `Incorrect: <span style="color: red;">${incorrectWord}</span>`;
+        result.style.color = "red";
+        document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
+    } else {
+        result.innerText = "Keep going, you're getting closer!";
+        result.style.color = "green";
+    }
 
-        function showCompletionMessage() {
-            const originalSentenceElement = document.getElementById("original-sentence");
-            originalSentenceElement.innerText = "Congratulations! You've completed the practice.";
-            originalSentenceElement.classList.add('completed-message');
-            originalSentenceElement.style.color = "#333"; // Set text color to black
-            document.getElementById("user-input").style.display = "none";
-            document.getElementById("check-button").style.display = "none";
-            document.getElementById("show-original-icon").style.display = "none";
-            document.getElementById("result").innerText = "";
-        }
+    updateProgressBar(); // Ensure the progress bar updates after checking the text
+}
 
-        function normalizeText(text) {
-            return text
-                .replace(/’/g, "'") // Right single quotation mark
-                .replace(/‘/g, "'") // Left single quotation mark
-                .replace(/“/g, '"') // Left double quotation mark
-                .replace(/”/g, '"') // Right double quotation mark
-                .replace(/‐/g, '-') // Hyphen
-                .replace(/–/g, '-') // En dash
-                .replace(/—/g, '-') // Em dash
-                .replace(/\u00A0/g, ' ') // Non-breaking space
-                .replace(/…/g, '...'); // Ellipsis
-        }
+function updateProgressBar() {
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    const progress = (currentSentenceIndex / sentences.length) * 100;
+    progressBarFill.style.width = progress + "%";
+    progressBarFill.innerText = Math.round(progress) + "%";
+}
 
-        function checkText() {
-            const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
-            const userInput = normalizeText(document.getElementById("user-input").value.trim());
-            const result = document.getElementById("result");
+function showHighlightButton(event) {
+    const selection = window.getSelection().toString().trim();
+    if (selection) {
+        selectedWord = selection;
+        const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+        highlightButton.style.top = (rect.bottom + window.scrollY) + 'px';
+        highlightButton.style.left = (rect.left + window.scrollX) + 'px';
+        highlightButton.style.display = 'block';
+    }
+}
 
-            const originalWords = originalSentence.split(' ');
-            const userWords = userInput.split(' ');
+function searchHighlightedWord() {
+    const selectedWord = window.getSelection().toString().trim();
+    if (selectedWord) {
+        const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
+        window.open(searchQuery, '_blank');
+    }
+}
 
-            let correctWords = "";
-            for (let i = 0; i < userWords.length; i++) {
-                if (userWords[i] === originalWords[i]) {
-                    correctWords += userWords[i] + ' ';
-                }
-            }
+// Prevent default right-click context menu
+window.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});
 
-            if (userInput === originalSentence) {
-                result.innerText = "Perfect! You matched the original text exactly.";
-                result.style.color = "green";
-                currentSentenceIndex++;
-                setTimeout(() => {
-                    result.innerText = ""; // Clear the result message
-                    showSentence();
-                }, 1000);
-            } else {
-                result.innerText = "Keep going, you're getting closer!";
-                result.style.color = "red";
-                document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
-            }
+function restartPractice() {
+    window.location.reload(); // This will reload the page to reset the state
+}
 
-            updateProgressBar(); // Ensure the progress bar updates after checking the text
-        }
+document.getElementById("reload-button").addEventListener("click", restartPractice);
 
-        function updateProgressBar() {
-            const progressBarFill = document.getElementById("progress-bar-fill");
-            const progress = (currentSentenceIndex / sentences.length) * 100;
-            progressBarFill.style.width = progress + "%";
-            progressBarFill.innerText = Math.round(progress) + "%";
-        }
+function hideOriginalSentence() {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    originalSentenceElement.style.color = "#f0f0f0";
+    document.getElementById("show-original-icon").style.display = "inline";
+    document.getElementById("result").innerText = ""; // Hide the result message when the user starts typing
+}
 
-        function showHighlightButton(event) {
-            const selection = window.getSelection().toString().trim();
-            if (selection) {
-                selectedWord = selection;
-                const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-                highlightButton.style.top = (rect.bottom + window.scrollY) + 'px';
-                highlightButton.style.left = (rect.left + window.scrollX) + 'px';
-                highlightButton.style.display = 'block';
-            }
-        }
+function showOriginalSentence() {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    originalSentenceElement.style.color = "#333"; // Restore original color
+    document.getElementById("show-original-icon").style.display = "none";
+}
 
-        function searchHighlightedWord() {
-            const selectedWord = window.getSelection().toString().trim();
-            if (selectedWord) {
-                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
-                window.open(searchQuery, '_blank');
-            }
-        }
+document.addEventListener('click', function (event) {
+    if (!highlightButton.contains(event.target)) {
+        highlightButton.style.display = 'none';
+    }
+});
 
-        // Prevent default right-click context menu
-        window.addEventListener('contextmenu', function (event) {
-            event.preventDefault();
-        });
+document.addEventListener('copy', function (event) {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    const selection = window.getSelection();
+    if (selection.containsNode(originalSentenceElement, true)) {
+        event.preventDefault();
+        alert("Copying the original sentence is not allowed!");
+    }
+});
 
-        function restartPractice() {
-            window.location.reload(); // This will reload the page to reset the state
-        }
+function handleKeyDown(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        checkText();
+    } else if (event.key === "Alt") {
+        event.preventDefault();
+        showOriginalSentence();
+    } else {
+        hideOriginalSentence();
+    }
+}
 
-        document.getElementById("reload-button").addEventListener("click", restartPractice);
+// Modal control functions
+function closeModal() {
+    document.getElementById("rules-modal").style.display = "none";
+}
 
-        function hideOriginalSentence() {
-            const originalSentenceElement = document.getElementById("original-sentence");
-            originalSentenceElement.style.color = "#f0f0f0";
-            document.getElementById("show-original-icon").style.display = "inline";
-        }
+window.onload = function() {
+    document.getElementById("rules-modal").style.display = "flex";
+}
 
-        function showOriginalSentence() {
-            const originalSentenceElement = document.getElementById("original-sentence");
-            originalSentenceElement.style.color = "#333"; // Restore original color
-            document.getElementById("show-original-icon").style.display = "none";
-        }
-
-        document.addEventListener('click', function (event) {
-            if (!highlightButton.contains(event.target)) {
-                highlightButton.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('copy', function (event) {
-            const originalSentenceElement = document.getElementById("original-sentence");
-            const selection = window.getSelection();
-            if (selection.containsNode(originalSentenceElement, true)) {
-                event.preventDefault();
-                alert("Copying the original sentence is not allowed!");
-            }
-        });
-
-        function handleKeyDown(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                checkText();
-            } else if (event.key === "Alt") {
-                event.preventDefault();
-                showOriginalSentence();
-            }
-        }
-
-        // Modal control functions
-        function closeModal() {
-            document.getElementById("rules-modal").style.display = "none";
-        }
-
-        window.onload = function() {
-            document.getElementById("rules-modal").style.display = "flex";
-        }
     </script>
 </body>
 </html>
