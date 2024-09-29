@@ -352,6 +352,7 @@ function checkText() {
     let correctWords = "";
     let incorrectWordFound = false;
     let incorrectWord = "";
+    let correctWord = "";
 
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
@@ -359,6 +360,7 @@ function checkText() {
         } else {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
+            correctWord = originalWords[i]; // Store the correct word
             break;
         }
     }
@@ -372,8 +374,8 @@ function checkText() {
             showSentence();
         }, 1000);
     } else if (incorrectWordFound) {
-        result.innerHTML = `Incorrect: <span style="color: red;">${incorrectWord}</span>`;
-        result.style.color = "red";
+        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
+        result.style.color = "black";
         document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
     } else {
         result.innerText = "Keep going, you're getting closer!";
@@ -382,6 +384,7 @@ function checkText() {
 
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
+
 
 function updateProgressBar() {
     const progressBarFill = document.getElementById("progress-bar-fill");
@@ -472,4 +475,3 @@ window.onload = function() {
     </script>
 </body>
 </html>
-
