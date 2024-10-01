@@ -351,8 +351,15 @@ function checkText() {
 
     let correctWords = "";
     let incorrectWordFound = false;
+    let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
+
+    // Check for missing spaces after any punctuation in the user input
+    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g; // Punctuation followed by non-space
+    if (punctuationWithoutSpacePattern.test(userInput)) {
+        missingSpaceFound = true;
+    }
 
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
@@ -373,6 +380,9 @@ function checkText() {
             result.innerText = ""; // Clear the result message
             showSentence();
         }, 1000);
+    } else if (missingSpaceFound) {
+        result.innerText = "Check your spacing after punctuation";
+        result.style.color = "orange";
     } else if (incorrectWordFound) {
         result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
         result.style.color = "black";
@@ -384,6 +394,8 @@ function checkText() {
 
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
+
+
 
 
 function updateProgressBar() {
