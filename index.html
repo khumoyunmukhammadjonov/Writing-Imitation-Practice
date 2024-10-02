@@ -318,7 +318,7 @@ function showSentence() {
 
 function showCompletionMessage() {
     const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.innerText = "You've completed the practice.";
+    originalSentenceElement.innerText = "You have completed the practice.";
     originalSentenceElement.classList.add('completed-message');
     originalSentenceElement.style.color = "#333"; // Set text color to black
     document.getElementById("user-input").style.display = "none";
@@ -372,7 +372,7 @@ function checkText() {
     }
 
     if (userInput === originalSentence) {
-        result.innerText = "Perfect! You matched the original text exactly.";
+        result.innerText = "Perfect!";
         result.style.color = "green";
         currentSentenceIndex++;
         setTimeout(() => {
