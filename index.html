@@ -231,112 +231,6 @@
     text-decoration: underline; /* Underline on hover for accessibility */
 }
 
-
-
-/* Improved Review Modal styles */
-#review-modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Dark background for focus */
-    justify-content: center;
-    align-items: center;
-}
-
-#review-modal .modal-content {
-    background-color: #f9f9f9; /* Soft background for readability */
-    padding: 25px; /* Increased padding for better spacing */
-    border-radius: 10px; /* More rounded corners for a modern feel */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
-    max-width: 600px;
-    width: 90%;
-    border: 1px solid #ccc;
-    font-family: 'Arial', sans-serif;
-    box-sizing: border-box;
-}
-
-#review-modal .modal-header {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #4CAF50;
-    text-align: center;
-    font-weight: bold;
-    border-bottom: 1px solid #ddd; /* Adds a clean divider */
-    padding-bottom: 10px;
-}
-
-#review-modal .modal-body {
-    font-size: 16px;
-    color: #555; /* Slightly muted text for less harsh contrast */
-    line-height: 1.6;
-    text-align: left;
-}
-
-#review-modal .modal-body p {
-    margin-bottom: 10px;
-}
-
-#review-modal .modal-body input.review-input {
-    width: 100%; /* Full-width input */
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    transition: border-color 0.3s ease;
-}
-
-#review-modal .modal-body input.review-input:focus {
-    border-color: #4CAF50;
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); /* Slight glow for focus */
-}
-
-#review-modal .modal-body .rewrite-count-message {
-    color: #999; /* Softer text color */
-    font-size: 14px;
-    margin-top: 5px;
-    display: inline-block;
-}
-
-#review-modal .modal-body .rewrite-count-message.green {
-    color: #4CAF50; /* Change color on correct count */
-}
-
-#review-modal .modal-footer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#review-modal .modal-footer button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#review-modal .modal-footer button:hover {
-    background-color: #45a049;
-}
-
-#review-modal .modal-footer button:focus {
-    outline: none;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); /* Subtle glow */
-}
-
-
-
-
-
     </style>
 </head>
 <body>
@@ -389,172 +283,38 @@
     </div>
 </div>
 
-<!-- Add a new modal for reviewing the incorrect words -->
-<div id="review-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">Practice Your Incorrect Words</div>
-        <div class="modal-body" id="review-body">
-            <p>Here are the words you struggled with.</p>
-            <div id="incorrect-words-container"></div>
-        </div>
-        <div class="modal-footer">
-            <button id="close-review-modal" disabled onclick="closeReviewModal()">Close</button>
-        </div>
-    </div>
-</div>
-
-<script>
-     let sentences = [];
-    let currentSentenceIndex = 0;
-    let selectedWord = '';
-    const highlightButton = document.getElementById('highlight-button');
-    let incorrectWordCount = {}; // Dictionary to store incorrect word counts
-    let reviewWords = []; // Words to review (incorrectly rewritten twice)
-
-    function processArticle() {
-        let articleInput = document.getElementById("article-input").value;
-        sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
-        if (sentences && sentences.length > 0) {
-            currentSentenceIndex = 0;
-            updateProgressBar();
-            showSentence();
-            document.getElementById("practice-section").style.display = "block";
-            document.getElementById("start-button").classList.add("hidden");
-            document.getElementById("article-input").classList.add("hidden");
-        } else {
-            alert("Please paste a valid article.");
-        }
+    <script>
+        let sentences = [];
+        let currentSentenceIndex = 0;
+        let selectedWord = '';
+        const highlightButton = document.getElementById('highlight-button');
+        
+       function processArticle() {
+    let articleInput = document.getElementById("article-input").value;
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
+    if (sentences && sentences.length > 0) {
+        currentSentenceIndex = 0;
+        updateProgressBar();
+        showSentence();
+        document.getElementById("practice-section").style.display = "block";
+        document.getElementById("start-button").classList.add("hidden");
+        document.getElementById("article-input").classList.add("hidden");
+    } else {
+        alert("Please paste a valid article.");
     }
+}
 
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
         document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
-        document.getElementById("original-sentence").style.color = "#333";
+        document.getElementById("original-sentence").style.color = "#333"; // Ensure the text color is correct
         document.getElementById("user-input").value = "";
         document.getElementById("result").innerText = "";
         updateProgressBar();
     } else {
-        // All sentences are complete, show review or completion message
-        openReviewModal();
+        showCompletionMessage();
     }
 }
-
-    function checkText() {
-        const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
-        const userInput = normalizeText(document.getElementById("user-input").value.trim());
-        const result = document.getElementById("result");
-
-        const originalWords = originalSentence.split(' ');
-        const userWords = userInput.split(' ');
-
-        let correctWords = "";
-        let incorrectWordFound = false;
-        let incorrectWord = "";
-        let correctWord = "";
-
-        const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g;
-        if (punctuationWithoutSpacePattern.test(userInput)) {
-            result.innerText = "Check your spacing after punctuation.";
-            result.style.color = "orange";
-            return;
-        }
-
-        for (let i = 0; i < userWords.length; i++) {
-            if (userWords[i] === originalWords[i]) {
-                correctWords += userWords[i] + ' ';
-            } else {
-                incorrectWordFound = true;
-                incorrectWord = userWords[i];
-                correctWord = originalWords[i];
-                
-                // Track incorrect word count
-                if (incorrectWord in incorrectWordCount) {
-                    incorrectWordCount[incorrectWord]++;
-                } else {
-                    incorrectWordCount[incorrectWord] = 1;
-                }
-
-                // If the word was incorrect twice, add it to reviewWords array
-                if (incorrectWordCount[incorrectWord] >= 2) {
-                    if (!reviewWords.includes(correctWord)) {
-                        reviewWords.push(correctWord);
-                    }
-                }
-                break;
-            }
-        }
-
-        if (userInput === originalSentence) {
-            result.innerText = "Perfect! You matched the original text exactly.";
-            result.style.color = "green";
-            currentSentenceIndex++;
-            setTimeout(() => {
-                result.innerText = ""; // Clear the result message
-                showSentence();
-            }, 1000);
-        } else if (incorrectWordFound) {
-            result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
-            result.style.color = "black";
-            document.getElementById("user-input").value = correctWords;
-        } else {
-            result.innerText = "Keep going, you're getting closer!";
-            result.style.color = "green";
-        }
-
-        updateProgressBar();
-    }
-
-
-
-// Open the review modal with the incorrect words
-function openReviewModal() {
-    const reviewBody = document.getElementById("incorrect-words-container");
-    reviewBody.innerHTML = "";
-
-    // Show the completion message first
-    showCompletionMessage();
-
-    // Now, show the review modal after a brief delay (e.g., 2 seconds)
-    setTimeout(() => {
-        if (reviewWords.length > 0) {
-            reviewWords.forEach((word) => {
-                let wordContainer = document.createElement('div');
-                // Create just 1 input field per word with a message
-                wordContainer.innerHTML = `
-                    <p><strong>${word}</strong>:</p>
-                    <p><input type="text" class="review-input" data-correct-word="${word}" data-rewrite-count="0" placeholder="Rewrite the word..."></p>
-                    <p class="rewrite-count-message" id="rewrite-count-${word}">Rewrite the word correctly 3 times.</p>
-                `;
-                reviewBody.appendChild(wordContainer);
-            });
-
-            // Show the review modal after displaying the completion message
-            document.getElementById("review-modal").style.display = "flex";
-        }
-    }, 1000); // Delay of 2 seconds
-}
-
-    // Open the review modal with the incorrect words
-
-    // Handle review input and check if the user spells the word correctly
-    document.addEventListener('input', function (event) {
-        if (event.target.classList.contains('review-input')) {
-            const userWord = event.target.value.trim();
-            const correctWord = event.target.dataset.correctWord;
-
-            if (userWord === correctWord) {
-                event.target.style.borderColor = "green"; // Highlight correct word
-                event.target.disabled = true; // Disable input once correct
-            } else {
-                event.target.style.borderColor = "red"; // Highlight incorrect word
-            }
-        }
-    });
-
-    // Close the review modal
-    function closeReviewModal() {
-        document.getElementById("review-modal").style.display = "none";
-    }
 
 function showCompletionMessage() {
     const originalSentenceElement = document.getElementById("original-sentence");
@@ -563,29 +323,86 @@ function showCompletionMessage() {
     originalSentenceElement.style.color = "#333"; // Set text color to black
     document.getElementById("user-input").style.display = "none";
     document.getElementById("check-button").style.display = "none";
-    document.getElementById("reload-button").innerText = "Restart Practice"; // Optional: Change button text
+    document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
 }
 
-    function normalizeText(text) {
-        return text
-            .replace(/’/g, "'") 
-            .replace(/‘/g, "'")
-            .replace(/“/g, '"')
-            .replace(/”/g, '"')
-            .replace(/‐/g, '-')
-            .replace(/–/g, '-')
-            .replace(/—/g, '-')
-            .replace(/\u00A0/g, ' ') 
-            .replace(/…/g, '...');
+function normalizeText(text) {
+    return text
+        .replace(/’/g, "'") // Right single quotation mark
+        .replace(/‘/g, "'") // Left single quotation mark
+        .replace(/“/g, '"') // Left double quotation mark
+        .replace(/”/g, '"') // Right double quotation mark
+        .replace(/‐/g, '-') // Hyphen
+        .replace(/–/g, '-') // En dash
+        .replace(/—/g, '-') // Em dash
+        .replace(/\u00A0/g, ' ') // Non-breaking space
+        .replace(/…/g, '...'); // Ellipsis
+}
+
+function checkText() {
+    const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
+    const userInput = normalizeText(document.getElementById("user-input").value.trim());
+    const result = document.getElementById("result");
+
+    const originalWords = originalSentence.split(' ');
+    const userWords = userInput.split(' ');
+
+    let correctWords = "";
+    let incorrectWordFound = false;
+    let missingSpaceFound = false;
+    let incorrectWord = "";
+    let correctWord = "";
+
+    // Check for missing spaces after any punctuation in the user input
+    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g; // Punctuation followed by non-space
+    if (punctuationWithoutSpacePattern.test(userInput)) {
+        missingSpaceFound = true;
     }
 
-    function updateProgressBar() {
-        const progressBarFill = document.getElementById("progress-bar-fill");
-        const progress = (currentSentenceIndex / sentences.length) * 100;
-        progressBarFill.style.width = progress + "%";
-        progressBarFill.innerText = Math.round(progress) + "%";
+    for (let i = 0; i < userWords.length; i++) {
+        if (userWords[i] === originalWords[i]) {
+            correctWords += userWords[i] + ' ';
+        } else {
+            incorrectWordFound = true;
+            incorrectWord = userWords[i];
+            correctWord = originalWords[i]; // Store the correct word
+            break;
+        }
     }
+
+    if (userInput === originalSentence) {
+        result.innerText = "Perfect!";
+        result.style.color = "green";
+        currentSentenceIndex++;
+        setTimeout(() => {
+            result.innerText = ""; // Clear the result message
+            showSentence();
+        }, 1000);
+    } else if (missingSpaceFound) {
+        result.innerText = "Check your spacing after punctuation";
+        result.style.color = "orange";
+    } else if (incorrectWordFound) {
+        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
+        result.style.color = "black";
+        document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
+    } else {
+        result.innerText = "Keep going, you're getting closer!";
+        result.style.color = "green";
+    }
+
+    updateProgressBar(); // Ensure the progress bar updates after checking the text
+}
+
+
+
+
+function updateProgressBar() {
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    const progress = (currentSentenceIndex / sentences.length) * 100;
+    progressBarFill.style.width = progress + "%";
+    progressBarFill.innerText = Math.round(progress) + "%";
+}
 
 function showHighlightButton(event) {
     const selection = window.getSelection().toString().trim();
@@ -644,70 +461,6 @@ document.addEventListener('copy', function (event) {
         alert("Copying the original sentence is not allowed!");
     }
 });
-
-// Handle review input and check if the user spells the word correctly
-// Handle review input and check if the user spells the word correctly
-document.addEventListener('input', function (event) {
-    if (event.target.classList.contains('review-input')) {
-        const userWord = event.target.value.trim();
-        const correctWord = event.target.dataset.correctWord;
-        let rewriteCount = parseInt(event.target.dataset.rewriteCount);
-
-        if (userWord === correctWord) {
-            rewriteCount += 1; // Increment the rewrite count
-            event.target.dataset.rewriteCount = rewriteCount; // Update the rewrite count
-
-            // Update the progress message and visually indicate success for this attempt
-            const rewriteMessageElement = document.getElementById(`rewrite-count-${correctWord}`);
-            rewriteMessageElement.innerText = `Correctly written ${rewriteCount}/3 times.`;
-            rewriteMessageElement.style.color = "green"; // Change message color to green
-            event.target.value = ""; // Clear the input for the next rewrite
-
-            // Keep input enabled until 3 correct rewrites are completed
-            if (rewriteCount < 3) {
-                event.target.disabled = false; // Keep input field active
-                event.target.style.borderColor = "green"; // Show success after each correct rewrite
-
-                // Automatically focus the input for the next rewrite
-                setTimeout(() => {
-                    event.target.focus();
-                }, 100); // Small delay to ensure focus happens after UI update
-            } else if (rewriteCount === 3) {
-                event.target.style.borderColor = "green"; // Indicate final success
-                event.target.disabled = true; // Disable input after 3 correct rewrites
-
-                rewriteMessageElement.style.color = "green";
-
-                // Check if all words have been rewritten correctly 3 times
-                checkIfAllWordsRewritten();
-            }
-        } else {
-            event.target.style.borderColor = "red"; // Highlight incorrect word
-        }
-    }
-});
-
-// Check if all words have been rewritten 3 times and enable close button
-function checkIfAllWordsRewritten() {
-    const allReviewInputs = document.querySelectorAll('.review-input');
-    let allWordsRewritten = true;
-
-    allReviewInputs.forEach(input => {
-        if (parseInt(input.dataset.rewriteCount) < 3) {
-            allWordsRewritten = false;
-        }
-    });
-
-    // Enable the close button if all words have been rewritten correctly 3 times
-    if (allWordsRewritten) {
-        document.getElementById("close-review-modal").disabled = false;
-    }
-}
-
-
-
-
-
 
 function handleKeyDown(event) {
     if (event.key === "Enter") {
