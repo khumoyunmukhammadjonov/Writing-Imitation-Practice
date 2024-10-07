@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <title>Writing Imitation Practice</title>
     <style>
         body {
@@ -233,45 +231,6 @@
     text-decoration: underline; /* Underline on hover for accessibility */
 }
 
-/* Dark Mode Toggle */
-.dark-mode-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-}
-
-.dark-mode-toggle i {
-  font-size: 24px;
-  color: #333;
-}
-
-/* Dark Mode Active */
-body.dark-mode .dark-mode-toggle i {
-  color: #f0f0f0;
-}
-
-/* Light Mode Background */
-body {
-  background-color: #333;
-  color: black;
-}
-
-/* Dark Mode Styles */
-body.dark-mode {
-  background-color: #121212;
-  color: #f0f0f0;
-}
-
-/* Hide original word in dark mode */
-.dark-mode .original-word {
-  color: transparent; /* Hide original word */
-}
-
-.dark-mode .original-word.show-word {
-  color: #f0f0f0; /* Make it visible when Alt is pressed */
-}
-
     </style>
 </head>
 <body>
@@ -323,12 +282,6 @@ body.dark-mode {
         </div>
     </div>
 </div>
-
-<div class="dark-mode-toggle">
-  <i id="modeIcon" class="fas fa-moon"></i> <!-- Font Awesome Icon -->
-</div>
-
-
 
     <script>
         let sentences = [];
@@ -529,26 +482,6 @@ function closeModal() {
 window.onload = function() {
     document.getElementById("rules-modal").style.display = "flex";
 }
-
-
-
-
-const toggle = document.querySelector('.dark-mode-toggle');
-const icon = document.getElementById('modeIcon');
-
-toggle.addEventListener('click', function() {
-  document.body.classList.toggle('dark-mode');
-  
-  // Toggle the icon between sun and moon
-  if (document.body.classList.contains('dark-mode')) {
-    icon.classList.remove('fa-moon');
-    icon.classList.add('fa-sun');
-  } else {
-    icon.classList.remove('fa-sun');
-    icon.classList.add('fa-moon');
-  }
-});
-
 
     </script>
 </body>
