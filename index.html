@@ -290,30 +290,14 @@ let mistakeCount = 0;
 const highlightButton = document.getElementById('highlight-button');
 
 // Save progress in localStorage
-function saveProgress(progress) {
-    localStorage.setItem("writingProgress", JSON.stringify(progress));
-}
-
-// Call this function with appropriate data when the user completes the task
-// For example, in your `showCompletionMessage` function:
-function showCompletionMessage() {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.innerText = "You have completed the practice.";
-    originalSentenceElement.classList.add('completed-message');
-    originalSentenceElement.style.color = "#333"; // Set text color to black
-    document.getElementById("user-input").style.display = "none";
-    document.getElementById("check-button").style.display = "none";
-    document.getElementById("show-original-icon").style.display = "none";
-    document.getElementById("result").innerText = "";
-
-    // Save the progress when completed
+function saveProgress() {
     const progressData = {
-        completed: true,
-        // Add any other relevant data to save
+        currentSentenceIndex: currentSentenceIndex,
+        mistakeCount: mistakeCount,
+        sentences: sentences
     };
-    saveProgress(progressData);
+    localStorage.setItem("writingProgress", JSON.stringify(progressData));
 }
-
 // Save progress in localStorage
 
 // Retrieve progress from localStorage
@@ -372,9 +356,6 @@ function showCompletionMessage() {
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
-
-    // Clear progress from localStorage
-    localStorage.removeItem("writingProgress");
 }
 
 
@@ -585,7 +566,6 @@ window.onload = function() {
         document.getElementById("rules-modal").style.display = "flex";
     }
 };
-
 // Load progress when the page loads
 
     </script>
