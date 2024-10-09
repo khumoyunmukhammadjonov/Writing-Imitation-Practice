@@ -480,10 +480,26 @@ window.addEventListener('contextmenu', function (event) {
 
 // Restart practice and clear localStorage
 function restartPractice() {
-    localStorage.removeItem('currentSentenceIndex'); // Clears the saved progress
-    localStorage.removeItem('sentences'); // Clears the saved sentences
-    window.location.reload(); // This will reload the page to reset the state
+    // Clear local storage to reset saved progress and sentences
+    localStorage.removeItem('currentSentenceIndex'); // Clear saved progress
+    localStorage.removeItem('sentences'); // Clear the saved sentences
+
+    // Reset the UI elements and variables
+    sentences = []; // Clear the sentences array
+    currentSentenceIndex = 0; // Reset the sentence index
+
+    // Hide the practice section and show the text input again
+    document.getElementById("practice-section").style.display = "none"; // Hide the practice section
+    document.getElementById("start-button").classList.remove("hidden"); // Show the Start button
+    document.getElementById("article-input").classList.remove("hidden"); // Show the article input
+    document.getElementById("article-input").value = ""; // Clear the article input text box
+
+    // Reset the progress bar
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    progressBarFill.style.width = "0%";
+    progressBarFill.innerText = "0%";
 }
+
 // Restart practice and clear localStorage
 
 document.getElementById("reload-button").addEventListener("click", restartPractice);
