@@ -283,105 +283,103 @@
     </div>
 </div>
 
-<script>
-// Variables to track progress
-let sentences = [];
+    <script>
+   let sentences = [];
 let currentSentenceIndex = 0;
 let mistakeCount = 0;
-let selectedWord = '';
-
-// DOM elements
 const highlightButton = document.getElementById('highlight-button');
-const progressBarFill = document.getElementById("progress-bar-fill");
-const userInput = document.getElementById("user-input");
-const originalSentenceElement = document.getElementById("original-sentence");
-const resultElement = document.getElementById("result");
 
-// Save progress to localStorage
+// Save progress in localStorage
 function saveProgress() {
-    localStorage.setItem('sentences', JSON.stringify(sentences));
-    localStorage.setItem('currentSentenceIndex', currentSentenceIndex);
-    localStorage.setItem('userInput', userInput.value);
-    console.log("Progress saved:", { sentences, currentSentenceIndex, userInput: userInput.value });
+    const progressData = {
+        currentSentenceIndex: currentSentenceIndex,
+        mistakeCount: mistakeCount,
+        sentences: sentences
+    };
+    localStorage.setItem("writingProgress", JSON.stringify(progressData));
 }
+// Save progress in localStorage
 
-// Load progress from localStorage
+// Retrieve progress from localStorage
 function loadProgress() {
-    if (localStorage.getItem('sentences')) {
-        sentences = JSON.parse(localStorage.getItem('sentences'));
-        currentSentenceIndex = parseInt(localStorage.getItem('currentSentenceIndex'));
-        userInput.value = localStorage.getItem('userInput') || "";
-        console.log("Progress loaded:", { sentences, currentSentenceIndex, userInput: userInput.value });
+    const savedProgress = localStorage.getItem("writingProgress");
+    if (savedProgress) {
+        const progressData = JSON.parse(savedProgress);
+        currentSentenceIndex = progressData.currentSentenceIndex || 0;
+        mistakeCount = progressData.mistakeCount || 0;
+        sentences = progressData.sentences || [];
         showSentence();
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
     }
 }
-
-// Process the article to split it into sentences and start practice
+// Retrieve progress from localStorage
+        
+  // Modified processArticle function to save progress
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
-    sentences = articleInput.match(/[^.!?]+[.!?]+/g); // Split into sentences
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         updateProgressBar();
         showSentence();
+        saveProgress();  // Save initial progress
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
-
-        // Save the initial progress
-        saveProgress();
     } else {
         alert("Please paste a valid article.");
     }
 }
+// Modified processArticle function to save progress
 
-// Display the current sentence for the user to practice
+
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
-        originalSentenceElement.innerText = sentences[currentSentenceIndex].trim();
-        originalSentenceElement.style.color = "#333"; // Ensure the text color is correct
-        userInput.value = "";
-        resultElement.innerText = "";
+        document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
+        document.getElementById("original-sentence").style.color = "#333"; // Ensure the text color is correct
+        document.getElementById("user-input").value = "";
+        document.getElementById("result").innerText = "";
         updateProgressBar();
     } else {
         showCompletionMessage();
     }
 }
 
-// Show a completion message after the last sentence is done
 function showCompletionMessage() {
+    const originalSentenceElement = document.getElementById("original-sentence");
     originalSentenceElement.innerText = "You have completed the practice.";
     originalSentenceElement.classList.add('completed-message');
     originalSentenceElement.style.color = "#333"; // Set text color to black
-    userInput.style.display = "none";
+    document.getElementById("user-input").style.display = "none";
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
-    resultElement.innerText = "";
+    document.getElementById("result").innerText = "";
 }
 
-// Normalize text by replacing problematic characters
 function normalizeText(text) {
     return text
-        .replace(/’/g, "'")
-        .replace(/‘/g, "'")
-        .replace(/“/g, '"')
-        .replace(/”/g, '"')
-        .replace(/‐/g, '-')
-        .replace(/–/g, '-')
-        .replace(/—/g, '-')
-        .replace(/\u00A0/g, ' ')
-        .replace(/…/g, '...');
+        .replace(/’/g, "'") // Right single quotation mark
+        .replace(/‘/g, "'") // Left single quotation mark
+        .replace(/“/g, '"') // Left double quotation mark
+        .replace(/”/g, '"') // Right double quotation mark
+        .replace(/‐/g, '-') // Hyphen
+        .replace(/–/g, '-') // En dash
+        .replace(/—/g, '-') // Em dash
+        .replace(/\u00A0/g, ' ') // Non-breaking space
+        .replace(/…/g, '...'); // Ellipsis
 }
 
-// Check the user input against the original sentence
+
+// Modified checkText function to save progress after checking each sentence
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
-    const userInputText = normalizeText(userInput.value.trim());
+    const userInput = normalizeText(document.getElementById("user-input").value.trim());
+    const result = document.getElementById("result");
+
     const originalWords = originalSentence.split(' ');
-    const userWords = userInputText.split(' ');
+    const userWords = userInput.split(' ');
 
     let correctWords = "";
     let incorrectWordFound = false;
@@ -389,8 +387,9 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
-    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g;
-    if (punctuationWithoutSpacePattern.test(userInputText)) {
+    // Check for missing spaces after any punctuation in the user input
+    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g; // Punctuation followed by non-space
+    if (punctuationWithoutSpacePattern.test(userInput)) {
         missingSpaceFound = true;
     }
 
@@ -400,76 +399,127 @@ function checkText() {
         } else {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
-            correctWord = originalWords[i];
-            mistakeCount++;
+            correctWord = originalWords[i]; // Store the correct word
+            mistakeCount++; // Increment the mistake count
             break;
         }
     }
 
-    if (userInputText === originalSentence) {
-        resultElement.innerText = "Perfect!";
-        resultElement.style.color = "green";
-        mistakeCount = 0;
+    if (userInput === originalSentence) {
+        result.innerText = "Perfect!";
+        result.style.color = "green";
+        mistakeCount = 0; // Reset mistake count on correct answer
         currentSentenceIndex++;
+        saveProgress();  // Save progress after checking
         setTimeout(() => {
-            resultElement.innerText = "";
+            result.innerText = ""; // Clear the result message
             showSentence();
-            saveProgress(); // Save progress after checking text
         }, 1000);
     } else if (missingSpaceFound) {
-        resultElement.innerText = "Check your spacing after punctuation";
-        resultElement.style.color = "orange";
+        result.innerText = "Check your spacing after punctuation";
+        result.style.color = "orange";
     } else if (incorrectWordFound) {
         if (mistakeCount >= 2) {
-            resultElement.innerHTML = `<span style="color: red;">Too many mistakes! Resetting your input...</span>`;
-            mistakeCount = 0;
-            userInput.value = "";
+            result.innerHTML = `<span style="color: red;">Too many mistakes! Resetting your input...</span>`;
+            mistakeCount = 0; // Reset the mistake count
+            document.getElementById("user-input").value = ""; // Clear the user's input
         } else {
-            resultElement.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
-            resultElement.style.color = "black";
-            userInput.value = correctWords;
+            result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
+            result.style.color = "black";
+            document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
         }
     } else {
-        resultElement.innerText = "Keep going, you're getting closer!";
-        resultElement.style.color = "green";
+        result.innerText = "Keep going, you're getting closer!";
+        result.style.color = "green";
     }
 
-    saveProgress(); // Save progress after the check
-    updateProgressBar();
+    updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
+// Modified checkText function to save progress after checking each sentence
 
-// Clear feedback when user starts typing again
+
+
+// New function to clear the result message when user starts typing again
 function clearFeedback() {
-    resultElement.innerText = ""; // Clear feedback message
+    document.getElementById("result").innerText = ""; // Clear the feedback
 }
 
-// Update progress bar based on current progress
+// Attach the event listener to clear the feedback when user starts typing again
+document.getElementById("user-input").addEventListener("input", clearFeedback);
+
+
+
+
+
+
 function updateProgressBar() {
+    const progressBarFill = document.getElementById("progress-bar-fill");
     const progress = (currentSentenceIndex / sentences.length) * 100;
     progressBarFill.style.width = progress + "%";
     progressBarFill.innerText = Math.round(progress) + "%";
 }
 
-// Restart practice by clearing localStorage and reloading the page
-function restartPractice() {
-    localStorage.clear();
-    window.location.reload();
+function showHighlightButton(event) {
+    const selection = window.getSelection().toString().trim();
+    if (selection) {
+        selectedWord = selection;
+        const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+        highlightButton.style.top = (rect.bottom + window.scrollY) + 'px';
+        highlightButton.style.left = (rect.left + window.scrollX) + 'px';
+        highlightButton.style.display = 'block';
+    }
 }
 
-// Hide the original sentence
+function searchHighlightedWord() {
+    const selectedWord = window.getSelection().toString().trim();
+    if (selectedWord) {
+        const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
+        window.open(searchQuery, '_blank');
+    }
+}
+
+// Prevent default right-click context menu
+window.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});
+
+// Restart practice and clear localStorage
+function restartPractice() {
+    localStorage.removeItem("writingProgress");  // Clear saved progress
+    window.location.reload(); // This will reload the page to reset the state
+}
+// Restart practice and clear localStorage
+
+document.getElementById("reload-button").addEventListener("click", restartPractice);
+
 function hideOriginalSentence() {
+    const originalSentenceElement = document.getElementById("original-sentence");
     originalSentenceElement.style.color = "#f0f0f0";
     document.getElementById("show-original-icon").style.display = "inline";
-    resultElement.innerText = "";
+    document.getElementById("result").innerText = ""; // Hide the result message when the user starts typing
 }
 
-// Show the original sentence
 function showOriginalSentence() {
-    originalSentenceElement.style.color = "#333";
+    const originalSentenceElement = document.getElementById("original-sentence");
+    originalSentenceElement.style.color = "#333"; // Restore original color
     document.getElementById("show-original-icon").style.display = "none";
 }
 
-// Handle key down events (check text, show original)
+document.addEventListener('click', function (event) {
+    if (!highlightButton.contains(event.target)) {
+        highlightButton.style.display = 'none';
+    }
+});
+
+document.addEventListener('copy', function (event) {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    const selection = window.getSelection();
+    if (selection.containsNode(originalSentenceElement, true)) {
+        event.preventDefault();
+        alert("Copying the original sentence is not allowed!");
+    }
+});
+
 function handleKeyDown(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -482,38 +532,22 @@ function handleKeyDown(event) {
     }
 }
 
-// Close modal function
+// Modal control functions
 function closeModal() {
     document.getElementById("rules-modal").style.display = "none";
 }
 
-// Handle the "Got It" button click
-document.getElementById("got-it-button").addEventListener("click", closeModal);
-
-// On page load, check if there's saved progress and load it
+// Load progress when the page loads
 window.onload = function() {
-    if (localStorage.getItem('sentences')) {
-        if (confirm("You have unfinished practice. Would you like to continue?")) {
-            loadProgress();
-        } else {
-            localStorage.clear();
-        }
+    const savedProgress = localStorage.getItem("writingProgress");
+    if (savedProgress) {
+        loadProgress();
+    } else {
+        document.getElementById("rules-modal").style.display = "flex";
     }
-    document.getElementById("rules-modal").style.display = "flex"; // Show modal on load
 };
+// Load progress when the page loads
 
-// Attach the event listener to clear feedback when user starts typing again
-userInput.addEventListener("input", clearFeedback);
-
-// Restart button event listener
-document.getElementById("reload-button").addEventListener("click", restartPractice);
-
-// Prevent default right-click context menu
-window.addEventListener('contextmenu', function(event) {
-    event.preventDefault();
-});
-</script>
-
-
+    </script>
 </body>
 </html>
