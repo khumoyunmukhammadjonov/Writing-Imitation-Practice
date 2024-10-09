@@ -284,18 +284,47 @@
 </div>
 
     <script>
-        let sentences = [];
-        let currentSentenceIndex = 0;
-        let selectedWord = '';
-        const highlightButton = document.getElementById('highlight-button');
+   let sentences = [];
+let currentSentenceIndex = 0;
+let mistakeCount = 0;
+const highlightButton = document.getElementById('highlight-button');
+
+// Save progress in localStorage
+function saveProgress() {
+    const progressData = {
+        currentSentenceIndex: currentSentenceIndex,
+        mistakeCount: mistakeCount,
+        sentences: sentences
+    };
+    localStorage.setItem("writingProgress", JSON.stringify(progressData));
+}
+// Save progress in localStorage
+
+// Retrieve progress from localStorage
+function loadProgress() {
+    const savedProgress = localStorage.getItem("writingProgress");
+    if (savedProgress) {
+        const progressData = JSON.parse(savedProgress);
+        currentSentenceIndex = progressData.currentSentenceIndex || 0;
+        mistakeCount = progressData.mistakeCount || 0;
+        sentences = progressData.sentences || [];
+        showSentence();
+        document.getElementById("practice-section").style.display = "block";
+        document.getElementById("start-button").classList.add("hidden");
+        document.getElementById("article-input").classList.add("hidden");
+    }
+}
+// Retrieve progress from localStorage
         
-       function processArticle() {
+  // Modified processArticle function to save progress
+function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         updateProgressBar();
         showSentence();
+        saveProgress();  // Save initial progress
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
@@ -303,6 +332,8 @@
         alert("Please paste a valid article.");
     }
 }
+// Modified processArticle function to save progress
+
 
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
@@ -333,15 +364,15 @@ function normalizeText(text) {
         .replace(/‘/g, "'") // Left single quotation mark
         .replace(/“/g, '"') // Left double quotation mark
         .replace(/”/g, '"') // Right double quotation mark
-        .replace(/-/g, '-') // Hyphen
+        .replace(/‐/g, '-') // Hyphen
         .replace(/–/g, '-') // En dash
         .replace(/—/g, '-') // Em dash
         .replace(/\u00A0/g, ' ') // Non-breaking space
         .replace(/…/g, '...'); // Ellipsis
 }
 
-let mistakeCount = 0;
 
+// Modified checkText function to save progress after checking each sentence
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
@@ -379,6 +410,7 @@ function checkText() {
         result.style.color = "green";
         mistakeCount = 0; // Reset mistake count on correct answer
         currentSentenceIndex++;
+        saveProgress();  // Save progress after checking
         setTimeout(() => {
             result.innerText = ""; // Clear the result message
             showSentence();
@@ -403,6 +435,9 @@ function checkText() {
 
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
+// Modified checkText function to save progress after checking each sentence
+
+
 
 // New function to clear the result message when user starts typing again
 function clearFeedback() {
@@ -448,9 +483,12 @@ window.addEventListener('contextmenu', function (event) {
     event.preventDefault();
 });
 
+// Restart practice and clear localStorage
 function restartPractice() {
+    localStorage.removeItem("writingProgress");  // Clear saved progress
     window.location.reload(); // This will reload the page to reset the state
 }
+// Restart practice and clear localStorage
 
 document.getElementById("reload-button").addEventListener("click", restartPractice);
 
@@ -499,9 +537,16 @@ function closeModal() {
     document.getElementById("rules-modal").style.display = "none";
 }
 
+// Load progress when the page loads
 window.onload = function() {
-    document.getElementById("rules-modal").style.display = "flex";
-}
+    const savedProgress = localStorage.getItem("writingProgress");
+    if (savedProgress) {
+        loadProgress();
+    } else {
+        document.getElementById("rules-modal").style.display = "flex";
+    }
+};
+// Load progress when the page loads
 
     </script>
 </body>
