@@ -482,6 +482,14 @@ function handleKeyDown(event) {
     }
 }
 
+// Close modal function
+function closeModal() {
+    document.getElementById("rules-modal").style.display = "none";
+}
+
+// Handle the "Got It" button click
+document.getElementById("got-it-button").addEventListener("click", closeModal);
+
 // On page load, check if there's saved progress and load it
 window.onload = function() {
     if (localStorage.getItem('sentences')) {
@@ -491,7 +499,7 @@ window.onload = function() {
             localStorage.clear();
         }
     }
-    document.getElementById("rules-modal").style.display = "flex";
+    document.getElementById("rules-modal").style.display = "flex"; // Show modal on load
 };
 
 // Attach the event listener to clear feedback when user starts typing again
@@ -505,6 +513,7 @@ window.addEventListener('contextmenu', function(event) {
     event.preventDefault();
 });
 </script>
+
 
 </body>
 </html>
