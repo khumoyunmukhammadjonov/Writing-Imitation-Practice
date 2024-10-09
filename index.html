@@ -284,19 +284,34 @@
 </div>
 
     <script>
+let sentences = [];
+let currentSentenceIndex = 0;
+let selectedWord = '';
+let mistakeCount = 0;
+
 // Function to save progress to localStorage
 function saveProgress() {
     localStorage.setItem('sentences', JSON.stringify(sentences));
     localStorage.setItem('currentSentenceIndex', currentSentenceIndex);
     localStorage.setItem('userInput', document.getElementById("user-input").value);
+    console.log("Progress saved", {
+        sentences,
+        currentSentenceIndex,
+        userInput: document.getElementById("user-input").value
+    });
 }
 
 // Function to load progress from localStorage
 function loadProgress() {
     if (localStorage.getItem('sentences')) {
         sentences = JSON.parse(localStorage.getItem('sentences'));
-        currentSentenceIndex = parseInt(localStorage.getItem('currentSentenceIndex'));
+        currentSentenceIndex = parseInt(localStorage.getItem('currentSentenceIndex'), 10);
         document.getElementById("user-input").value = localStorage.getItem('userInput') || "";
+        console.log("Progress loaded", {
+            sentences,
+            currentSentenceIndex,
+            userInput: document.getElementById("user-input").value
+        });
         showSentence();
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
@@ -304,20 +319,7 @@ function loadProgress() {
     }
 }
 
-
-
-
-
-
-
-
-
-        let sentences = [];
-        let currentSentenceIndex = 0;
-        let selectedWord = '';
-        const highlightButton = document.getElementById('highlight-button');
-        
-// Update `processArticle` function to save progress when starting practice
+// Function to process the article into sentences and start the practice
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
@@ -336,6 +338,7 @@ function processArticle() {
     }
 }
 
+// Function to display the current sentence
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
         document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
@@ -348,6 +351,7 @@ function showSentence() {
     }
 }
 
+// Function to display a completion message when all sentences are done
 function showCompletionMessage() {
     const originalSentenceElement = document.getElementById("original-sentence");
     originalSentenceElement.innerText = "You have completed the practice.";
@@ -359,6 +363,7 @@ function showCompletionMessage() {
     document.getElementById("result").innerText = "";
 }
 
+// Normalizing text to avoid issues with punctuation and special characters
 function normalizeText(text) {
     return text
         .replace(/’/g, "'") // Right single quotation mark
@@ -372,9 +377,7 @@ function normalizeText(text) {
         .replace(/…/g, '...'); // Ellipsis
 }
 
-let mistakeCount = 0;
-
-// Modify `checkText` to save progress after checking text
+// Checking user input against the original sentence
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
@@ -400,8 +403,8 @@ function checkText() {
         } else {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
-            correctWord = originalWords[i]; 
-            mistakeCount++; 
+            correctWord = originalWords[i];
+            mistakeCount++;
             break;
         }
     }
@@ -412,9 +415,9 @@ function checkText() {
         mistakeCount = 0;
         currentSentenceIndex++;
         setTimeout(() => {
-            result.innerText = ""; 
+            result.innerText = "";
             showSentence();
-            saveProgress();  // Save progress here
+            saveProgress(); // Save progress here
         }, 1000);
     } else if (missingSpaceFound) {
         result.innerText = "Check your spacing after punctuation";
@@ -422,8 +425,8 @@ function checkText() {
     } else if (incorrectWordFound) {
         if (mistakeCount >= 2) {
             result.innerHTML = `<span style="color: red;">Too many mistakes! Resetting your input...</span>`;
-            mistakeCount = 0; 
-            document.getElementById("user-input").value = ""; 
+            mistakeCount = 0;
+            document.getElementById("user-input").value = "";
         } else {
             result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
             result.style.color = "black";
@@ -438,19 +441,7 @@ function checkText() {
     updateProgressBar();
 }
 
-// New function to clear the result message when user starts typing again
-function clearFeedback() {
-    document.getElementById("result").innerText = ""; // Clear the feedback
-}
-
-// Attach the event listener to clear the feedback when user starts typing again
-document.getElementById("user-input").addEventListener("input", clearFeedback);
-
-
-
-
-
-
+// Function to update the progress bar based on the current progress
 function updateProgressBar() {
     const progressBarFill = document.getElementById("progress-bar-fill");
     const progress = (currentSentenceIndex / sentences.length) * 100;
@@ -458,78 +449,18 @@ function updateProgressBar() {
     progressBarFill.innerText = Math.round(progress) + "%";
 }
 
-function showHighlightButton(event) {
-    const selection = window.getSelection().toString().trim();
-    if (selection) {
-        selectedWord = selection;
-        const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-        highlightButton.style.top = (rect.bottom + window.scrollY) + 'px';
-        highlightButton.style.left = (rect.left + window.scrollX) + 'px';
-        highlightButton.style.display = 'block';
-    }
+// Function to clear the result feedback when the user starts typing
+function clearFeedback() {
+    document.getElementById("result").innerText = "";
 }
 
-function searchHighlightedWord() {
-    const selectedWord = window.getSelection().toString().trim();
-    if (selectedWord) {
-        const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
-        window.open(searchQuery, '_blank');
-    }
-}
+// Event listener to clear feedback on input
+document.getElementById("user-input").addEventListener("input", clearFeedback);
 
-// Prevent default right-click context menu
-window.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-});
-
+// Restart practice function that clears localStorage and reloads the page
 function restartPractice() {
-    window.location.reload(); // This will reload the page to reset the state
-}
-
-// Restart button clears the localStorage and reloads the page
-document.getElementById("reload-button").addEventListener("click", () => {
     localStorage.clear();
     window.location.reload();
-});
-
-function hideOriginalSentence() {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.style.color = "#f0f0f0";
-    document.getElementById("show-original-icon").style.display = "inline";
-    document.getElementById("result").innerText = ""; // Hide the result message when the user starts typing
-}
-
-function showOriginalSentence() {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.style.color = "#333"; // Restore original color
-    document.getElementById("show-original-icon").style.display = "none";
-}
-
-document.addEventListener('click', function (event) {
-    if (!highlightButton.contains(event.target)) {
-        highlightButton.style.display = 'none';
-    }
-});
-
-document.addEventListener('copy', function (event) {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    const selection = window.getSelection();
-    if (selection.containsNode(originalSentenceElement, true)) {
-        event.preventDefault();
-        alert("Copying the original sentence is not allowed!");
-    }
-});
-
-function handleKeyDown(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        checkText();
-    } else if (event.key === "Alt") {
-        event.preventDefault();
-        showOriginalSentence();
-    } else {
-        hideOriginalSentence();
-    }
 }
 
 // Modal control functions
@@ -549,6 +480,7 @@ window.onload = function() {
 
     document.getElementById("rules-modal").style.display = "flex";
 };
+
 
     </script>
 </body>
