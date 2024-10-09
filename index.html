@@ -356,7 +356,11 @@ function showCompletionMessage() {
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
+
+    // Clear progress from localStorage
+    localStorage.removeItem("writingProgress");
 }
+
 
 function normalizeText(text) {
     return text
@@ -558,6 +562,9 @@ function closeModal() {
 
 // Load progress when the page loads
 window.onload = function() {
+    // Clear progress if the user has completed the practice in the previous session
+    localStorage.removeItem("writingProgress");
+
     const savedProgress = localStorage.getItem("writingProgress");
     if (savedProgress) {
         loadProgress();
@@ -565,6 +572,7 @@ window.onload = function() {
         document.getElementById("rules-modal").style.display = "flex";
     }
 };
+
 // Load progress when the page loads
 
     </script>
