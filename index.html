@@ -481,24 +481,32 @@ window.addEventListener('contextmenu', function (event) {
 // Restart practice and clear localStorage
 function restartPractice() {
     // Clear local storage to reset saved progress and sentences
-    localStorage.removeItem('currentSentenceIndex'); // Clear saved progress
+    localStorage.removeItem('currentSentenceIndex'); // Clear saved sentence index
     localStorage.removeItem('sentences'); // Clear the saved sentences
-
-    // Reset the UI elements and variables
-    sentences = []; // Clear the sentences array
+    
+    // Reset internal state
+    sentences = []; // Reset the sentences array
     currentSentenceIndex = 0; // Reset the sentence index
 
-    // Hide the practice section and show the text input again
-    document.getElementById("practice-section").style.display = "none"; // Hide the practice section
-    document.getElementById("start-button").classList.remove("hidden"); // Show the Start button
-    document.getElementById("article-input").classList.remove("hidden"); // Show the article input
-    document.getElementById("article-input").value = ""; // Clear the article input text box
-
+    // Reset UI elements
+    document.getElementById("current-sentence").innerText = ""; // Clear the displayed sentence
+    document.getElementById("article-input").value = ""; // Clear the input text box
+    document.getElementById("start-button").classList.remove("hidden"); // Show Start button
+    document.getElementById("article-input").classList.remove("hidden"); // Show text input area
+    
     // Reset the progress bar
     const progressBarFill = document.getElementById("progress-bar-fill");
     progressBarFill.style.width = "0%";
     progressBarFill.innerText = "0%";
+    
+    // Hide the restart button and practice section
+    document.getElementById("practice-section").style.display = "none"; 
+    document.getElementById("restart-button").classList.add("hidden"); // Hide the restart button
+
+    // Ensure the program is ready for new text
+    readyForNewText = true; // If you have a flag that ensures the program is waiting for new text
 }
+
 
 // Restart practice and clear localStorage
 
