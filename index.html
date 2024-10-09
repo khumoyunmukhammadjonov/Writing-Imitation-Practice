@@ -284,12 +284,41 @@
 </div>
 
     <script>
+// Function to save progress to localStorage
+function saveProgress() {
+    localStorage.setItem('sentences', JSON.stringify(sentences));
+    localStorage.setItem('currentSentenceIndex', currentSentenceIndex);
+    localStorage.setItem('userInput', document.getElementById("user-input").value);
+}
+
+// Function to load progress from localStorage
+function loadProgress() {
+    if (localStorage.getItem('sentences')) {
+        sentences = JSON.parse(localStorage.getItem('sentences'));
+        currentSentenceIndex = parseInt(localStorage.getItem('currentSentenceIndex'));
+        document.getElementById("user-input").value = localStorage.getItem('userInput') || "";
+        showSentence();
+        document.getElementById("practice-section").style.display = "block";
+        document.getElementById("start-button").classList.add("hidden");
+        document.getElementById("article-input").classList.add("hidden");
+    }
+}
+
+
+
+
+
+
+
+
+
         let sentences = [];
         let currentSentenceIndex = 0;
         let selectedWord = '';
         const highlightButton = document.getElementById('highlight-button');
         
-       function processArticle() {
+// Update `processArticle` function to save progress when starting practice
+function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
@@ -299,6 +328,9 @@
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
+
+        // Save the progress to localStorage
+        saveProgress();
     } else {
         alert("Please paste a valid article.");
     }
@@ -342,6 +374,7 @@ function normalizeText(text) {
 
 let mistakeCount = 0;
 
+// Modify `checkText` to save progress after checking text
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
@@ -356,8 +389,7 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
-    // Check for missing spaces after any punctuation in the user input
-    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g; // Punctuation followed by non-space
+    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g;
     if (punctuationWithoutSpacePattern.test(userInput)) {
         missingSpaceFound = true;
     }
@@ -368,8 +400,8 @@ function checkText() {
         } else {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
-            correctWord = originalWords[i]; // Store the correct word
-            mistakeCount++; // Increment the mistake count
+            correctWord = originalWords[i]; 
+            mistakeCount++; 
             break;
         }
     }
@@ -377,11 +409,12 @@ function checkText() {
     if (userInput === originalSentence) {
         result.innerText = "Perfect!";
         result.style.color = "green";
-        mistakeCount = 0; // Reset mistake count on correct answer
+        mistakeCount = 0;
         currentSentenceIndex++;
         setTimeout(() => {
-            result.innerText = ""; // Clear the result message
+            result.innerText = ""; 
             showSentence();
+            saveProgress();  // Save progress here
         }, 1000);
     } else if (missingSpaceFound) {
         result.innerText = "Check your spacing after punctuation";
@@ -389,19 +422,20 @@ function checkText() {
     } else if (incorrectWordFound) {
         if (mistakeCount >= 2) {
             result.innerHTML = `<span style="color: red;">Too many mistakes! Resetting your input...</span>`;
-            mistakeCount = 0; // Reset the mistake count
-            document.getElementById("user-input").value = ""; // Clear the user's input
+            mistakeCount = 0; 
+            document.getElementById("user-input").value = ""; 
         } else {
             result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
             result.style.color = "black";
-            document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
+            document.getElementById("user-input").value = correctWords;
         }
     } else {
         result.innerText = "Keep going, you're getting closer!";
         result.style.color = "green";
     }
 
-    updateProgressBar(); // Ensure the progress bar updates after checking the text
+    saveProgress(); // Save progress after the check
+    updateProgressBar();
 }
 
 // New function to clear the result message when user starts typing again
@@ -452,7 +486,11 @@ function restartPractice() {
     window.location.reload(); // This will reload the page to reset the state
 }
 
-document.getElementById("reload-button").addEventListener("click", restartPractice);
+// Restart button clears the localStorage and reloads the page
+document.getElementById("reload-button").addEventListener("click", () => {
+    localStorage.clear();
+    window.location.reload();
+});
 
 function hideOriginalSentence() {
     const originalSentenceElement = document.getElementById("original-sentence");
@@ -499,9 +537,18 @@ function closeModal() {
     document.getElementById("rules-modal").style.display = "none";
 }
 
+// On page load, check if there's saved progress and load it
 window.onload = function() {
+    if (localStorage.getItem('sentences')) {
+        if (confirm("You have unfinished practice. Would you like to continue?")) {
+            loadProgress();
+        } else {
+            localStorage.clear(); // Clear the progress if the user does not want to continue
+        }
+    }
+
     document.getElementById("rules-modal").style.display = "flex";
-}
+};
 
     </script>
 </body>
