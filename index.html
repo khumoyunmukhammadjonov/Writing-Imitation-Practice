@@ -284,47 +284,18 @@
 </div>
 
     <script>
-let sentences = [];
-let currentSentenceIndex = 0;
-let mistakeCount = 0;
-const highlightButton = document.getElementById('highlight-button');
-
-// Save progress in localStorage
-function saveProgress() {
-    const progressData = {
-        currentSentenceIndex: currentSentenceIndex,
-        mistakeCount: mistakeCount,
-        sentences: sentences
-    };
-    localStorage.setItem("writingProgress", JSON.stringify(progressData));
-}
-// Save progress in localStorage
-
-// Retrieve progress from localStorage
-function loadProgress() {
-    const savedProgress = localStorage.getItem("writingProgress");
-    if (savedProgress) {
-        const progressData = JSON.parse(savedProgress);
-        currentSentenceIndex = progressData.currentSentenceIndex || 0;
-        mistakeCount = progressData.mistakeCount || 0;
-        sentences = progressData.sentences || [];
-        showSentence();
-        document.getElementById("practice-section").style.display = "block";
-        document.getElementById("start-button").classList.add("hidden");
-        document.getElementById("article-input").classList.add("hidden");
-    }
-}
-// Retrieve progress from localStorage
+        let sentences = [];
+        let currentSentenceIndex = 0;
+        let selectedWord = '';
+        const highlightButton = document.getElementById('highlight-button');
         
-  // Modified processArticle function to save progress
-function processArticle() {
+       function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         updateProgressBar();
         showSentence();
-        saveProgress();  // Save initial progress
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
@@ -332,8 +303,6 @@ function processArticle() {
         alert("Please paste a valid article.");
     }
 }
-// Modified processArticle function to save progress
-
 
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
@@ -364,15 +333,15 @@ function normalizeText(text) {
         .replace(/‘/g, "'") // Left single quotation mark
         .replace(/“/g, '"') // Left double quotation mark
         .replace(/”/g, '"') // Right double quotation mark
-        .replace(/‐/g, '-') // Hyphen
+        .replace(/-/g, '-') // Hyphen
         .replace(/–/g, '-') // En dash
         .replace(/—/g, '-') // Em dash
         .replace(/\u00A0/g, ' ') // Non-breaking space
         .replace(/…/g, '...'); // Ellipsis
 }
 
+let mistakeCount = 0;
 
-// Modified checkText function to save progress after checking each sentence
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
@@ -410,7 +379,6 @@ function checkText() {
         result.style.color = "green";
         mistakeCount = 0; // Reset mistake count on correct answer
         currentSentenceIndex++;
-        saveProgress();  // Save progress after checking
         setTimeout(() => {
             result.innerText = ""; // Clear the result message
             showSentence();
@@ -435,9 +403,6 @@ function checkText() {
 
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
-// Modified checkText function to save progress after checking each sentence
-
-
 
 // New function to clear the result message when user starts typing again
 function clearFeedback() {
@@ -446,6 +411,11 @@ function clearFeedback() {
 
 // Attach the event listener to clear the feedback when user starts typing again
 document.getElementById("user-input").addEventListener("input", clearFeedback);
+
+
+
+
+
 
 function updateProgressBar() {
     const progressBarFill = document.getElementById("progress-bar-fill");
@@ -478,37 +448,9 @@ window.addEventListener('contextmenu', function (event) {
     event.preventDefault();
 });
 
-// Restart practice and clear localStorage
 function restartPractice() {
-    // Clear local storage to reset saved progress and sentences
-    localStorage.removeItem('currentSentenceIndex'); // Clear saved sentence index
-    localStorage.removeItem('sentences'); // Clear the saved sentences
-    
-    // Reset internal state
-    sentences = []; // Reset the sentences array
-    currentSentenceIndex = 0; // Reset the sentence index
-
-    // Reset UI elements
-    document.getElementById("current-sentence").innerText = ""; // Clear the displayed sentence
-    document.getElementById("article-input").value = ""; // Clear the input text box
-    document.getElementById("start-button").classList.remove("hidden"); // Show Start button
-    document.getElementById("article-input").classList.remove("hidden"); // Show text input area
-    
-    // Reset the progress bar
-    const progressBarFill = document.getElementById("progress-bar-fill");
-    progressBarFill.style.width = "0%";
-    progressBarFill.innerText = "0%";
-    
-    // Hide the restart button and practice section
-    document.getElementById("practice-section").style.display = "none"; 
-    document.getElementById("restart-button").classList.add("hidden"); // Hide the restart button
-
-    // Ensure the program is ready for new text
-    readyForNewText = true; // If you have a flag that ensures the program is waiting for new text
+    window.location.reload(); // This will reload the page to reset the state
 }
-
-
-// Restart practice and clear localStorage
 
 document.getElementById("reload-button").addEventListener("click", restartPractice);
 
@@ -557,16 +499,9 @@ function closeModal() {
     document.getElementById("rules-modal").style.display = "none";
 }
 
-// Load progress when the page loads
 window.onload = function() {
-    const savedProgress = localStorage.getItem("writingProgress");
-    if (savedProgress) {
-        loadProgress();
-    } else {
-        document.getElementById("rules-modal").style.display = "flex";
-    }
-};
-// Load progress when the page loads
+    document.getElementById("rules-modal").style.display = "flex";
+}
 
     </script>
 </body>
