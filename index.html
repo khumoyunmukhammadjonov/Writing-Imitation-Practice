@@ -485,9 +485,28 @@ window.addEventListener('contextmenu', function (event) {
 
 // Restart practice and clear localStorage
 function restartPractice() {
-    localStorage.removeItem("writingProgress");  // Clear saved progress
-    window.location.reload(); // This will reload the page to reset the state
+    // Clear saved progress
+    localStorage.removeItem("writingProgress");
+
+    // Reset all relevant elements to initial state
+    document.getElementById("practice-section").style.display = "none";
+    document.getElementById("start-button").classList.remove("hidden");
+    document.getElementById("article-input").classList.remove("hidden");
+    document.getElementById("article-input").value = "";  // Clear the input box
+    document.getElementById("user-input").style.display = "block";  // Reset user input display
+    document.getElementById("check-button").style.display = "inline";  // Reset check button
+    document.getElementById("result").innerText = "";  // Clear the result message
+    document.getElementById("original-sentence").innerText = "";  // Clear original sentence
+
+    // Clear the progress bar
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    progressBarFill.style.width = "0%";
+    progressBarFill.innerText = "0%";
+
+    // Optional: reload the page to fully reset
+    // window.location.reload();
 }
+
 // Restart practice and clear localStorage
 
 document.getElementById("reload-button").addEventListener("click", restartPractice);
