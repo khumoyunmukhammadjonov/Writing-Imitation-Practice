@@ -356,7 +356,11 @@ function showCompletionMessage() {
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
+
+    // Clear localStorage upon completion
+    localStorage.removeItem("writingProgress");
 }
+
 
 
 function normalizeText(text) {
