@@ -300,6 +300,10 @@ function saveProgress() {
 }
 // Save progress in localStorage
 
+function clearProgress() {
+    localStorage.removeItem("writingProgress");
+}
+
 // Retrieve progress from localStorage
 function loadProgress() {
     const savedProgress = localStorage.getItem("writingProgress");
@@ -319,6 +323,11 @@ function loadProgress() {
   // Modified processArticle function to save progress
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
+    
+    // Clear previous session data and localStorage if new text is pasted
+    clearProgress();
+    restartPractice(); // Reset everything
+
     sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
@@ -356,6 +365,9 @@ function showCompletionMessage() {
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
+
+    // Clear progress when practice is completed
+    clearProgress();
 }
 
 
@@ -490,9 +502,9 @@ window.addEventListener('contextmenu', function (event) {
 // Restart practice and clear localStorage
 function restartPractice() {
     // Clear saved progress
-    localStorage.removeItem("writingProgress");
+    clearProgress();
 
-    // Reset all relevant elements to initial state
+    // Reset all relevant elements to the initial state
     document.getElementById("practice-section").style.display = "none";
     document.getElementById("start-button").classList.remove("hidden");
     document.getElementById("article-input").classList.remove("hidden");
@@ -506,9 +518,6 @@ function restartPractice() {
     const progressBarFill = document.getElementById("progress-bar-fill");
     progressBarFill.style.width = "0%";
     progressBarFill.innerText = "0%";
-
-    // Optional: reload the page to fully reset
-    // window.location.reload();
 }
 
 // Restart practice and clear localStorage
