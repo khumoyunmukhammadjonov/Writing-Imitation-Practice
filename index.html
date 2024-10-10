@@ -357,9 +357,10 @@ function showCompletionMessage() {
     document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
 
-    // Clear localStorage upon completion
-    localStorage.removeItem("writingProgress");
+    // Call restartPractice to clear local storage
+    restartPractice();  // This will clear local storage and reset relevant elements
 }
+
 
 
 
