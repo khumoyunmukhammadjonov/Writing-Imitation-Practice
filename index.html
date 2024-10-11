@@ -403,9 +403,12 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
-    // Check for missing spaces after any punctuation in the user input
-    const punctuationWithoutSpacePattern = /([.,!?;:"'\(\)\[\]\{\}\-—–\/…])([^\s])/g; // Punctuation followed by non-space
-    if (punctuationWithoutSpacePattern.test(userInput)) {
+    // Check for missing spaces after punctuation in the user input
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\-—–\/…])([^\s])/g;
+    const apostrophePattern = /\b\w+'\w+\b/g; // Matches contractions like it's, don't, etc.
+
+    // Check for missing spaces and ensure it's not a contraction
+    if (punctuationWithoutSpacePattern.test(userInput) && !apostrophePattern.test(userInput)) {
         missingSpaceFound = true;
     }
 
@@ -451,6 +454,7 @@ function checkText() {
 
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
+
 // Modified checkText function to save progress after checking each sentence
 
 
