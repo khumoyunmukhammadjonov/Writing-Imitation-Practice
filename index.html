@@ -557,15 +557,9 @@ function checkText() {
         result.innerText = "Check your spacing after punctuation";
         result.style.color = "orange";
     } else if (incorrectWordFound) {
-        if (mistakeCount >= 2) {
-            result.innerHTML = `<span style="color: red;">Too many mistakes! Resetting your input...</span>`;
-            mistakeCount = 0; // Reset the mistake count
-            document.getElementById("user-input").value = ""; // Clear the user's input
-        } else {
-            result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
-            result.style.color = "black";
-            document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
-        }
+        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
+        result.style.color = "black";
+        document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
     } else {
         result.innerText = "Keep going, you're getting closer!";
         result.style.color = "green";
