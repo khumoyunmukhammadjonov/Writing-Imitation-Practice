@@ -531,6 +531,7 @@ function checkText() {
         missingSpaceFound = true;
     }
 
+    // Compare words in user input and original sentence
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
@@ -539,34 +540,53 @@ function checkText() {
             incorrectWord = userWords[i];
             correctWord = originalWords[i]; // Store the correct word
             mistakeCount++; // Increment the mistake count
-            break;
         }
     }
 
+    // Check if the user input is correct
     if (userInput === originalSentence) {
         result.innerText = "Perfect!";
         result.style.color = "green";
-        mistakeCount = 0; // Reset mistake count on correct answer
         currentSentenceIndex++;
         saveProgress();  // Save progress after checking
         setTimeout(() => {
             result.innerText = ""; // Clear the result message
             showSentence();
         }, 1000);
-    } else if (missingSpaceFound) {
-        result.innerText = "Check your spacing after punctuation";
+    } 
+    // If spacing after punctuation is wrong
+    else if (missingSpaceFound) {
+        result.innerText = "Check your spacing after punctuation.";
         result.style.color = "orange";
-    } else if (incorrectWordFound) {
+    } 
+    // If there's a word mismatch
+    else if (incorrectWordFound) {
         result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
         result.style.color = "black";
         document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
-    } else {
+    } 
+    // When user is getting close to the correct answer
+    else {
         result.innerText = "Keep going, you're getting closer!";
         result.style.color = "green";
     }
 
+    // If the user has completed the sentence
+    if (userInput === originalSentence) {
+        // Check if the mistake count is 2 or more
+        if (mistakeCount >= 2) {
+            result.innerHTML += `<br/><span style="color: red;">You made ${mistakeCount} mistakes. Please rewrite it again.</span>`;
+            mistakeCount = 0; // Reset mistake count for the next attempt
+            // Do not increment the sentence index so that the user has to retry the current one
+            currentSentenceIndex--; // Stay on the same sentence for rewriting
+        } else {
+            mistakeCount = 0; // Reset mistake count for the next sentence
+        }
+    }
+
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
+
 
 // Modified checkText function to save progress after checking each sentence
 
