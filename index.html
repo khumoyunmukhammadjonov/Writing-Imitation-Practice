@@ -539,6 +539,7 @@ function checkText() {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
             correctWord = originalWords[i]; // Store the correct word
+            break; // Stop checking further words after finding a mistake
         }
     }
 
@@ -562,7 +563,7 @@ function checkText() {
     else if (incorrectWordFound) {
         result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
         result.style.color = "black";
-        document.getElementById("user-input").value = correctWords; // Retain correct words and allow further input
+        document.getElementById("user-input").value = correctWords; // Only retain correct words, clear the rest of the input
         mistakeCount++; // Increment mistake count only when incorrectWordFound is true
     } 
     // When user is getting close to the correct answer
@@ -586,7 +587,6 @@ function checkText() {
 
     updateProgressBar(); // Ensure the progress bar updates after checking the text
 }
-
 // Modified checkText function to save progress after checking each sentence
 
 
