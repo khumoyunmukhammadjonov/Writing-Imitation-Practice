@@ -717,6 +717,9 @@ window.onload = function() {
 // Load progress when the page loads
 
 
+document.getElementById("original-sentence").addEventListener('dragstart', function(event) {
+    event.preventDefault(); // Prevent dragging the text
+});
 
 
 
