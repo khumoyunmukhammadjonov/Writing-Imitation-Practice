@@ -146,19 +146,44 @@
             display: none;
         }
 
-        #highlight-button {
-        display: none;
-        position: absolute;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 4px 8px; /* Adjust padding to make the button smaller */
-        border-radius: 4px;
-        cursor: pointer;
-        z-index: 1000;
-        top: 5px;
-        font-size: 14px; /* Adjust font size */
-    }
+        /* Updated Definition Button Styling */
+#highlight-button {
+    background-color: #007BFF; /* Soft blue color to complement the existing green style */
+    color: white; /* High contrast text */
+    padding: 5px 12px; /* Slight padding for balance */
+    border: none; /* Clean borderless design */
+    border-radius: 5px; /* Softer border radius for a modern look */
+    font-size: 14px; /* Font size that fits naturally with your design */
+    cursor: pointer;
+    position: absolute; /* Keeps the position relative to selected word */
+    display: none; /* Hidden until needed */
+    z-index: 999; /* Ensures it appears above other elements */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Subtle shadow for better focus */
+    transition: background-color 0.2s, transform 0.2s; /* Smooth interaction */
+}
+
+/* Hover effect */
+#highlight-button:hover {
+    background-color: #0056b3; /* Slightly darker blue on hover */
+}
+
+/* Active state for when button is clicked */
+#highlight-button:active {
+    background-color: #004080; /* Dark blue for active state */
+    transform: translateY(1px); /* Slight movement for click feedback */
+}
+
+/* For better accessibility: subtle increase in padding for larger hit area */
+#highlight-button {
+    padding: 6px 14px;
+}
+
+/* Subtle focus style */
+#highlight-button:focus {
+    outline: 2px solid #80bdff; /* Focus ring for keyboard navigation */
+    outline-offset: 2px; /* Keeps the focus ring from hugging the button too tightly */
+}
+
 
         .icon-container {
             position: relative;
