@@ -758,6 +758,22 @@ lowLightToggle.addEventListener('change', function() {
   }
 });
 
+
+
+function removeLineBreaks(text) {
+    // Remove multiple consecutive line breaks
+    return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// Event handler for paste event
+document.getElementById("article-input").addEventListener("paste", function(event) {
+    event.preventDefault();
+    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    pastedText = removeLineBreaks(pastedText);
+    document.execCommand("insertText", false, pastedText);
+});
+
+
     </script>
 </body>
 </html>
