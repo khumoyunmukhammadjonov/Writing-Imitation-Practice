@@ -500,107 +500,124 @@ let sentences = [];
 let currentSentenceIndex = 0;
 let mistakeCount = 0;
 
-
-// Save progress in localStorage
-function saveProgress() {
-    const progressData = {
-        currentSentenceIndex: currentSentenceIndex,
-        mistakeCount: mistakeCount,
-        sentences: sentences
-    };
-    localStorage.setItem("writingProgress", JSON.stringify(progressData));
-}
-// Save progress in localStorage
-
-function clearProgress() {
-    localStorage.removeItem("writingProgress");
-}
-
-// Retrieve progress from localStorage
-function loadProgress() {
+// Load saved progress when the page loads
+window.onload = function() {
+    // Load word list
+    displayWordList();
+    
+    // Load saved progress if it exists
     const savedProgress = localStorage.getItem("writingProgress");
     if (savedProgress) {
         const progressData = JSON.parse(savedProgress);
         currentSentenceIndex = progressData.currentSentenceIndex || 0;
         mistakeCount = progressData.mistakeCount || 0;
         sentences = progressData.sentences || [];
-        showSentence();
-        document.getElementById("practice-section").style.display = "block";
-        document.getElementById("start-button").classList.add("hidden");
-        document.getElementById("article-input").classList.add("hidden");
-    }
-}
-// Retrieve progress from localStorage
         
-  // Modified processArticle function to save progress
+        if (sentences.length > 0) {
+            showSentence();
+            document.getElementById("practice-section").style.display = "block";
+            document.getElementById("start-button").classList.add("hidden");
+            document.getElementById("article-input").classList.add("hidden");
+            updateProgressBar();
+        }
+    } else {
+        // Show rules modal only if there's no saved progress
+        document.getElementById("rules-modal").style.display = "flex";
+    }
+};
+
+// Save progress function
+function saveProgress() {
+    const progressData = {
+        currentSentenceIndex: currentSentenceIndex,
+        mistakeCount: mistakeCount,
+        sentences: sentences,
+        articleInput: document.getElementById("article-input").value,
+        userInput: document.getElementById("user-input").value,
+        practiceVisible: document.getElementById("practice-section").style.display,
+        startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
+        articleInputHidden: document.getElementById("article-input").classList.contains("hidden")
+    };
+    localStorage.setItem("writingProgress", JSON.stringify(progressData));
+}
+
+// Clear progress function
+function clearProgress() {
+    localStorage.removeItem("writingProgress");
+    currentSentenceIndex = 0;
+    mistakeCount = 0;
+    sentences = [];
+    document.getElementById("article-input").value = "";
+    document.getElementById("user-input").value = "";
+}
+
+// Process article function
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     
-    // Clear previous session data and localStorage if new text is pasted
+    // Clear previous session data
     clearProgress();
-    restartPractice(); // Reset everything
+    restartPractice();
 
     sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
+        mistakeCount = 0;
         updateProgressBar();
         showSentence();
-        saveProgress();  // Save initial progress
+        
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
+        
+        saveProgress(); // Save initial progress
     } else {
         alert("Please paste a valid article.");
     }
 }
-// Modified processArticle function to save progress
 
-
+// Show sentence function
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
         document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
-        document.getElementById("original-sentence").style.color = "#333"; // Ensure the text color is correct
+        document.getElementById("original-sentence").style.color = "#333";
         document.getElementById("user-input").value = "";
         document.getElementById("result").innerText = "";
         updateProgressBar();
+        saveProgress();
     } else {
         showCompletionMessage();
     }
 }
 
+// Show completion message
 function showCompletionMessage() {
     const originalSentenceElement = document.getElementById("original-sentence");
     originalSentenceElement.innerText = "You have completed the practice.";
     originalSentenceElement.classList.add('completed-message');
-    originalSentenceElement.style.color = "#333"; // Set text color to black
+    originalSentenceElement.style.color = "#333";
     document.getElementById("user-input").style.display = "none";
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
     document.getElementById("result").innerText = "";
-
-    // Clear progress when practice is completed
     clearProgress();
 }
 
-
-
-
-
+// Normalize text function
 function normalizeText(text) {
     return text
-        .replace(/’/g, "'") // Right single quotation mark
-        .replace(/‘/g, "'") // Left single quotation mark
-        .replace(/“/g, '"') // Left double quotation mark
-        .replace(/”/g, '"') // Right double quotation mark
-        .replace(/‐/g, '-') // Hyphen
-        .replace(/–/g, '-') // En dash
-        .replace(/—/g, '-') // Em dash
-        .replace(/\u00A0/g, ' ') // Non-breaking space
-        .replace(/…/g, '...'); // Ellipsis
+        .replace(/'/g, "'")
+        .replace(/'/g, "'")
+        .replace(/"/g, '"')
+        .replace(/"/g, '"')
+        .replace(/‐/g, '-')
+        .replace(/–/g, '-')
+        .replace(/—/g, '-')
+        .replace(/\u00A0/g, ' ')
+        .replace(/…/g, '...');
 }
 
-
-// Modified checkText function to save progress after checking each sentence
+// Check text function
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
@@ -615,84 +632,61 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
-    // Check for missing spaces after punctuation in the user input
     const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\-—–\/…])([^\s])/g;
-    const apostrophePattern = /\b\w+'\w+\b/g; // Matches contractions like it's, don't, etc.
+    const apostrophePattern = /\b\w+'\w+\b/g;
 
-    // Check for missing spaces and ensure it's not a contraction
     if (punctuationWithoutSpacePattern.test(userInput) && !apostrophePattern.test(userInput)) {
         missingSpaceFound = true;
     }
 
-    // Compare words in user input and original sentence
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
         } else {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
-            correctWord = originalWords[i]; // Store the correct word
-            break; // Stop checking further words after finding a mistake
+            correctWord = originalWords[i];
+            break;
         }
     }
 
-    // Check if the user input is correct
     if (userInput === originalSentence) {
         result.innerText = "Correct";
         result.style.color = "green";
         currentSentenceIndex++;
-        saveProgress();  // Save progress after checking
+        saveProgress();
         setTimeout(() => {
-            result.innerText = ""; // Clear the result message
+            result.innerText = "";
             showSentence();
         }, 1000);
-    } 
-    // If spacing after punctuation is wrong
-    else if (missingSpaceFound) {
+    } else if (missingSpaceFound) {
         result.innerText = "Check your spacing after punctuation.";
         result.style.color = "orange";
-    } 
-    // If there's a word mismatch
-    else if (incorrectWordFound) {
+    } else if (incorrectWordFound) {
         result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: black;">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: black;">${correctWord}</span>`;
         result.style.color = "black";
-        document.getElementById("user-input").value = correctWords; // Only retain correct words, clear the rest of the input
-        mistakeCount++; // Increment mistake count only when incorrectWordFound is true
-    } 
-    // When user is getting close to the correct answer
-    else {
+        document.getElementById("user-input").value = correctWords;
+        mistakeCount++;
+    } else {
         result.innerText = "Keep going, you're getting closer!";
         result.style.color = "green";
     }
 
-    // If the user has completed the sentence
     if (userInput === originalSentence) {
-        // Check if the mistake count is 2 or more
         if (mistakeCount >= 2) {
             result.innerHTML += `<br/><span style="color: red;">You made ${mistakeCount} mistakes. Please rewrite it again.</span>`;
-            mistakeCount = 0; // Reset mistake count for the next attempt
-            // Do not increment the sentence index so that the user has to retry the current one
-            currentSentenceIndex--; // Stay on the same sentence for rewriting
+            mistakeCount = 0;
+            currentSentenceIndex--;
         } else {
-            mistakeCount = 0; // Reset mistake count for the next sentence
+            mistakeCount = 0;
         }
     }
 
-    updateProgressBar(); // Ensure the progress bar updates after checking the text
-}
-// Modified checkText function to save progress after checking each sentence
-
-
-
-// New function to clear the result message when user starts typing again
-function clearFeedback() {
-    document.getElementById("result").innerText = ""; // Clear the feedback
+    updateProgressBar();
+    saveProgress();
 }
 
-// Attach the event listener to clear the feedback when user starts typing again
-document.getElementById("user-input").addEventListener("input", clearFeedback);
-
-
+// Update progress bar function
 function updateProgressBar() {
     const progressBarFill = document.getElementById("progress-bar-fill");
     const progress = (currentSentenceIndex / sentences.length) * 100;
@@ -700,61 +694,39 @@ function updateProgressBar() {
     progressBarFill.innerText = Math.round(progress) + "%";
 }
 
-
-// Prevent default right-click context menu
-window.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-});
-
-// Restart practice and clear localStorage
+// Restart practice function
 function restartPractice() {
-    // Clear saved progress
     clearProgress();
-
-    // Reset all relevant elements to the initial state
     document.getElementById("practice-section").style.display = "none";
     document.getElementById("start-button").classList.remove("hidden");
     document.getElementById("article-input").classList.remove("hidden");
-    document.getElementById("article-input").value = "";  // Clear the input box
-    document.getElementById("user-input").style.display = "block";  // Reset user input display
-    document.getElementById("check-button").style.display = "inline";  // Reset check button
-    document.getElementById("result").innerText = "";  // Clear the result message
-    document.getElementById("original-sentence").innerText = "";  // Clear original sentence
-
-    // Clear the progress bar
+    document.getElementById("article-input").value = "";
+    document.getElementById("user-input").style.display = "block";
+    document.getElementById("check-button").style.display = "inline";
+    document.getElementById("result").innerText = "";
+    document.getElementById("original-sentence").innerText = "";
+    document.getElementById("original-sentence").classList.remove('completed-message');
+    
     const progressBarFill = document.getElementById("progress-bar-fill");
     progressBarFill.style.width = "0%";
     progressBarFill.innerText = "0%";
 }
 
-// Restart practice and clear localStorage
-
-document.getElementById("reload-button").addEventListener("click", restartPractice);
-
+// Hide and show original sentence functions
 function hideOriginalSentence() {
     const originalSentenceElement = document.getElementById("original-sentence");
     originalSentenceElement.style.color = "#f0f0f0";
     document.getElementById("show-original-icon").style.display = "inline";
-    document.getElementById("result").innerText = ""; // Hide the result message when the user starts typing
+    document.getElementById("result").innerText = "";
 }
 
 function showOriginalSentence() {
     const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.style.color = "#333"; // Restore original color
+    originalSentenceElement.style.color = "#333";
     document.getElementById("show-original-icon").style.display = "none";
 }
 
-
-
-document.addEventListener('copy', function (event) {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    const selection = window.getSelection();
-    if (selection.containsNode(originalSentenceElement, true)) {
-        event.preventDefault();
-        alert("Copying the original sentence is not allowed!");
-    }
-});
-
+// Handle keydown events
 function handleKeyDown(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -767,140 +739,18 @@ function handleKeyDown(event) {
     }
 }
 
-// Modal control functions
-function closeModal() {
-    document.getElementById("rules-modal").style.display = "none";
-}
-
-// Load progress when the page loads
-window.onload = function() {
-    const savedProgress = localStorage.getItem("writingProgress");
-    if (savedProgress) {
-        loadProgress();
-    } else {
-        document.getElementById("rules-modal").style.display = "flex";
-    }
-};
-// Load progress when the page loads
-
-
-document.getElementById("original-sentence").addEventListener('dragstart', function(event) {
-    event.preventDefault(); // Prevent dragging the text
-});
-
-
-
-const lowLightToggle = document.getElementById('low-light-toggle'); // Corrected ID
-
-lowLightToggle.addEventListener('change', function() {
-  if (this.checked) {
-    document.body.classList.add('low-light-mode');
-  } else {
-    document.body.classList.remove('low-light-mode');
-  }
-});
-
-
-
+// Remove line breaks function
 function removeLineBreaks(text) {
-    // Remove multiple consecutive line breaks
     return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// Event handler for paste event
-document.getElementById("article-input").addEventListener("paste", function(event) {
-    event.preventDefault();
-    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
-    pastedText = removeLineBreaks(pastedText);
-    document.execCommand("insertText", false, pastedText);
-});
+// Word list functionality
+let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
 
-
-
- let selectedWord = '';
-        const contextMenu = document.getElementById('context-menu');
-        const definitionBtn = document.getElementById('definition-btn');
-        const addToListBtn = document.getElementById('add-to-list-btn');
-
-        document.addEventListener('mouseup', function(event) {
-            const selection = window.getSelection().toString().trim();
-            if (selection) {
-                selectedWord = selection;
-                if (event.button === 2) { // Right mouse button
-                    event.preventDefault();
-                    showContextMenu(event.pageX, event.pageY);
-                }
-            } else {
-                hideContextMenu();
-            }
-        });
-
-        document.addEventListener('click', function(event) {
-            if (!contextMenu.contains(event.target)) {
-                hideContextMenu();
-            }
-        });
-
-        function showContextMenu(x, y) {
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = x + 'px';
-            contextMenu.style.top = y + 'px';
-        }
-
-        function hideContextMenu() {
-            contextMenu.style.display = 'none';
-        }
-
-        definitionBtn.addEventListener('click', function() {
-            const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
-            window.open(searchQuery, '_blank');
-            hideContextMenu();
-        });
-
-        let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-
-        addToListBtn.addEventListener('click', function() {
-            if (selectedWord && !wordList.includes(selectedWord)) {
-                wordList.push(selectedWord);
-                localStorage.setItem('wordList', JSON.stringify(wordList));
-                alert(`"${selectedWord}" has been added to your word list.`);
-            } else {
-                alert(`"${selectedWord}" is already in your word list.`);
-            }
-            hideContextMenu();
-        });
-
-        // Prevent default context menu
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-        });
-
-
-
-// Display the full-screen word list section
-document.getElementById('view-word-list-btn').addEventListener('click', function() {
-    displayWordList();
-    document.getElementById('word-list-section').style.display = 'block'; // Show word list section
-});
-
-// Close the word list section
-document.getElementById('close-word-list-btn').addEventListener('click', function() {
-    document.getElementById('word-list-section').style.display = 'none'; // Hide word list section
-});
-
-// Clear entire word list
-document.getElementById('clear-word-list-btn').addEventListener('click', function() {
-    if (confirm("Are you sure you want to clear the word list?")) {
-        localStorage.removeItem('wordList');
-        displayWordList();
-    }
-});
-
-// Function to display the word list with remove buttons
 function displayWordList() {
     const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
     const wordListElement = document.getElementById('word-list');
-    wordListElement.innerHTML = '';  // Clear the list before re-rendering
+    wordListElement.innerHTML = '';
 
     if (wordList.length > 0) {
         wordList.forEach((word, index) => {
@@ -912,7 +762,6 @@ function displayWordList() {
         wordListElement.innerHTML = '<li>No words saved yet.</li>';
     }
 
-    // Add event listeners to each remove button
     const removeButtons = document.querySelectorAll('.remove-word-btn');
     removeButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -922,18 +771,120 @@ function displayWordList() {
     });
 }
 
-// Function to remove a word from the list
 function removeWordFromList(index) {
     let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-    wordList.splice(index, 1);  // Remove word by index
-    localStorage.setItem('wordList', JSON.stringify(wordList));  // Save updated list
-    displayWordList();  // Re-render the list after removing the word
+    wordList.splice(index, 1);
+    localStorage.setItem('wordList', JSON.stringify(wordList));
+    displayWordList();
 }
 
-// Load word list on page load if available
-window.onload = function() {
+// Event listeners
+document.getElementById("reload-button").addEventListener("click", restartPractice);
+document.getElementById("user-input").addEventListener("input", () => {
+    hideOriginalSentence();
+    saveProgress();
+});
+
+document.getElementById("article-input").addEventListener("paste", function(event) {
+    event.preventDefault();
+    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    pastedText = removeLineBreaks(pastedText);
+    document.execCommand("insertText", false, pastedText);
+});
+
+// Context menu functionality
+let selectedWord = '';
+const contextMenu = document.getElementById('context-menu');
+
+document.addEventListener('mouseup', function(event) {
+    const selection = window.getSelection().toString().trim();
+    if (selection) {
+        selectedWord = selection;
+        if (event.button === 2) {
+            event.preventDefault();
+            showContextMenu(event.pageX, event.pageY);
+        }
+    } else {
+        hideContextMenu();
+    }
+});
+
+document.addEventListener('click', function(event) {
+    if (!contextMenu.contains(event.target)) {
+        hideContextMenu();
+    }
+});
+
+function showContextMenu(x, y) {
+    contextMenu.style.display = 'block';
+    contextMenu.style.left = x + 'px';
+    contextMenu.style.top = y + 'px';
+}
+
+function hideContextMenu() {
+    contextMenu.style.display = 'none';
+}
+
+// Prevent copying
+document.addEventListener('copy', function(event) {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    const selection = window.getSelection();
+    if (selection.containsNode(originalSentenceElement, true)) {
+        event.preventDefault();
+        alert("Copying the original sentence is not allowed!");
+    }
+});
+
+// Close modal function
+function closeModal() {
+    document.getElementById("rules-modal").style.display = "none";
+}
+
+// Dark mode toggle
+const lowLightToggle = document.getElementById('low-light-toggle');
+lowLightToggle.addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.add('low-light-mode');
+    } else {
+        document.body.classList.remove('low-light-mode');
+    }
+});
+
+// Word list button handlers
+document.getElementById('view-word-list-btn').addEventListener('click', function() {
     displayWordList();
-};
+    document.getElementById('word-list-section').style.display = 'block';
+});
+
+document.getElementById('close-word-list-btn').addEventListener('click', function() {
+    document.getElementById('word-list-section').style.display = 'none';
+});
+
+document.getElementById('clear-word-list-btn').addEventListener('click', function() {
+    if (confirm("Are you sure you want to clear the word list?")) {
+        localStorage.removeItem('wordList');
+        displayWordList();
+    }
+});
+
+// Definition button handler
+document.getElementById('definition-btn').addEventListener('click', function() {
+    const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
+    window.open(searchQuery, '_blank');
+    hideContextMenu();
+});
+
+// Add to list button handler
+document.getElementById('add-to-list-btn').addEventListener('click', function() {
+    if (selectedWord && !wordList.includes(selectedWord)) {
+        wordList.push(selectedWord);
+        localStorage.setItem('wordList', JSON.stringify(wordList));
+        alert(`"${selectedWord}" has been added to your word list.`);
+    } else {
+        alert(`"${selectedWord}" is already in your word list.`);
+    }
+    hideContextMenu();
+});
 
 
     </script>
