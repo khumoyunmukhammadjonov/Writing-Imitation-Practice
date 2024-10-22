@@ -146,44 +146,6 @@
             display: none;
         }
 
-        /* Updated Definition Button Styling */
-#highlight-button {
-    background-color: #007BFF; /* Soft blue color to complement the existing green style */
-    color: white; /* High contrast text */
-    padding: 5px 12px; /* Slight padding for balance */
-    border: none; /* Clean borderless design */
-    border-radius: 5px; /* Softer border radius for a modern look */
-    font-size: 14px; /* Font size that fits naturally with your design */
-    cursor: pointer;
-    position: absolute; /* Keeps the position relative to selected word */
-    display: none; /* Hidden until needed */
-    z-index: 999; /* Ensures it appears above other elements */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Subtle shadow for better focus */
-    transition: background-color 0.2s, transform 0.2s; /* Smooth interaction */
-}
-
-/* Hover effect */
-#highlight-button:hover {
-    background-color: #0056b3; /* Slightly darker blue on hover */
-}
-
-/* Active state for when button is clicked */
-#highlight-button:active {
-    background-color: #004080; /* Dark blue for active state */
-    transform: translateY(1px); /* Slight movement for click feedback */
-}
-
-/* For better accessibility: subtle increase in padding for larger hit area */
-#highlight-button {
-    padding: 6px 14px;
-}
-
-/* Subtle focus style */
-#highlight-button:focus {
-    outline: 2px solid #80bdff; /* Focus ring for keyboard navigation */
-    outline-offset: 2px; /* Keeps the focus ring from hugging the button too tightly */
-}
-
 
         .icon-container {
             position: relative;
@@ -257,17 +219,36 @@
 }
 
 
-
-
-
-
 /* Switch - base styles */
 /* Add this CSS to move the toggle to the top-right corner */
-.toggle-container {
+.toggle-and-list-container {
     position: absolute;
-    top: 10px; /* Adjust based on how far from the top you want */
-    right: 10px; /* Adjust based on how far from the right you want */
-    z-index: 100; /* Ensures it stays on top of other elements */
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.toggle-container {
+    position: static;
+    display: flex;
+    align-items: center;
+}
+
+
+.word-list-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 /* Switch - base styles */
@@ -367,15 +348,85 @@ input:checked + .slider:before {
     color: black; /* Change text color to black */
 }
 
+/* Context menu */
+  #context-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        #context-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px 10px;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        #context-menu button:hover {
+            background-color: #f0f0f0;
+        }
+
+
+#word-list-section {
+    width: 100%;
+    height: 100vh; /* Full screen height */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f0f0f0;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#word-list {
+    list-style-type: none;
+    width: 60%;
+    max-width: 600px;
+    margin: 20px 0;
+    padding: 0;
+}
+
+#word-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#word-list button {
+    margin-left: 10px;
+    
+}
+
+
+
+/* Context menu */
+
  </style>
 </head>
 <body>
 
-<div class="toggle-container">
-    <label class="switch">
-        <input type="checkbox" id="low-light-toggle">
-        <span class="slider"></span>
-    </label>
+<div class="toggle-and-list-container">
+<button id="view-word-list-btn" class="word-list-btn">📚</button>
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="low-light-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
 </div>
 
     <div class="container">
@@ -399,7 +450,12 @@ input:checked + .slider:before {
             <p id="result"></p>
         </div>
     </div>
-    <button id="highlight-button" onclick="searchHighlightedWord()">Definition</button>
+
+
+<div id="context-menu">
+        <button id="definition-btn">🔍 Definition</button>
+        <button id="add-to-list-btn">➕ Add to Word List</button>
+    </div>
 
     <!-- Modal Structure -->
 <div id="rules-modal" class="modal">
@@ -427,11 +483,23 @@ input:checked + .slider:before {
     </div>
 </div>
 
+
+
+<!-- Full-screen Word List Section -->
+<div id="word-list-section" style="display: none;">
+    <h2>Your Word List</h2>
+    <ul id="word-list"></ul>
+    <button id="clear-word-list-btn">Clear Word List</button>
+    <button id="close-word-list-btn">Close Word List</button>
+</div>
+
+
+
     <script>
-   let sentences = [];
+let sentences = [];
 let currentSentenceIndex = 0;
 let mistakeCount = 0;
-const highlightButton = document.getElementById('highlight-button');
+
 
 // Save progress in localStorage
 function saveProgress() {
@@ -625,10 +693,6 @@ function clearFeedback() {
 document.getElementById("user-input").addEventListener("input", clearFeedback);
 
 
-
-
-
-
 function updateProgressBar() {
     const progressBarFill = document.getElementById("progress-bar-fill");
     const progress = (currentSentenceIndex / sentences.length) * 100;
@@ -636,24 +700,6 @@ function updateProgressBar() {
     progressBarFill.innerText = Math.round(progress) + "%";
 }
 
-function showHighlightButton(event) {
-    const selection = window.getSelection().toString().trim();
-    if (selection) {
-        selectedWord = selection;
-        const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-        highlightButton.style.top = (rect.bottom + window.scrollY) + 'px';
-        highlightButton.style.left = (rect.left + window.scrollX) + 'px';
-        highlightButton.style.display = 'block';
-    }
-}
-
-function searchHighlightedWord() {
-    const selectedWord = window.getSelection().toString().trim();
-    if (selectedWord) {
-        const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
-        window.open(searchQuery, '_blank');
-    }
-}
 
 // Prevent default right-click context menu
 window.addEventListener('contextmenu', function (event) {
@@ -698,11 +744,7 @@ function showOriginalSentence() {
     document.getElementById("show-original-icon").style.display = "none";
 }
 
-document.addEventListener('click', function (event) {
-    if (!highlightButton.contains(event.target)) {
-        highlightButton.style.display = 'none';
-    }
-});
+
 
 document.addEventListener('copy', function (event) {
     const originalSentenceElement = document.getElementById("original-sentence");
@@ -772,6 +814,126 @@ document.getElementById("article-input").addEventListener("paste", function(even
     pastedText = removeLineBreaks(pastedText);
     document.execCommand("insertText", false, pastedText);
 });
+
+
+
+ let selectedWord = '';
+        const contextMenu = document.getElementById('context-menu');
+        const definitionBtn = document.getElementById('definition-btn');
+        const addToListBtn = document.getElementById('add-to-list-btn');
+
+        document.addEventListener('mouseup', function(event) {
+            const selection = window.getSelection().toString().trim();
+            if (selection) {
+                selectedWord = selection;
+                if (event.button === 2) { // Right mouse button
+                    event.preventDefault();
+                    showContextMenu(event.pageX, event.pageY);
+                }
+            } else {
+                hideContextMenu();
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!contextMenu.contains(event.target)) {
+                hideContextMenu();
+            }
+        });
+
+        function showContextMenu(x, y) {
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = x + 'px';
+            contextMenu.style.top = y + 'px';
+        }
+
+        function hideContextMenu() {
+            contextMenu.style.display = 'none';
+        }
+
+        definitionBtn.addEventListener('click', function() {
+            const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
+            window.open(searchQuery, '_blank');
+            hideContextMenu();
+        });
+
+        let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+
+        addToListBtn.addEventListener('click', function() {
+            if (selectedWord && !wordList.includes(selectedWord)) {
+                wordList.push(selectedWord);
+                localStorage.setItem('wordList', JSON.stringify(wordList));
+                alert(`"${selectedWord}" has been added to your word list.`);
+            } else {
+                alert(`"${selectedWord}" is already in your word list.`);
+            }
+            hideContextMenu();
+        });
+
+        // Prevent default context menu
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+
+
+// Display the full-screen word list section
+document.getElementById('view-word-list-btn').addEventListener('click', function() {
+    displayWordList();
+    document.getElementById('word-list-section').style.display = 'block'; // Show word list section
+});
+
+// Close the word list section
+document.getElementById('close-word-list-btn').addEventListener('click', function() {
+    document.getElementById('word-list-section').style.display = 'none'; // Hide word list section
+});
+
+// Clear entire word list
+document.getElementById('clear-word-list-btn').addEventListener('click', function() {
+    if (confirm("Are you sure you want to clear the word list?")) {
+        localStorage.removeItem('wordList');
+        displayWordList();
+    }
+});
+
+// Function to display the word list with remove buttons
+function displayWordList() {
+    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    const wordListElement = document.getElementById('word-list');
+    wordListElement.innerHTML = '';  // Clear the list before re-rendering
+
+    if (wordList.length > 0) {
+        wordList.forEach((word, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `${word} <button class="remove-word-btn" data-index="${index}">Remove</button>`;
+            wordListElement.appendChild(li);
+        });
+    } else {
+        wordListElement.innerHTML = '<li>No words saved yet.</li>';
+    }
+
+    // Add event listeners to each remove button
+    const removeButtons = document.querySelectorAll('.remove-word-btn');
+    removeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const wordIndex = this.getAttribute('data-index');
+            removeWordFromList(wordIndex);
+        });
+    });
+}
+
+// Function to remove a word from the list
+function removeWordFromList(index) {
+    let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    wordList.splice(index, 1);  // Remove word by index
+    localStorage.setItem('wordList', JSON.stringify(wordList));  // Save updated list
+    displayWordList();  // Re-render the list after removing the word
+}
+
+// Load word list on page load if available
+window.onload = function() {
+    displayWordList();
+};
 
 
     </script>
