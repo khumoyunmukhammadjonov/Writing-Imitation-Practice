@@ -878,7 +878,7 @@ function displayWordList() {
             wordListElement.appendChild(li);
         });
     } else {
-        wordListElement.innerHTML = '<li>No words saved yet.</li>';
+        wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
     }
 
     const removeButtons = document.querySelectorAll('.remove-word-btn');
@@ -995,9 +995,12 @@ document.getElementById('definition-btn').addEventListener('click', function() {
 
 // Add to list button handler
 document.getElementById('add-to-list-btn').addEventListener('click', function() {
-    if (selectedWord && !wordList.includes(selectedWord)) {
-        wordList.push(selectedWord);
-        localStorage.setItem('wordList', JSON.stringify(wordList));
+    // Get the current word list from localStorage
+    const currentWordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    
+    if (selectedWord && !currentWordList.includes(selectedWord)) {
+        currentWordList.push(selectedWord);
+        localStorage.setItem('wordList', JSON.stringify(currentWordList));
         alert(`"${selectedWord}" has been added to your word list.`);
     } else {
         alert(`"${selectedWord}" is already in your word list.`);
