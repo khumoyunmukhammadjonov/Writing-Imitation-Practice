@@ -251,6 +251,17 @@
 
 }
 
+.remove-word-btn {
+    background-color: #c82333 !important; /* Darker red on hover */
+}
+
+#clear-word-list-btn {
+  background-color: #c82333 !important;
+}
+
+#close-word-list-btn {
+  background-color: black;
+}
 /* Switch - base styles */
 .switch {
     position: relative;
@@ -489,8 +500,8 @@ input:checked + .slider:before {
 <div id="word-list-section" style="display: none;">
     <h2>Your Word List</h2>
     <ul id="word-list"></ul>
-    <button id="clear-word-list-btn">Clear Word List</button>
-    <button id="close-word-list-btn">Close Word List</button>
+    <button id="clear-word-list-btn">Delete all</button>
+    <button id="close-word-list-btn">Close the modal</button>
 </div>
 
 
@@ -886,6 +897,10 @@ document.getElementById('add-to-list-btn').addEventListener('click', function() 
     hideContextMenu();
 });
 
+// Prevent default right-click context menu
+window.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});
 
     </script>
 </body>
