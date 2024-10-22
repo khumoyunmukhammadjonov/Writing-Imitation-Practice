@@ -239,29 +239,7 @@
 }
 
 
-.word-list-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-}
-
-.remove-word-btn {
-    background-color: #c82333 !important; /* Darker red on hover */
-}
-
-#clear-word-list-btn {
-  background-color: #c82333 !important;
-}
-
-#close-word-list-btn {
-  background-color: black;
-}
 /* Switch - base styles */
 .switch {
     position: relative;
@@ -384,46 +362,152 @@ input:checked + .slider:before {
         }
 
 
+/* Updated Word List Modal Styles */
 #word-list-section {
     width: 100%;
-    height: 100vh; /* Full screen height */
+    height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #f0f0f0;
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 40px 20px;
     overflow-y: auto;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+#word-list-section h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    text-align: center;
 }
 
 #word-list {
     list-style-type: none;
-    width: 60%;
+    width: 90%;
     max-width: 600px;
     margin: 20px 0;
     padding: 0;
+    display: grid;
+    gap: 12px;
 }
 
 #word-list li {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 16px 20px;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-#word-list button {
-    margin-left: 10px;
+#word-list li:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#word-list .remove-word-btn {
+    background-color: rgba(220, 38, 38, 0.8) !important;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+#word-list .remove-word-btn:hover {
+    background-color: rgba(220, 38, 38, 1) !important;
+    transform: scale(1.05);
+}
+
+.word-list-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    width: 90%;
+    max-width: 600px;
+    justify-content: center;
+}
+
+#clear-word-list-btn,
+#close-word-list-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 120px;
+}
+
+#clear-word-list-btn {
+    background-color: rgba(220, 38, 38, 0.8) !important;
+    color: white;
+}
+
+#close-word-list-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#clear-word-list-btn:hover,
+#close-word-list-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Empty state styling */
+#word-list li.empty-state {
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    background-color: transparent;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #word-list-section {
+        padding: 20px 16px;
+    }
     
+    #word-list-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #word-list li {
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+    
+    .word-list-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #clear-word-list-btn,
+    #close-word-list-btn {
+        width: 100%;
+        padding: 10px 20px;
+    }
 }
-
-
-
 /* Context menu */
 
  </style>
@@ -500,8 +584,10 @@ input:checked + .slider:before {
 <div id="word-list-section" style="display: none;">
     <h2>Your Word List</h2>
     <ul id="word-list"></ul>
-    <button id="clear-word-list-btn">Delete all</button>
-    <button id="close-word-list-btn">Close the modal</button>
+    <div class="word-list-controls">
+        <button id="clear-word-list-btn">Delete All</button>
+        <button id="close-word-list-btn">Close</button>
+    </div>
 </div>
 
 
