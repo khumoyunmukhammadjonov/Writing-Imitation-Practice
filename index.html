@@ -5,222 +5,244 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writing Imitation Practice</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #eef2f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 100%;
-            border: 1px solid #ccc;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 10px 0;
-            font-size: 30px;
-            color: #4CAF50;
-        }
-
-        textarea {
-            width: 100%;
-            height: 140px;
-            margin-top: 15px;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 17px;
-            font-family: 'Arial', sans-serif;
-            resize: none;
-            box-sizing: border-box;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        button {
-            padding: 9px 18px;
-            border: none;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 17px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #reload-button {
-            background-color: #999;
-        }
-
-        #result {
-            margin-top: 15px;
-            font-size: 17px;
-            text-align: center;
-            height: 24px;
-        }
-
-        #practice-section {
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            textarea {
-                height: 100px;
-            }
-        }
-
-        #original-sentence {
-            text-align: center;
-            font-size: 19px;
-            font-weight: bold;
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 90px;
-            cursor: text;
-            color: #333;
-        }
-
-        .completed-message {
-            text-align: center;
-            font-size: 21px;
-            font-weight: bold;
-            margin: 30px 0;
-            padding: 15px;
-            background-color: #e0ffe0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            color: #333; /* Set text color to black */
-        }
-
-        .progress-bar {
-            width: 100%;
-            background-color: #ccc;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .progress-bar-fill {
-            height: 20px;
-            width: 0;
-            background-color: #4CAF50;
-            text-align: center;
-            color: white;
-            line-height: 20px;
-            transition: width 0.4s ease;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-
-        .icon-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        #show-original-icon {
-            display: none;
-            cursor: pointer;
-            font-size: 20px;
-            margin-left: 10px;
-            color: #4CAF50;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-            border: 1px solid #ccc;
-        }
-
-        .modal-header {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #4CAF50;
-            text-align: center;
-        }
-
-        .modal-body {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .modal-footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .modal-footer button {
-            margin: 0 5px;
-        }
-        
-        .modal-body a {
-    font-size: 1rem; /* Adjust the font size */
-    color: #007bff; /* Matching other link colors */
-    text-decoration: none; /* Removing the underline for a cleaner look */
-    padding: 0.5rem 0; /* Adding padding for better spacing */
+      /* Base body styles - Sets up the main page layout and typography */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #eef2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
+/* Main container styles - Holds all content with card-like appearance */
+.container {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Main heading styles - Green title at the top of the container */
+h1 {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 30px;
+    color: #4CAF50;
+}
+
+/* Text input area styles - For article input and sentence practice */
+textarea {
+    width: 100%;
+    height: 140px;
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 17px;
+    font-family: 'Arial', sans-serif;
+    resize: none;
+    box-sizing: border-box;
+}
+
+/* Button container styles - Centers and spaces buttons */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* General button styles - Common styling for all buttons */
+button {
+    padding: 9px 18px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 17px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #45a049;
+}
+
+/* Reload button specific style */
+#reload-button {
+    background-color: #999;
+}
+
+/* Result display area styles */
+#result {
+    margin-top: 15px;
+    font-size: 17px;
+    text-align: center;
+    height: 24px;
+}
+
+/* Practice section initial state */
+#practice-section {
+    display: none;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    textarea {
+        height: 100px;
+    }
+}
+
+/* Original sentence display styles */
+#original-sentence {
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+    cursor: text;
+    color: #333;
+}
+
+/* Completion message styles */
+.completed-message {
+    text-align: center;
+    font-size: 21px;
+    font-weight: bold;
+    margin: 30px 0;
+    padding: 15px;
+    background-color: #e0ffe0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+}
+
+/* Progress bar container styles */
+.progress-bar {
+    width: 100%;
+    background-color: #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+/* Progress bar fill styles */
+.progress-bar-fill {
+    height: 20px;
+    width: 0;
+    background-color: #4CAF50;
+    text-align: center;
+    color: white;
+    line-height: 20px;
+    transition: width 0.4s ease;
+}
+
+/* Hidden element style */
+.hidden {
+    display: none;
+}
+
+/* Icon container styles */
+.icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Show original icon styles */
+#show-original-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+    color: #4CAF50;
+}
+
+/* Modal styles - For rules and instructions */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content container */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+/* Modal header styles */
+.modal-header {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #4CAF50;
+    text-align: center;
+}
+
+/* Modal body text styles */
+.modal-body {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Modal footer styles */
+.modal-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Modal footer button spacing */
+.modal-footer button {
+    margin: 0 5px;
+}
+
+/* Modal body link styles */
+.modal-body a {
+    font-size: 1rem;
+    color: #007bff;
+    text-decoration: none;
+    padding: 0.5rem 0;
+}
+
+/* Modal body link hover effect */
 .modal-body a:hover {
-    text-decoration: underline; /* Underline on hover for accessibility */
+    text-decoration: underline;
 }
 
-
-/* Switch - base styles */
-/* Add this CSS to move the toggle to the top-right corner */
+/* Toggle and list container positioning */
 .toggle-and-list-container {
     position: absolute;
     top: 10px;
@@ -231,16 +253,14 @@
     gap: 10px;
 }
 
-
+/* Toggle container styles */
 .toggle-container {
     position: static;
     display: flex;
     align-items: center;
 }
 
-
-
-/* Switch - base styles */
+/* Switch base styles - For low light mode toggle */
 .switch {
     position: relative;
     display: inline-block;
@@ -248,13 +268,14 @@
     height: 34px;
 }
 
+/* Switch input styles */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-/* Slider - the round knob */
+/* Switch slider styles */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -267,6 +288,7 @@
     border-radius: 34px;
 }
 
+/* Switch slider knob */
 .slider:before {
     position: absolute;
     content: "";
@@ -279,7 +301,7 @@
     border-radius: 50%;
 }
 
-/* Checked state of the switch */
+/* Switch checked state */
 input:checked + .slider {
     background-color: #555;
 }
@@ -288,81 +310,81 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-
-/* Low-light mode styling */
+/* Low-light mode styles */
 .low-light-mode {
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
     color: #ccc;
 }
+
 .low-light-mode .container {
     background-color: rgba(255, 255, 255, 0.2);
 }
+
 .low-light-mode h1 {
     color: #ccc;
 }
+
 .low-light-mode button {
     background-color: rgba(255, 255, 255, 0.1);
     color: #ccc;
     border: 1px solid #555;
 }
+
 .low-light-mode button:hover {
     background-color: rgba(255, 255, 255, 0.2);
     color: #fff;
     border-color: #777;
 }
-/* Additional low-light mode styles here */
 
-/* Low-light mode Incorrect and Correct text with improved clarity */
+/* Low-light mode text styles */
 .low-light-mode .incorrect {
-    color: #ff6666; /* Use a stronger red color without transparency */
-    background-color: rgba(255, 50, 50, 0.1); /* Keep background dimmed */
-    border: 1px solid rgba(255, 100, 100, 0.8); /* Border is still dimmed */
+    color: #ff6666;
+    background-color: rgba(255, 50, 50, 0.1);
+    border: 1px solid rgba(255, 100, 100, 0.8);
 }
 
 .low-light-mode .correct {
-    color: #66ff66; /* Stronger green color for better visibility */
-    background-color: rgba(50, 255, 50, 0.1); /* Dim background */
-    border: 1px solid rgba(100, 255, 100, 0.8); /* Keep border effect */
+    color: #66ff66;
+    background-color: rgba(50, 255, 50, 0.1);
+    border: 1px solid rgba(100, 255, 100, 0.8);
 }
 
-/* Too Many Mistakes text with higher contrast */
 .low-light-mode .too-many-mistakes {
-    color: #ff4444; /* Sharper red color */
-    font-weight: bold; /* Bold text can help improve visibility */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Adding a subtle shadow for extra clarity */
+    color: #ff4444;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .low-light-mode .progress-bar-fill {
-    background-color: white; /* Fill color for the progress bar */
-    color: black; /* Change text color to black */
+    background-color: white;
+    color: black;
 }
 
-/* Context menu */
-  #context-menu {
-            display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
+/* Context menu styles */
+#context-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
 
-        #context-menu button {
-            display: block;
-            width: 100%;
-            padding: 8px 10px;
-            text-align: left;
-            border: none;
-            background: none;
-            cursor: pointer;
-        }
+#context-menu button {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
 
-        #context-menu button:hover {
-            background-color: #f0f0f0;
-        }
-/* Context menu */
+#context-menu button:hover {
+    background-color: #f0f0f0;
+}
 
-/* Updated Word List Modal Styles */
+/* Word list section styles */
 #word-list-section {
     width: 100%;
     height: 100vh;
@@ -381,6 +403,7 @@ input:checked + .slider:before {
     transition: all 0.3s ease;
 }
 
+/* Word list section heading */
 #word-list-section h2 {
     color: white;
     font-size: 2rem;
@@ -389,18 +412,20 @@ input:checked + .slider:before {
     text-align: center;
 }
 
+/* Word list container */
 #word-list {
     list-style-type: none;
     width: 90%;
     max-width: 600px;
-    margin: 20px auto;  /* Changed to auto for horizontal centering */
+    margin: 20px auto;
     padding: 0;
-    display: flex;      /* Changed to flex */
-    flex-direction: column;  /* Added to stack items vertically */
-    align-items: center;    /* Center items horizontally */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 12px;
 }
 
+/* Individual word list items */
 #word-list li {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 16px 20px;
@@ -412,19 +437,21 @@ input:checked + .slider:before {
     font-size: 1.1rem;
     transition: all 0.2s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;        /* Added to make items full width */
+    width: 100%;
 }
 
+/* Word list control buttons container */
 .word-list-controls {
     display: flex;
     gap: 12px;
-    margin: 24px auto;  /* Changed to auto for horizontal centering */
+    margin: 24px auto;
     width: 90%;
     max-width: 600px;
     justify-content: center;
-    align-items: center;    /* Added to vertically center buttons */
+    align-items: center;
 }
 
+/* Word list control buttons */
 #clear-word-list-btn,
 #close-word-list-btn {
     padding: 12px 24px;
@@ -435,28 +462,30 @@ input:checked + .slider:before {
     transition: all 0.2s ease;
     border: none;
     min-width: 120px;
-    text-align: center;    /* Added to center button text */
+    text-align: center;
 }
 
-/* Rest of the styles remain the same */
+/* Clear word list button specific style */
 #clear-word-list-btn {
     background-color: rgba(220, 38, 38, 0.8) !important;
     color: white;
 }
 
+/* Close word list button specific style */
 #close-word-list-btn {
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Word list button hover effects */
 #clear-word-list-btn:hover,
 #close-word-list-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Empty state styling */
+/* Empty word list state */
 #word-list li.empty-state {
     justify-content: center;
     color: rgba(255, 255, 255, 0.6);
@@ -465,18 +494,18 @@ input:checked + .slider:before {
     border: 2px dashed rgba(255, 255, 255, 0.1);
 }
 
+/* Remove word button */
 #word-list .remove-word-btn {
     background-color: rgba(220, 38, 38, 1) !important;
-    
 }
-
-
  </style>
 </head>
 <body>
-
+<!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
-<button id="view-word-list-btn" class="word-list-btn">📚</button>
+    <!-- Word list toggle button with emoji icon -->
+    <button id="view-word-list-btn" class="word-list-btn">📚</button>
+    <!-- Low light mode toggle switch container -->
     <div class="toggle-container">
         <label class="switch">
             <input type="checkbox" id="low-light-toggle">
@@ -485,38 +514,67 @@ input:checked + .slider:before {
     </div>
 </div>
 
-    <div class="container">
-        <h1>Writing Imitation Practice</h1>
-        <textarea id="article-input" placeholder="Paste your text here..." onkeydown="if(event.keyCode===13){event.preventDefault();processArticle();}"></textarea>
+<!-- Main Application Container -->
+<div class="container">
+    <!-- Application Title -->
+    <h1>Writing Imitation Practice</h1>
+    
+    <!-- Text Input Area: For pasting practice text -->
+    <textarea 
+        id="article-input" 
+        placeholder="Paste your text here..." 
+        onkeydown="if(event.keyCode===13){event.preventDefault();processArticle();}"
+    ></textarea>
+    
+    <!-- Start Button Container -->
+    <div class="button-container">
+        <button onclick="processArticle()" id="start-button">Start Practice</button>
+    </div>
+    
+    <!-- Practice Section: Initially hidden, shown after starting practice -->
+    <div id="practice-section">
+        <!-- Progress Tracking Bar -->
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+        
+        <!-- Original Sentence Display Area -->
+        <div id="original-sentence" onmouseup="showHighlightButton(event)"></div>
+        
+        <!-- User Input Area for Practice -->
+        <textarea 
+            id="user-input" 
+            placeholder="Write the sentence from memory..." 
+            onkeydown="handleKeyDown(event)" 
+            oninput="hideOriginalSentence()"
+        ></textarea>
+        
+        <!-- Control Buttons Container -->
         <div class="button-container">
-            <button onclick="processArticle()" id="start-button">Start Practice</button>
-        </div>
-        <div id="practice-section">
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            <div class="icon-container">
+                <button id="check-button" onclick="checkText()">Check</button>
             </div>
-            <div id="original-sentence" onmouseup="showHighlightButton(event)"></div>
-            <textarea id="user-input" placeholder="Write the sentence from memory..." onkeydown="handleKeyDown(event)" oninput="hideOriginalSentence()"></textarea>
-            <div class="button-container">
-                <div class="icon-container">
-                    <button id="check-button" onclick="checkText()">Check</button>
-                </div>
-                <button id="reload-button">Restart</button>
-            </div>
-            <p id="result"></p>
+            <button id="reload-button">Restart</button>
         </div>
+        
+        <!-- Results Display Area -->
+        <p id="result"></p>
     </div>
+</div>
 
-
+<!-- Context Menu: Appears on text selection -->
 <div id="context-menu">
-        <button id="definition-btn">🔍 Definition</button>
-        <button id="add-to-list-btn">➕ Add to Word List</button>
-    </div>
+    <button id="definition-btn">🔍 Definition</button>
+    <button id="add-to-list-btn">➕ Add to Word List</button>
+</div>
 
-    <!-- Modal Structure -->
+<!-- Welcome Modal: Shows instructions on first visit -->
 <div id="rules-modal" class="modal">
     <div class="modal-content">
+        <!-- Modal Header -->
         <div class="modal-header">Welcome to Writing Imitation Practice</div>
+        
+        <!-- Modal Instructions -->
         <div class="modal-body">
             <p>How it works:</p>
             <ol>
@@ -525,33 +583,37 @@ input:checked + .slider:before {
                 <li>Press "Enter" or click "Check" to compare your input.</li>
                 <li>Progress is shown via the progress bar.</li>
             </ol>
+            
+            <!-- Keyboard Shortcuts Section -->
             <p><strong>Shortcuts:</strong></p>
             <ul>
                 <li><strong>Enter:</strong> Check your input.</li>
                 <li><strong>Alt:</strong> Temporarily reveal the original sentence.</li>
             </ul>
+            
+            <!-- Additional Information -->
             <p>For full instructions, watch the video tutorial.</p>
             <p>Contact: <a href="mailto:kmukhammadjonov685@gmail.com">kmukhammadjonov685@gmail.com</a></p>
         </div>
+        
+        <!-- Modal Footer -->
         <div class="modal-footer">
             <button onclick="closeModal()">Got it!</button>
         </div>
     </div>
 </div>
 
-
-
-<!-- Full-screen Word List Section -->
+<!-- Word List Section: Full-screen overlay for saved words -->
 <div id="word-list-section" style="display: none">
     <h2>Your Word List</h2>
+    <!-- Dynamic Word List Container -->
     <ul id="word-list"></ul>
+    <!-- Word List Control Buttons -->
     <div class="word-list-controls">
         <button id="clear-word-list-btn">Delete All</button>
         <button id="close-word-list-btn">Close</button>
     </div>
 </div>
-
-
 
     <script>
 let sentences = [];
