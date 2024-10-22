@@ -393,9 +393,11 @@ input:checked + .slider:before {
     list-style-type: none;
     width: 90%;
     max-width: 600px;
-    margin: 20px 0;
+    margin: 20px auto;  /* Changed to auto for horizontal centering */
     padding: 0;
-    display: grid;
+    display: flex;      /* Changed to flex */
+    flex-direction: column;  /* Added to stack items vertically */
+    align-items: center;    /* Center items horizontally */
     gap: 12px;
 }
 
@@ -410,37 +412,17 @@ input:checked + .slider:before {
     font-size: 1.1rem;
     transition: all 0.2s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#word-list li:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-#word-list .remove-word-btn {
-    background-color: rgba(220, 38, 38, 0.8) !important;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
-
-#word-list .remove-word-btn:hover {
-    background-color: rgba(220, 38, 38, 1) !important;
-    transform: scale(1.05);
+    width: 100%;        /* Added to make items full width */
 }
 
 .word-list-controls {
     display: flex;
     gap: 12px;
-    margin-top: 24px;
+    margin: 24px auto;  /* Changed to auto for horizontal centering */
     width: 90%;
     max-width: 600px;
     justify-content: center;
+    align-items: center;    /* Added to vertically center buttons */
 }
 
 #clear-word-list-btn,
@@ -453,8 +435,10 @@ input:checked + .slider:before {
     transition: all 0.2s ease;
     border: none;
     min-width: 120px;
+    text-align: center;    /* Added to center button text */
 }
 
+/* Rest of the styles remain the same */
 #clear-word-list-btn {
     background-color: rgba(220, 38, 38, 0.8) !important;
     color: white;
@@ -480,6 +464,13 @@ input:checked + .slider:before {
     background-color: transparent;
     border: 2px dashed rgba(255, 255, 255, 0.1);
 }
+
+#word-list .remove-word-btn {
+    background-color: rgba(220, 38, 38, 1) !important;
+    
+}
+
+
  </style>
 </head>
 <body>
@@ -551,7 +542,7 @@ input:checked + .slider:before {
 
 
 <!-- Full-screen Word List Section -->
-<div id="word-list-section">
+<div id="word-list-section" style="display: none">
     <h2>Your Word List</h2>
     <ul id="word-list"></ul>
     <div class="word-list-controls">
