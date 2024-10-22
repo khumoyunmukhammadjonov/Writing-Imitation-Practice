@@ -439,6 +439,28 @@ input:checked + .slider:before {
     width: 100%;
 }
 
+/* Clickable word styles */
+.clickable-word {
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+/* Hover effect for clickable words */
+.clickable-word:hover {
+    color: #4CAF50;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Button container styles */
+#word-list li div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 /* Word list control buttons container */
 .word-list-controls {
     display: flex;
@@ -874,7 +896,28 @@ function displayWordList() {
     if (wordList.length > 0) {
         wordList.forEach((word, index) => {
             const li = document.createElement('li');
-            li.innerHTML = `${word} <button class="remove-word-btn" data-index="${index}">Remove</button>`;
+            // Create a span for the word that's clickable
+            const wordSpan = document.createElement('span');
+            wordSpan.textContent = word;
+            wordSpan.classList.add('clickable-word');
+            wordSpan.title = 'Click to look up definition';
+            wordSpan.onclick = () => {
+                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}`;
+                window.open(searchQuery, '_blank');
+            };
+            
+            // Create button container for the remove button
+            const buttonContainer = document.createElement('div');
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.className = 'remove-word-btn';
+            removeButton.setAttribute('data-index', index);
+            
+            // Add elements to the li
+            buttonContainer.appendChild(removeButton);
+            li.appendChild(wordSpan);
+            li.appendChild(buttonContainer);
+            
             wordListElement.appendChild(li);
         });
     } else {
@@ -896,6 +939,7 @@ function removeWordFromList(index) {
     localStorage.setItem('wordList', JSON.stringify(wordList));
     displayWordList();
 }
+
 
 // Event listeners
 document.getElementById("reload-button").addEventListener("click", restartPractice);
