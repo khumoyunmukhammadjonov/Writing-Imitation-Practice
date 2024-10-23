@@ -83,7 +83,7 @@ button:hover {
 
 /* Reload button specific style */
 #reload-button {
-    background-color: #999;
+    background-color: #DC2626;
 }
 
 /* Result display area styles */
@@ -330,6 +330,7 @@ input:checked + .slider:before {
     border: 1px solid #555;
 }
 
+
 .low-light-mode button:hover {
     background-color: rgba(255, 255, 255, 0.2);
     color: #fff;
@@ -360,30 +361,173 @@ input:checked + .slider:before {
     color: black;
 }
 
-/* Context menu styles */
 #context-menu {
     display: none;
     position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
+    min-width: 200px;
+    padding: 8px 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: contextMenuFadeIn 0.2s ease-out;
 }
 
+/* Context menu animation */
+@keyframes contextMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Context menu container */
+#context-menu {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 220px;
+    padding: 8px 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: contextMenuFadeIn 0.2s ease-out;
+}
+
+/* Context menu animation */
+@keyframes contextMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Context menu buttons base styles */
 #context-menu button {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
-    padding: 8px 10px;
+    padding: 12px 16px;
     text-align: left;
     border: none;
     background: none;
     cursor: pointer;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    gap: 12px;
+    position: relative;
 }
 
+/* Button hover state */
 #context-menu button:hover {
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
+    color: #4CAF50;
 }
 
+/* Button active state */
+#context-menu button:active {
+    background-color: #e8e8e8;
+    transform: scale(0.98);
+}
+
+/* Special styling for Add to Word List button */
+#add-to-list-btn {
+    color: #2196F3;
+    font-weight: 600;
+}
+
+#add-to-list-btn::before {
+    content: "📖";
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+/* Add plus indicator */
+#add-to-list-btn::after {
+    position: absolute;
+    right: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+}
+
+/* Show plus on hover */
+#add-to-list-btn:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Definition button styling */
+#definition-btn::before {
+    content: "🔍";
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+/* Divider between buttons */
+#context-menu button:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Success state for add to list button */
+#add-to-list-btn.success {
+    color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+#add-to-list-btn.success::before {
+    content: "✓";
+}
+
+/* Low light mode styles */
+.low-light-mode #context-menu {
+    background-color: #2d2d2d;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.low-light-mode #context-menu button {
+    color: #ffffff;
+}
+
+.low-light-mode #context-menu button:hover {
+    background-color: #3d3d3d;
+    color: #6FCF97;
+}
+
+.low-light-mode #add-to-list-btn {
+    color: #64B5F6;
+}
+
+.low-light-mode #add-to-list-btn.success {
+    color: #81C784;
+    background-color: rgba(129, 199, 132, 0.1);
+}
+
+.low-light-mode #context-menu button:active {
+    background-color: #444444;
+}
+
+.low-light-mode #context-menu button:not(:last-child) {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
 /* Word list section styles */
 #word-list-section {
     width: 100%;
@@ -519,6 +663,74 @@ input:checked + .slider:before {
 #word-list .remove-word-btn {
     background-color: rgba(220, 38, 38, 1) !important;
 }
+
+
+/* Word list item animation */
+const styleSheet = `
+
+#word-list li {
+    transform-origin: center;
+    transition: all 0.3s ease;
+}
+
+.word-list-item-removing {
+    animation: removeItem 0.5s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes removeItem {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.9);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        margin-top: -60px;
+    }
+}
+
+/* Remove button hover and active states */
+.remove-word-btn {
+    background-color: #dc2626 !important;
+    transition: all 0.2s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.remove-word-btn:hover {
+    background-color: #ef4444 !important;
+    transform: translateY(-1px);
+}
+
+.remove-word-btn:active {
+    transform: translateY(1px);
+}
+
+/* Button click ripple effect */
+.remove-word-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease-out, height 0.3s ease-out;
+}
+
+.remove-word-btn.clicked::after {
+    width: 150%;
+    height: 150%;
+    opacity: 0;
+}
+`;
  </style>
 </head>
 <body>
@@ -585,8 +797,8 @@ input:checked + .slider:before {
 
 <!-- Context Menu: Appears on text selection -->
 <div id="context-menu">
-    <button id="definition-btn">🔍 Definition</button>
-    <button id="add-to-list-btn">➕ Add to Word List</button>
+    <button id="definition-btn"> Definition</button>
+    <button id="add-to-list-btn"> Add to Word List</button>
 </div>
 
 <!-- Welcome Modal: Shows instructions on first visit -->
@@ -885,18 +1097,35 @@ function removeLineBreaks(text) {
     return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+// Prevent default right-click context menu
+window.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});
+
 // Word list functionality
 let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
 
 function displayWordList() {
     const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
     const wordListElement = document.getElementById('word-list');
+    
+    // Clear with fade if transitioning to empty state
+    if (wordList.length === 0 && wordListElement.children.length > 0) {
+        wordListElement.style.opacity = '0';
+        setTimeout(() => {
+            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
+            wordListElement.style.opacity = '1';
+        }, 300);
+        return;
+    }
+    
     wordListElement.innerHTML = '';
-
+    
     if (wordList.length > 0) {
         wordList.forEach((word, index) => {
             const li = document.createElement('li');
-            // Create a span for the word that's clickable
+            
+            // Create clickable word span
             const wordSpan = document.createElement('span');
             wordSpan.textContent = word;
             wordSpan.classList.add('clickable-word');
@@ -906,7 +1135,7 @@ function displayWordList() {
                 window.open(searchQuery, '_blank');
             };
             
-            // Create button container for the remove button
+            // Create button container
             const buttonContainer = document.createElement('div');
             const removeButton = document.createElement('button');
             removeButton.textContent = 'Remove';
@@ -924,20 +1153,46 @@ function displayWordList() {
         wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
     }
 
+    // Add click handlers for remove buttons
     const removeButtons = document.querySelectorAll('.remove-word-btn');
     removeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const wordIndex = this.getAttribute('data-index');
             removeWordFromList(wordIndex);
         });
+        
+        // Remove ripple effect after animation
+        button.addEventListener('animationend', () => {
+            button.classList.remove('clicked');
+        });
     });
 }
 
+//Remove Word From List
 function removeWordFromList(index) {
-    let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-    wordList.splice(index, 1);
-    localStorage.setItem('wordList', JSON.stringify(wordList));
-    displayWordList();
+    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    const listItem = document.querySelector(`[data-index="${index}"]`).parentElement.parentElement;
+    const button = document.querySelector(`[data-index="${index}"]`);
+    
+    // Add ripple effect to button
+    button.classList.add('clicked');
+    
+    // Add removal animation to list item
+    listItem.classList.add('word-list-item-removing');
+    
+    // Wait for animation to complete before removing from storage and updating display
+    setTimeout(() => {
+        wordList.splice(index, 1);
+        localStorage.setItem('wordList', JSON.stringify(wordList));
+        
+        // If this was the last item, show the empty state immediately
+        if (wordList.length === 0) {
+            const wordListElement = document.getElementById('word-list');
+            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
+        } else {
+            displayWordList();
+        }
+    }, 500); // Match this with the animation duration
 }
 
 
@@ -998,6 +1253,13 @@ document.addEventListener('copy', function(event) {
     }
 });
 
+// Prevent drag-and-drop on the original sentence element
+const originalSentenceElement = document.getElementById("original-sentence");
+originalSentenceElement.addEventListener("dragstart", function(event) {
+    event.preventDefault();
+});
+
+
 // Close modal function
 function closeModal() {
     document.getElementById("rules-modal").style.display = "none";
@@ -1039,23 +1301,33 @@ document.getElementById('definition-btn').addEventListener('click', function() {
 
 // Add to list button handler
 document.getElementById('add-to-list-btn').addEventListener('click', function() {
-    // Get the current word list from localStorage
     const currentWordList = JSON.parse(localStorage.getItem('wordList')) || [];
     
     if (selectedWord && !currentWordList.includes(selectedWord)) {
         currentWordList.push(selectedWord);
         localStorage.setItem('wordList', JSON.stringify(currentWordList));
-        alert(`"${selectedWord}" has been added to your word list.`);
+        
+        // Add success state
+        this.classList.add('success');
+        this.textContent = 'Added to Word List';
+        
+        // Reset after a short delay
+        setTimeout(() => {
+            this.classList.remove('success');
+            this.textContent = 'Add to Word List';
+            hideContextMenu();
+        }, 1500);
     } else {
         alert(`"${selectedWord}" is already in your word list.`);
+        hideContextMenu();
     }
-    hideContextMenu();
 });
 
-// Prevent default right-click context menu
-window.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-});
+
+// Add the styles to the document
+const styleElement = document.createElement('style');
+styleElement.textContent = styleSheet;
+document.head.appendChild(styleElement);
 
     </script>
 </body>
