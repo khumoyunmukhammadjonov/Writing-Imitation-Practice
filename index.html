@@ -310,56 +310,7 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-/* Low-light mode styles */
-.low-light-mode {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #ccc;
-}
 
-.low-light-mode .container {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.low-light-mode h1 {
-    color: #ccc;
-}
-
-.low-light-mode button {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ccc;
-    border: 1px solid #555;
-}
-
-
-.low-light-mode button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border-color: #777;
-}
-
-/* Low-light mode text styles */
-.low-light-mode .incorrect {
-    color: #ff6666;
-    background-color: rgba(255, 50, 50, 0.1);
-    border: 1px solid rgba(255, 100, 100, 0.8);
-}
-
-.low-light-mode .correct {
-    color: #66ff66;
-    background-color: rgba(50, 255, 50, 0.1);
-    border: 1px solid rgba(100, 255, 100, 0.8);
-}
-
-.low-light-mode .too-many-mistakes {
-    color: #ff4444;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.low-light-mode .progress-bar-fill {
-    background-color: white;
-    color: black;
-}
 
 #context-menu {
     display: none;
@@ -497,36 +448,147 @@ input:checked + .slider:before {
 }
 
 /* Low light mode styles */
+/* Low-light mode (Dark mode) styles */
+.low-light-mode {
+    background-color: #121212;
+    color: #E0E0E0;
+}
+
+.low-light-mode .container {
+    background-color: #1E1E1E;
+    border-color: #333333;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.low-light-mode h1 {
+    color: #4CAF50;
+}
+
+.low-light-mode textarea {
+    background-color: #2D2D2D;
+    color: #E0E0E0;
+    border-color: #404040;
+}
+
+.low-light-mode textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.low-light-mode button {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    border: none;
+}
+
+.low-light-mode button:hover {
+    background-color: #45a049;
+}
+
+.low-light-mode #reload-button {
+    background-color: #DC2626;
+}
+
+.low-light-mode #reload-button:hover {
+    background-color: #B91C1C;
+}
+
+.low-light-mode #original-sentence {
+    background-color: #2D2D2D;
+    border-color: #404040;
+    color: #E0E0E0;
+}
+
+.low-light-mode .completed-message {
+    background-color: #1B4332;
+    border-color: #2D6A4F;
+    color: #95D5B2;
+}
+
+.low-light-mode .progress-bar {
+    background-color: #2D2D2D;
+    border: 1px solid #404040;
+}
+
+.low-light-mode .progress-bar-fill {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+}
+
+.low-light-mode .incorrect {
+    color: #FF6B6B;
+    background-color: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.low-light-mode .correct {
+    color: #69DB7C;
+    background-color: rgba(105, 219, 124, 0.1);
+    border: 1px solid rgba(105, 219, 124, 0.3);
+}
+
+.low-light-mode .too-many-mistakes {
+    color: #FF8787;
+    text-shadow: none;
+}
+
+/* Dark mode context menu styles */
 .low-light-mode #context-menu {
-    background-color: #2d2d2d;
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background-color: #2D2D2D;
+    border-color: #404040;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .low-light-mode #context-menu button {
-    color: #ffffff;
+    color: #E0E0E0;
 }
 
 .low-light-mode #context-menu button:hover {
-    background-color: #3d3d3d;
-    color: #6FCF97;
+    background-color: #404040;
+    color: #4CAF50;
 }
 
 .low-light-mode #add-to-list-btn {
-    color: #64B5F6;
+    color: #90CAF9;
 }
 
 .low-light-mode #add-to-list-btn.success {
-    color: #81C784;
-    background-color: rgba(129, 199, 132, 0.1);
-}
-
-.low-light-mode #context-menu button:active {
-    background-color: #444444;
+    color: #69DB7C;
+    background-color: rgba(105, 219, 124, 0.1);
 }
 
 .low-light-mode #context-menu button:not(:last-child) {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: #404040;
+}
+
+/* Dark mode word list styles */
+.low-light-mode #word-list-section {
+    background-color: rgba(18, 18, 18, 0.95);
+}
+
+.low-light-mode #word-list li {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
+
+.low-light-mode .clickable-word:hover {
+    color: #69DB7C;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.low-light-mode #clear-word-list-btn {
+    background-color: #DC2626 !important;
+}
+
+.low-light-mode #close-word-list-btn {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
+
+.low-light-mode #word-list li.empty-state {
+    border-color: #404040;
+    color: #808080;
 }
 /* Word list section styles */
 #word-list-section {
@@ -1020,6 +1082,9 @@ function checkText() {
         result.style.color = "black";
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
+        
+        // Set up the input field to clear the error message on next input
+        document.getElementById("user-input").addEventListener("input", clearErrorOnce, { once: true });
     } else {
         result.innerText = "Keep going, you're getting closer!";
         result.style.color = "green";
@@ -1037,6 +1102,13 @@ function checkText() {
 
     updateProgressBar();
     saveProgress();
+}
+
+// Add a helper function to clear error message once
+function clearErrorOnce() {
+    const result = document.getElementById("result");
+    result.innerText = "";
+    result.innerHTML = "";
 }
 
 // Update progress bar function
@@ -1197,9 +1269,14 @@ function removeWordFromList(index) {
 
 
 // Event listeners
+
 document.getElementById("reload-button").addEventListener("click", restartPractice);
-document.getElementById("user-input").addEventListener("input", () => {
+document.getElementById("user-input").addEventListener("input", (event) => {
     hideOriginalSentence();
+    // Clear any error messages in the result div
+    const result = document.getElementById("result");
+    result.innerText = "";
+    result.innerHTML = "";
     saveProgress();
 });
 
