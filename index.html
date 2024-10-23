@@ -495,10 +495,15 @@ input:checked + .slider:before {
 }
 
 .low-light-mode #original-sentence {
-    background-color: #2D2D2D;
-    border-color: #404040;
-    color: #E0E0E0;
-}
+            background-color: #2D2D2D;
+            border-color: #404040;
+            color: #E0E0E0;  /* Default visible state in dark mode */
+        }
+
+        /* Update hideOriginalSentence function behavior for dark mode */
+        .low-light-mode #original-sentence.hidden-sentence {
+            color: #2D2D2D;  /* Same as background color when hidden */
+        }
 
 .low-light-mode .completed-message {
     background-color: #1B4332;
@@ -994,8 +999,16 @@ function processArticle() {
 // Show sentence function
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
-        document.getElementById("original-sentence").innerText = sentences[currentSentenceIndex].trim();
-        document.getElementById("original-sentence").style.color = "#333";
+        const originalSentenceElement = document.getElementById("original-sentence");
+        originalSentenceElement.innerText = sentences[currentSentenceIndex].trim();
+        
+        // Set proper color based on current mode
+        if (document.body.classList.contains('low-light-mode')) {
+            originalSentenceElement.style.color = "#E0E0E0"; // Dark mode visible color
+        } else {
+            originalSentenceElement.style.color = "#333"; // Light mode visible color
+        }
+        
         document.getElementById("user-input").value = "";
         document.getElementById("result").innerText = "";
         updateProgressBar();
@@ -1004,7 +1017,6 @@ function showSentence() {
         showCompletionMessage();
     }
 }
-
 // Show completion message
 function showCompletionMessage() {
     const originalSentenceElement = document.getElementById("original-sentence");
@@ -1140,16 +1152,26 @@ function restartPractice() {
 // Hide and show original sentence functions
 function hideOriginalSentence() {
     const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.style.color = "#f0f0f0";
+    if (document.body.classList.contains('low-light-mode')) {
+        originalSentenceElement.style.color = "#2D2D2D"; // Dark mode hidden color
+    } else {
+        originalSentenceElement.style.color = "#f0f0f0"; // Light mode hidden color
+    }
     document.getElementById("show-original-icon").style.display = "inline";
     document.getElementById("result").innerText = "";
 }
 
+
 function showOriginalSentence() {
     const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.style.color = "#333";
+    if (document.body.classList.contains('low-light-mode')) {
+        originalSentenceElement.style.color = "#E0E0E0"; // Dark mode visible color
+    } else {
+        originalSentenceElement.style.color = "#333"; // Light mode visible color
+    }
     document.getElementById("show-original-icon").style.display = "none";
 }
+
 
 // Handle keydown events
 function handleKeyDown(event) {
@@ -1345,10 +1367,23 @@ function closeModal() {
 // Dark mode toggle
 const lowLightToggle = document.getElementById('low-light-toggle');
 lowLightToggle.addEventListener('change', function() {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    const userInput = document.getElementById("user-input").value;
+    
     if (this.checked) {
+        // Switching to dark mode
         document.body.classList.add('low-light-mode');
+        // Only change color if user hasn't started typing or is showing original sentence
+        if (!userInput || originalSentenceElement.style.color !== "#2D2D2D") {
+            originalSentenceElement.style.color = "#E0E0E0";
+        }
     } else {
+        // Switching to light mode
         document.body.classList.remove('low-light-mode');
+        // Only change color if user hasn't started typing or is showing original sentence
+        if (!userInput || originalSentenceElement.style.color !== "#f0f0f0") {
+            originalSentenceElement.style.color = "#333";
+        }
     }
 });
 
