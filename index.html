@@ -309,8 +309,6 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
-
-
 #context-menu {
     display: none;
     position: absolute;
@@ -319,33 +317,6 @@ input:checked + .slider:before {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     min-width: 200px;
-    padding: 8px 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    animation: contextMenuFadeIn 0.2s ease-out;
-}
-
-/* Context menu animation */
-@keyframes contextMenuFadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Context menu container */
-#context-menu {
-    display: none;
-    position: absolute;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    min-width: 220px;
     padding: 8px 0;
     border: 1px solid rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
