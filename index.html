@@ -75,6 +75,25 @@ button {
     transition: background-color 0.3s;
 }
 
+
+/* Add or update button styles */
+button#check-button,
+button#reload-button {
+    min-width: 100px !important; /* Set equal minimum width for both buttons */
+    padding: 9px 18px !important;
+}
+
+/* Additional styles to ensure equal sizing */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.button-container button {
+    flex: 0 0 auto; /* Prevent flex from affecting button width */
+}
 /* Button hover effect */
 button:hover {
     background-color: #45a049;
@@ -768,13 +787,47 @@ const styleSheet = `
     opacity: 0;
 }
 `;
+
+/* Word list button styles */
+.word-list-btn {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Word list button styles - with higher specificity */
+button#view-word-list-btn.word-list-btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    box-shadow: none !important;
+    margin-right: 15px !important; /* Added spacing between icon and toggle */
+}
+
+/* Dark mode specific style for word list button */
+.low-light-mode button#view-word-list-btn.word-list-btn {
+    color: #E0E0E0;
+}
+
+/* Override hover state */
+button#view-word-list-btn.word-list-btn:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
  </style>
 </head>
 <body>
 <!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
     <!-- Word list toggle button with emoji icon -->
-    <button id="view-word-list-btn" class="word-list-btn">📚</button>
+    <button id="view-word-list-btn" class="word-list-btn">📖</button>
     <!-- Low light mode toggle switch container -->
     <div class="toggle-container">
         <label class="switch">
@@ -886,16 +939,147 @@ const styleSheet = `
 </div>
 
     <script>
+// Color Management System
+const ColorManager = {
+    getTextColor(isLowLight) {
+        return isLowLight ? "#E0E0E0" : "#333";
+    },
+    
+    getHiddenColor(isLowLight) {
+        return isLowLight ? "#2D2D2D" : "#f0f0f0";
+    },
+    
+    updateOriginalSentenceColor(isVisible = true) {
+        const originalSentenceElement = document.getElementById("original-sentence");
+        const isLowLight = document.body.classList.contains('low-light-mode');
+        originalSentenceElement.style.color = isVisible ? 
+            this.getTextColor(isLowLight) : 
+            this.getHiddenColor(isLowLight);
+    },
+
+    updateErrorMessageColors() {
+        const result = document.getElementById("result");
+        if (result.innerHTML.includes("Incorrect:")) {
+            const incorrectWord = result.querySelector("span:nth-of-type(2)").textContent;
+            const correctWord = result.querySelector("span:nth-of-type(4)").textContent;
+            const isLowLight = document.body.classList.contains('low-light-mode');
+            const textColor = this.getTextColor(isLowLight);
+            result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
+        }
+    }
+};
+
+// Result Management System
+const ResultManager = {
+    clearResult() {
+        const result = document.getElementById("result");
+        result.innerText = "";
+        result.innerHTML = "";
+    },
+    
+    showErrorMessage(incorrectWord, correctWord) {
+        const result = document.getElementById("result");
+        const textColor = ColorManager.getTextColor(document.body.classList.contains('low-light-mode'));
+        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
+    },
+    
+    showMistakeCount(count) {
+        const result = document.getElementById("result");
+        const errorColor = document.body.classList.contains('low-light-mode') ? '#FF6B6B' : 'red';
+        result.innerHTML += `<br/><span style="color: ${errorColor};">You made ${count} mistakes. Please rewrite it again.</span>`;
+    },
+
+    showSuccess() {
+        const result = document.getElementById("result");
+        result.innerText = "Correct";
+        result.style.color = "green";
+    },
+
+    showSpacingError() {
+        const result = document.getElementById("result");
+        result.innerText = "Check your spacing after punctuation.";
+        result.style.color = "orange";
+    },
+
+    showProgress() {
+        const result = document.getElementById("result");
+        result.innerText = "Keep going, you're getting closer!";
+        result.style.color = "green";
+    }
+};
+
+
+document.getElementById("user-input").addEventListener("input", function() {
+    const result = document.getElementById("result");
+    if (result.innerText === "Keep going, you're getting closer!") {
+        result.innerText = "";
+        result.style.color = "";
+    }
+});
+
+// Word List UI Management System
+const WordListUI = {
+    showEmptyState(wordListElement) {
+        wordListElement.style.opacity = '0';
+        setTimeout(() => {
+            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
+            wordListElement.style.opacity = '1';
+        }, 300);
+    },
+    
+    createWordListItem(word, index) {
+        const li = document.createElement('li');
+        
+        const wordSpan = document.createElement('span');
+        wordSpan.textContent = word;
+        wordSpan.classList.add('clickable-word');
+        wordSpan.title = 'Click to look up definition';
+wordSpan.onclick = () => {
+    const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US`;
+    window.open(searchQuery, '_blank');
+};
+        
+        const buttonContainer = document.createElement('div');
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'remove-word-btn';
+        removeButton.setAttribute('data-index', index);
+        
+        buttonContainer.appendChild(removeButton);
+        li.appendChild(wordSpan);
+        li.appendChild(buttonContainer);
+        
+        return li;
+    },
+
+    setupRemoveButtons() {
+        const removeButtons = document.querySelectorAll('.remove-word-btn');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const wordIndex = this.getAttribute('data-index');
+                removeWordFromList(wordIndex);
+            });
+            
+            button.addEventListener('animationend', () => {
+                button.classList.remove('clicked');
+            });
+        });
+    }
+};
+
+// Practice State Management
 let sentences = [];
 let currentSentenceIndex = 0;
 let mistakeCount = 0;
 
-// Load saved progress when the page loads
+// Initialize application
 window.onload = function() {
-    // Load word list
     displayWordList();
-    
-    // Load saved progress if it exists
+    loadSavedProgress();
+};
+
+// Progress Management
+function loadSavedProgress() {
     const savedProgress = localStorage.getItem("writingProgress");
     if (savedProgress) {
         const progressData = JSON.parse(savedProgress);
@@ -911,17 +1095,15 @@ window.onload = function() {
             updateProgressBar();
         }
     } else {
-        // Show rules modal only if there's no saved progress
         document.getElementById("rules-modal").style.display = "flex";
     }
-};
+}
 
-// Save progress function
 function saveProgress() {
     const progressData = {
-        currentSentenceIndex: currentSentenceIndex,
-        mistakeCount: mistakeCount,
-        sentences: sentences,
+        currentSentenceIndex,
+        mistakeCount,
+        sentences,
         articleInput: document.getElementById("article-input").value,
         userInput: document.getElementById("user-input").value,
         practiceVisible: document.getElementById("practice-section").style.display,
@@ -931,7 +1113,6 @@ function saveProgress() {
     localStorage.setItem("writingProgress", JSON.stringify(progressData));
 }
 
-// Clear progress function
 function clearProgress() {
     localStorage.removeItem("writingProgress");
     currentSentenceIndex = 0;
@@ -941,11 +1122,10 @@ function clearProgress() {
     document.getElementById("user-input").value = "";
 }
 
-// Process article function
+// Practice Functions
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     
-    // Clear previous session data
     clearProgress();
     restartPractice();
 
@@ -960,47 +1140,39 @@ function processArticle() {
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
         
-        saveProgress(); // Save initial progress
+        saveProgress();
     } else {
         alert("Please paste a valid article.");
     }
 }
 
-// Show sentence function
 function showSentence() {
     if (currentSentenceIndex < sentences.length) {
         const originalSentenceElement = document.getElementById("original-sentence");
         originalSentenceElement.innerText = sentences[currentSentenceIndex].trim();
-        
-        // Set proper color based on current mode
-        if (document.body.classList.contains('low-light-mode')) {
-            originalSentenceElement.style.color = "#E0E0E0"; // Dark mode visible color
-        } else {
-            originalSentenceElement.style.color = "#333"; // Light mode visible color
-        }
+        ColorManager.updateOriginalSentenceColor(true);
         
         document.getElementById("user-input").value = "";
-        document.getElementById("result").innerText = "";
+        ResultManager.clearResult();
         updateProgressBar();
         saveProgress();
     } else {
         showCompletionMessage();
     }
 }
-// Show completion message
+
 function showCompletionMessage() {
     const originalSentenceElement = document.getElementById("original-sentence");
     originalSentenceElement.innerText = "You have completed the practice.";
     originalSentenceElement.classList.add('completed-message');
-    originalSentenceElement.style.color = document.body.classList.contains('low-light-mode') ? "#E0E0E0" : "#333";
+    ColorManager.updateOriginalSentenceColor(true);
     document.getElementById("user-input").style.display = "none";
     document.getElementById("check-button").style.display = "none";
     document.getElementById("show-original-icon").style.display = "none";
-    document.getElementById("result").innerText = "";
+    ResultManager.clearResult();
     clearProgress();
 }
 
-// Normalize text function
 function normalizeText(text) {
     return text
         .replace(/'/g, "'")
@@ -1014,11 +1186,9 @@ function normalizeText(text) {
         .replace(/…/g, '...');
 }
 
-// Check text function
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
-    const result = document.getElementById("result");
     const originalWords = originalSentence.split(' ');
     const userWords = userInput.split(' ');
     let correctWords = "";
@@ -1026,11 +1196,6 @@ function checkText() {
     let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
-    
-    // Get text color based on current mode
-    function getTextColor() {
-        return document.body.classList.contains('low-light-mode') ? "#E0E0E0" : "#333";
-    }
 
     const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\-—–\/…])([^\s])/g;
     const apostrophePattern = /\b\w+'\w+\b/g;
@@ -1051,48 +1216,36 @@ function checkText() {
     }
 
     if (userInput === originalSentence) {
-        result.innerText = "Correct";
-        result.style.color = "green";
+        ResultManager.showSuccess();
         currentSentenceIndex++;
         saveProgress();
         setTimeout(() => {
-            result.innerText = "";
+            ResultManager.clearResult();
             showSentence();
         }, 1000);
-    } else if (missingSpaceFound) {
-        result.innerText = "Check your spacing after punctuation.";
-        result.style.color = "orange";
-    } else if (incorrectWordFound) {
-        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${getTextColor()};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${getTextColor()};">${correctWord}</span>`;
-        document.getElementById("user-input").value = correctWords;
-        mistakeCount++;
-        document.getElementById("user-input").addEventListener("input", clearErrorOnce, { once: true });
-    } else {
-        result.innerText = "Keep going, you're getting closer!";
-        result.style.color = "green";
-    }
 
-    if (userInput === originalSentence) {
         if (mistakeCount >= 2) {
-            result.innerHTML += `<br/><span style="color: ${document.body.classList.contains('low-light-mode') ? '#FF6B6B' : 'red'};">You made ${mistakeCount} mistakes. Please rewrite it again.</span>`;
+            ResultManager.showMistakeCount(mistakeCount);
             mistakeCount = 0;
             currentSentenceIndex--;
         } else {
             mistakeCount = 0;
         }
+    } else if (missingSpaceFound) {
+        ResultManager.showSpacingError();
+    } else if (incorrectWordFound) {
+        ResultManager.showErrorMessage(incorrectWord, correctWord);
+        document.getElementById("user-input").value = correctWords;
+        mistakeCount++;
+        document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
+    } else {
+        ResultManager.showProgress();
     }
 
     updateProgressBar();
     saveProgress();
 }
-// Add a helper function to clear error message once
-function clearErrorOnce() {
-    const result = document.getElementById("result");
-    result.innerText = "";
-    result.innerHTML = "";
-}
 
-// Update progress bar function
 function updateProgressBar() {
     const progressBarFill = document.getElementById("progress-bar-fill");
     const progress = (currentSentenceIndex / sentences.length) * 100;
@@ -1100,7 +1253,6 @@ function updateProgressBar() {
     progressBarFill.innerText = Math.round(progress) + "%";
 }
 
-// Restart practice function
 function restartPractice() {
     clearProgress();
     document.getElementById("practice-section").style.display = "none";
@@ -1109,7 +1261,7 @@ function restartPractice() {
     document.getElementById("article-input").value = "";
     document.getElementById("user-input").style.display = "block";
     document.getElementById("check-button").style.display = "inline";
-    document.getElementById("result").innerText = "";
+    ResultManager.clearResult();
     document.getElementById("original-sentence").innerText = "";
     document.getElementById("original-sentence").classList.remove('completed-message');
     
@@ -1118,31 +1270,18 @@ function restartPractice() {
     progressBarFill.innerText = "0%";
 }
 
-// Hide and show original sentence functions
+// UI Event Functions
 function hideOriginalSentence() {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    if (document.body.classList.contains('low-light-mode')) {
-        originalSentenceElement.style.color = "#2D2D2D"; // Dark mode hidden color
-    } else {
-        originalSentenceElement.style.color = "#f0f0f0"; // Light mode hidden color
-    }
+    ColorManager.updateOriginalSentenceColor(false);
     document.getElementById("show-original-icon").style.display = "inline";
-    document.getElementById("result").innerText = "";
+    ResultManager.clearResult();
 }
 
-
 function showOriginalSentence() {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    if (document.body.classList.contains('low-light-mode')) {
-        originalSentenceElement.style.color = "#E0E0E0"; // Dark mode visible color
-    } else {
-        originalSentenceElement.style.color = "#333"; // Light mode visible color
-    }
+    ColorManager.updateOriginalSentenceColor(true);
     document.getElementById("show-original-icon").style.display = "none";
 }
 
-
-// Handle keydown events
 function handleKeyDown(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -1155,30 +1294,17 @@ function handleKeyDown(event) {
     }
 }
 
-// Remove line breaks function
 function removeLineBreaks(text) {
     return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// Prevent default right-click context menu
-window.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-});
-
-// Word list functionality
-let wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-
+// Word List Functions
 function displayWordList() {
     const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
     const wordListElement = document.getElementById('word-list');
     
-    // Clear with fade if transitioning to empty state
     if (wordList.length === 0 && wordListElement.children.length > 0) {
-        wordListElement.style.opacity = '0';
-        setTimeout(() => {
-            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
-            wordListElement.style.opacity = '1';
-        }, 300);
+        WordListUI.showEmptyState(wordListElement);
         return;
     }
     
@@ -1186,102 +1312,42 @@ function displayWordList() {
     
     if (wordList.length > 0) {
         wordList.forEach((word, index) => {
-            const li = document.createElement('li');
-            
-            // Create clickable word span
-            const wordSpan = document.createElement('span');
-            wordSpan.textContent = word;
-            wordSpan.classList.add('clickable-word');
-            wordSpan.title = 'Click to look up definition';
-            wordSpan.onclick = () => {
-                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}`;
-                window.open(searchQuery, '_blank');
-            };
-            
-            // Create button container
-            const buttonContainer = document.createElement('div');
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.className = 'remove-word-btn';
-            removeButton.setAttribute('data-index', index);
-            
-            // Add elements to the li
-            buttonContainer.appendChild(removeButton);
-            li.appendChild(wordSpan);
-            li.appendChild(buttonContainer);
-            
-            wordListElement.appendChild(li);
+            const listItem = WordListUI.createWordListItem(word, index);
+            wordListElement.appendChild(listItem);
         });
     } else {
         wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
     }
-
-    // Add click handlers for remove buttons
-    const removeButtons = document.querySelectorAll('.remove-word-btn');
-    removeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const wordIndex = this.getAttribute('data-index');
-            removeWordFromList(wordIndex);
-        });
-        
-        // Remove ripple effect after animation
-        button.addEventListener('animationend', () => {
-            button.classList.remove('clicked');
-        });
-    });
+    
+    WordListUI.setupRemoveButtons();
 }
 
-//Remove Word From List
 function removeWordFromList(index) {
     const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
     const listItem = document.querySelector(`[data-index="${index}"]`).parentElement.parentElement;
     const button = document.querySelector(`[data-index="${index}"]`);
     
-    // Add ripple effect to button
     button.classList.add('clicked');
-    
-    // Add removal animation to list item
     listItem.classList.add('word-list-item-removing');
     
-    // Wait for animation to complete before removing from storage and updating display
     setTimeout(() => {
         wordList.splice(index, 1);
         localStorage.setItem('wordList', JSON.stringify(wordList));
         
-        // If this was the last item, show the empty state immediately
         if (wordList.length === 0) {
             const wordListElement = document.getElementById('word-list');
             wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
         } else {
             displayWordList();
         }
-    }, 500); // Match this with the animation duration
+    }, 500);
 }
 
-
-// Event listeners
-
-document.getElementById("reload-button").addEventListener("click", restartPractice);
-document.getElementById("user-input").addEventListener("input", (event) => {
-    hideOriginalSentence();
-    // Clear any error messages in the result div
-    const result = document.getElementById("result");
-    result.innerText = "";
-    result.innerHTML = "";
-    saveProgress();
-});
-
-document.getElementById("article-input").addEventListener("paste", function(event) {
-    event.preventDefault();
-    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
-    pastedText = removeLineBreaks(pastedText);
-    document.execCommand("insertText", false, pastedText);
-});
-
-// Context menu functionality
+// Context Menu Management
 let selectedWord = '';
 const contextMenu = document.getElementById('context-menu');
 
+// Event Listeners
 document.addEventListener('mouseup', function(event) {
     const selection = window.getSelection().toString().trim();
     if (selection) {
@@ -1301,6 +1367,38 @@ document.addEventListener('click', function(event) {
     }
 });
 
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+document.addEventListener('copy', function(event) {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    const selection = window.getSelection();
+    if (selection.containsNode(originalSentenceElement, true)) {
+        event.preventDefault();
+        alert("Copying the original sentence is not allowed!");
+    }
+});
+
+document.getElementById("reload-button").addEventListener("click", restartPractice);
+
+document.getElementById("user-input").addEventListener("input", (event) => {
+    hideOriginalSentence();
+    ResultManager.clearResult();
+    saveProgress();
+});
+
+document.getElementById("article-input").addEventListener("paste", function(event) {
+    event.preventDefault();
+    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    pastedText = removeLineBreaks(pastedText);
+    document.execCommand("insertText", false, pastedText);
+});
+
+// Modal Management
+function closeModal() {
+    document.getElementById("rules-modal").style.display = "none";
+}
+
+// Context Menu Functions
 function showContextMenu(x, y) {
     contextMenu.style.display = 'block';
     contextMenu.style.left = x + 'px';
@@ -1311,63 +1409,19 @@ function hideContextMenu() {
     contextMenu.style.display = 'none';
 }
 
-// Prevent copying
-document.addEventListener('copy', function(event) {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    const selection = window.getSelection();
-    if (selection.containsNode(originalSentenceElement, true)) {
-        event.preventDefault();
-        alert("Copying the original sentence is not allowed!");
-    }
-});
-
-// Prevent drag-and-drop on the original sentence element
-const originalSentenceElement = document.getElementById("original-sentence");
-originalSentenceElement.addEventListener("dragstart", function(event) {
-    event.preventDefault();
-});
-
-
-// Close modal function
-function closeModal() {
-    document.getElementById("rules-modal").style.display = "none";
-}
-
-// Dark mode toggle
+// Low Light Mode Toggle
 const lowLightToggle = document.getElementById('low-light-toggle');
 lowLightToggle.addEventListener('change', function() {
-    const originalSentenceElement = document.getElementById("original-sentence");
     const userInput = document.getElementById("user-input").value;
+    document.body.classList.toggle('low-light-mode');
     
-    if (this.checked) {
-        // Switching to dark mode
-        document.body.classList.add('low-light-mode');
-        // Only change color if user hasn't started typing or is showing original sentence
-        if (!userInput || originalSentenceElement.style.color !== "#2D2D2D") {
-            originalSentenceElement.style.color = "#E0E0E0";
-        }
-    } else {
-        // Switching to light mode
-        document.body.classList.remove('low-light-mode');
-        // Only change color if user hasn't started typing or is showing original sentence
-        if (!userInput || originalSentenceElement.style.color !== "#f0f0f0") {
-            originalSentenceElement.style.color = "#333";
-        }
+    if (!userInput || document.getElementById("original-sentence").style.color !== ColorManager.getHiddenColor(this.checked)) {
+        ColorManager.updateOriginalSentenceColor(true);
     }
+    ColorManager.updateErrorMessageColors();
 });
 
-document.getElementById('low-light-toggle').addEventListener('change', function() {
-    const result = document.getElementById("result");
-    if (result.innerHTML.includes("Incorrect:")) {
-        // Re-render the error message with updated colors
-        const incorrectWord = result.querySelector("span:nth-of-type(2)").textContent;
-        const correctWord = result.querySelector("span:nth-of-type(4)").textContent;
-        const textColor = this.checked ? "#E0E0E0" : "#333";
-        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
-    }
-});
-
-// Word list button handlers
+// Word List Button Handlers
 document.getElementById('view-word-list-btn').addEventListener('click', function() {
     displayWordList();
     document.getElementById('word-list-section').style.display = 'block';
@@ -1384,14 +1438,14 @@ document.getElementById('clear-word-list-btn').addEventListener('click', functio
     }
 });
 
-// Definition button handler
+// Definition Button Handler
 document.getElementById('definition-btn').addEventListener('click', function() {
-    const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}`;
+    const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}&kad=en_US`;
     window.open(searchQuery, '_blank');
     hideContextMenu();
 });
 
-// Add to list button handler
+// Add to List Button Handler
 document.getElementById('add-to-list-btn').addEventListener('click', function() {
     const currentWordList = JSON.parse(localStorage.getItem('wordList')) || [];
     
@@ -1399,11 +1453,9 @@ document.getElementById('add-to-list-btn').addEventListener('click', function() 
         currentWordList.push(selectedWord);
         localStorage.setItem('wordList', JSON.stringify(currentWordList));
         
-        // Add success state
         this.classList.add('success');
         this.textContent = 'Added to Word List';
         
-        // Reset after a short delay
         setTimeout(() => {
             this.classList.remove('success');
             this.textContent = 'Add to Word List';
@@ -1415,12 +1467,10 @@ document.getElementById('add-to-list-btn').addEventListener('click', function() 
     }
 });
 
-
-// Add the styles to the document
-const styleElement = document.createElement('style');
-styleElement.textContent = styleSheet;
-document.head.appendChild(styleElement);
-
+// Prevent drag-and-drop on the original sentence
+document.getElementById("original-sentence").addEventListener("dragstart", function(event) {
+    event.preventDefault();
+});
     </script>
 </body>
 </html>
