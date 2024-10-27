@@ -267,15 +267,16 @@ button:hover {
     right: 10px;
     z-index: 100;
     display: flex;
-    align-items: center;
+    align-items: center; /* Ensures vertical alignment */
     gap: 10px;
+    height: 34px; /* Match the height of the toggle */
 }
 
 /* Toggle container styles */
 .toggle-container {
-    position: static;
     display: flex;
     align-items: center;
+    height: 34px;
 }
 
 /* Switch base styles - For low light mode toggle */
@@ -284,6 +285,7 @@ button:hover {
     display: inline-block;
     width: 60px;
     height: 34px;
+    margin: 0;
 }
 
 /* Switch input styles */
@@ -807,7 +809,11 @@ button#view-word-list-btn.word-list-btn {
     cursor: pointer;
     color: #333;
     box-shadow: none !important;
-    margin-right: 15px !important; /* Added spacing between icon and toggle */
+    margin-right: 10px !important;  /* Add small margin to the right */
+    display: flex;
+    align-items: center;
+    height: 34px; /* Match container height */
+    line-height: 34px; /* Ensure vertical centering of the emoji */
 }
 
 /* Dark mode specific style for word list button */
