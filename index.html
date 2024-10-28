@@ -828,32 +828,76 @@ button#view-word-list-btn.word-list-btn:hover {
     box-shadow: none !important;
 }
 
+/* Text Controls Modal */
+#text-controls-modal.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+#text-controls-modal .modal-content {
+    max-width: 400px;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Dark mode styles for modal */
+.low-light-mode #text-controls-modal .modal-content {
+    background-color: #18181b;
+    border-color: #27272a;
+}
+
+.low-light-mode #text-controls-modal .modal-header h2 {
+    color: #f4f4f5;
+}
+
+/* Control sections */
 .control-section {
-    margin: 20px 0;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    margin-bottom: 24px;
+    padding: 0;
+    border: none;
+    background: none;
 }
 
 .control-section h3 {
-    margin: 0 0 10px 0;
-    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
 }
 
+.low-light-mode .control-section h3 {
+    color: #d4d4d8;
+}
+
+/* Size buttons */
 .size-controls {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    gap: 8px;
 }
 
 .size-btn {
-    padding: 5px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid #e5e7eb;
     background-color: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
+}
+
+.low-light-mode .size-btn {
+    background-color: #27272a;
+    border-color: #3f3f46;
+    color: #d4d4d8;
+}
+
+.size-btn:hover {
+    background-color: #f9fafb;
+}
+
+.low-light-mode .size-btn:hover {
+    background-color: #3f3f46;
 }
 
 .size-btn.active {
@@ -862,35 +906,62 @@ button#view-word-list-btn.word-list-btn:hover {
     border-color: #4CAF50;
 }
 
+.low-light-mode .size-btn.active {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+/* Font select */
 #font-family-select {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    background-color: white;
+    color: #111827;
 }
 
-/* Dark mode styles */
-.low-light-mode .control-section {
-    background-color: #2D2D2D;
-    border-color: #404040;
+.low-light-mode #font-family-select {
+    background-color: #27272a;
+    border-color: #3f3f46;
+    color: #d4d4d8;
 }
 
-.low-light-mode .size-btn {
-    background-color: #333;
-    border-color: #404040;
-    color: #E0E0E0;
+/* Modal footer */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
 }
 
-.low-light-mode .size-btn.active {
+.modal-footer button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-footer button:first-child {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.low-light-mode .modal-footer button:first-child {
+    background-color: #27272a;
+    color: #d4d4d8;
+}
+
+.modal-footer button:last-child {
     background-color: #4CAF50;
     color: white;
 }
 
-.low-light-mode #font-family-select {
-    background-color: #333;
-    border-color: #404040;
-    color: #E0E0E0;
+.low-light-mode .modal-footer button:last-child {
+    background-color: #4CAF50;
 }
+
  </style>
 </head>
 <body>
