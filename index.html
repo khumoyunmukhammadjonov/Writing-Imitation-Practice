@@ -827,9 +827,108 @@ button#view-word-list-btn.word-list-btn:hover {
     transform: none !important;
     box-shadow: none !important;
 }
+
+.control-section {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.control-section h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.size-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.size-btn {
+    padding: 5px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.size-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+#font-family-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Dark mode styles */
+.low-light-mode .control-section {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
+
+.low-light-mode .size-btn {
+    background-color: #333;
+    border-color: #404040;
+    color: #E0E0E0;
+}
+
+.low-light-mode .size-btn.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.low-light-mode #font-family-select {
+    background-color: #333;
+    border-color: #404040;
+    color: #E0E0E0;
+}
  </style>
 </head>
 <body>
+
+<div id="text-controls-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Text Controls</h2>
+        </div>
+        <div class="modal-body">
+            <!-- Font Size Controls -->
+            <div class="control-section">
+                <h3>Font Size</h3>
+                <div class="size-controls">
+                    <button class="size-btn" data-size="18">Small</button>
+                    <button class="size-btn" data-size="20">Medium</button>
+                    <button class="size-btn" data-size="22">Large</button>
+                </div>
+            </div>
+
+            <!-- Font Family Selection -->
+            <div class="control-section">
+                <h3>Font Family</h3>
+                <select id="font-family-select">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Roboto, sans-serif">Roboto</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="TextControlSystem.resetDefaults()">Reset to Defaults</button>
+            <button onclick="TextControlSystem.closeControls()">Close</button>
+        </div>
+    </div>
+</div>
 <!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
     <!-- Word list toggle button with emoji icon -->
@@ -1476,6 +1575,120 @@ document.getElementById('add-to-list-btn').addEventListener('click', function() 
 // Prevent drag-and-drop on the original sentence
 document.getElementById("original-sentence").addEventListener("dragstart", function(event) {
     event.preventDefault();
+});
+
+
+// Add this JavaScript
+const TextControlSystem = {
+    defaults: {
+        fontSize: 18,
+        fontFamily: 'Arial, sans-serif'
+    },
+
+    settings: {},
+
+    init() {
+        this.addControlButton();
+        this.loadSavedSettings();
+        this.setupEventListeners();
+    },
+
+    addControlButton() {
+        const buttonContainer = document.querySelector('.toggle-and-list-container');
+        const controlButton = document.createElement('button');
+        controlButton.id = 'text-controls-btn';
+        controlButton.className = 'word-list-btn';
+        controlButton.innerHTML = '🔤';
+        controlButton.title = 'Text Controls';
+        controlButton.onclick = () => this.toggleControls();
+        buttonContainer.insertBefore(controlButton, buttonContainer.firstChild);
+    },
+
+    loadSavedSettings() {
+        const saved = localStorage.getItem('textControls');
+        this.settings = saved ? JSON.parse(saved) : { ...this.defaults };
+        this.applySettings();
+    },
+
+    saveSettings() {
+        localStorage.setItem('textControls', JSON.stringify(this.settings));
+    },
+
+    setupEventListeners() {
+        // Font size buttons
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.updateFontSize(parseInt(btn.dataset.size));
+            });
+        });
+
+        // Font family select
+        document.getElementById('font-family-select').addEventListener('change', (e) => {
+            this.updateFontFamily(e.target.value);
+        });
+    },
+
+    updateFontSize(size) {
+        this.settings.fontSize = size;
+        this.applySettings();
+        this.updateUI();
+        this.saveSettings();
+    },
+
+    updateFontFamily(family) {
+        this.settings.fontFamily = family;
+        this.applySettings();
+        this.saveSettings();
+    },
+
+    applySettings() {
+        const elements = ['original-sentence', 'user-input'].map(id => 
+            document.getElementById(id));
+
+        elements.forEach(el => {
+            if (el) {
+                el.style.fontSize = `${this.settings.fontSize}px`;
+                el.style.fontFamily = this.settings.fontFamily;
+            }
+        });
+    },
+
+    updateUI() {
+        // Update size buttons
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', 
+                parseInt(btn.dataset.size) === this.settings.fontSize);
+        });
+
+        // Update font family select
+        document.getElementById('font-family-select').value = this.settings.fontFamily;
+    },
+
+    toggleControls() {
+        const modal = document.getElementById('text-controls-modal');
+        if (modal.style.display !== 'flex') {
+            modal.style.display = 'flex';
+            this.updateUI();
+        } else {
+            this.closeControls();
+        }
+    },
+
+    closeControls() {
+        document.getElementById('text-controls-modal').style.display = 'none';
+    },
+
+    resetDefaults() {
+        this.settings = { ...this.defaults };
+        this.applySettings();
+        this.updateUI();
+        this.saveSettings();
+    }
+};
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    TextControlSystem.init();
 });
     </script>
 </body>
