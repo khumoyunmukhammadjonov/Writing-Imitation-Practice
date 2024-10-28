@@ -962,6 +962,39 @@ button#view-word-list-btn.word-list-btn:hover {
     background-color: #4CAF50;
 }
 
+
+
+
+
+/* Word list button styles - with higher specificity */
+button#text-controls-btn.word-list-btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    box-shadow: none !important;
+    margin-right: 10px !important;  /* Add small margin to the right */
+    display: flex;
+    align-items: center;
+    height: 34px; /* Match container height */
+    line-height: 34px; /* Ensure vertical centering of the emoji */
+}
+
+/* Dark mode specific style for both buttons */
+.low-light-mode button#text-controls-btn.word-list-btn,
+.low-light-mode button#view-word-list-btn.word-list-btn {
+    color: #E0E0E0;
+}
+
+/* Override hover state for both buttons */
+button#text-controls-btn.word-list-btn:hover,
+button#view-word-list-btn.word-list-btn:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
  </style>
 </head>
 <body>
