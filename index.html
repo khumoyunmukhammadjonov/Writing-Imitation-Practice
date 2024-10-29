@@ -852,105 +852,150 @@ button#view-word-list-btn.word-list-btn:hover {
     color: #f4f4f5;
 }
 
-/* Control sections */
-.control-section {
+/* Text Controls Modal Base */
+#text-controls-modal.modal {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    padding: 20px;
+}
+
+#text-controls-modal .modal-content {
+    max-width: 420px;
+    padding: 28px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.2),
+        0 10px 10px -5px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Header */
+#text-controls-modal .modal-header {
     margin-bottom: 24px;
-    padding: 0;
-    border: none;
-    background: none;
+    text-align: left;
+}
+
+#text-controls-modal .modal-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #4CAF50;
+    margin: 0;
+}
+
+/* Control Sections */
+.control-section {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(156, 163, 175, 0.1);
+}
+
+.control-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .control-section h3 {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    color: #6B7280;
 }
 
-.low-light-mode .control-section h3 {
-    color: #d4d4d8;
-}
-
-/* Size buttons */
+/* Size Controls */
 .size-controls {
     display: flex;
-    gap: 8px;
+    gap: 12px;
 }
 
 .size-btn {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 500;
-    transition: all 0.2s;
-    border: 1px solid #e5e7eb;
-    background-color: white;
-}
-
-.low-light-mode .size-btn {
-    background-color: #27272a;
-    border-color: #3f3f46;
-    color: #d4d4d8;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    background-color: rgba(156, 163, 175, 0.1);
+    color: #6B7280;
 }
 
 .size-btn:hover {
-    background-color: #f9fafb;
-}
-
-.low-light-mode .size-btn:hover {
-    background-color: #3f3f46;
+    background-color: rgba(156, 163, 175, 0.15);
 }
 
 .size-btn.active {
-    background-color: #4CAF50;
-    color: white;
+    background-color: rgba(76, 175, 80, 0.15);
     border-color: #4CAF50;
+    color: #4CAF50;
 }
 
-.low-light-mode .size-btn.active {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
-}
-
-/* Font select */
+/* Font Select */
 #font-family-select {
     width: 100%;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    border: 1px solid #e5e7eb;
-    background-color: white;
-    color: #111827;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    border: 2px solid rgba(156, 163, 175, 0.1);
+    background-color: rgba(156, 163, 175, 0.05);
+    color: #4B5563;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 48px;
 }
 
-.low-light-mode #font-family-select {
-    background-color: #27272a;
-    border-color: #3f3f46;
-    color: #d4d4d8;
+#font-family-select:hover {
+    border-color: rgba(156, 163, 175, 0.2);
 }
 
-/* Modal footer */
+#font-family-select:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Modal Footer */
 .modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 24px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(156, 163, 175, 0.1);
 }
 
 .modal-footer button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 15px;
     font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-footer button:first-child {
-    background-color: #f3f4f6;
-    color: #374151;
+    background-color: rgba(156, 163, 175, 0.1);
+    color: #6B7280;
 }
 
-.low-light-mode .modal-footer button:first-child {
-    background-color: #27272a;
-    color: #d4d4d8;
+.modal-footer button:first-child:hover {
+    background-color: rgba(156, 163, 175, 0.15);
 }
 
 .modal-footer button:last-child {
@@ -958,13 +1003,54 @@ button#view-word-list-btn.word-list-btn:hover {
     color: white;
 }
 
-.low-light-mode .modal-footer button:last-child {
-    background-color: #4CAF50;
+.modal-footer button:last-child:hover {
+    background-color: #43A047;
+    transform: translateY(-1px);
 }
 
+/* Dark Mode Styles */
+.low-light-mode #text-controls-modal .modal-content {
+    background-color: #1A1A1A;
+    border-color: rgba(255, 255, 255, 0.1);
+}
 
+.low-light-mode .control-section h3 {
+    color: #9CA3AF;
+}
 
+.low-light-mode .size-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #9CA3AF;
+}
 
+.low-light-mode .size-btn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.low-light-mode .size-btn.active {
+    background-color: rgba(76, 175, 80, 0.15);
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.low-light-mode #font-family-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #E5E7EB;
+}
+
+.low-light-mode #font-family-select:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.low-light-mode .modal-footer button:first-child {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #9CA3AF;
+}
+
+.low-light-mode .modal-footer button:first-child:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
 
 /* Word list button styles - with higher specificity */
 button#text-controls-btn.word-list-btn {
