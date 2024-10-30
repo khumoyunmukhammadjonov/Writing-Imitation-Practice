@@ -1115,7 +1115,7 @@ button#view-word-list-btn.word-list-btn:hover {
 <!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
     <!-- Word list toggle button with emoji icon -->
-    <button id="view-word-list-btn" class="word-list-btn">📖</button>
+<button id="view-word-list-btn" class="word-list-btn">&#x1F4D6;</button> 
     <!-- Low light mode toggle switch container -->
     <div class="toggle-container">
         <label class="switch">
@@ -1776,16 +1776,16 @@ const TextControlSystem = {
         this.setupEventListeners();
     },
 
-    addControlButton() {
-        const buttonContainer = document.querySelector('.toggle-and-list-container');
-        const controlButton = document.createElement('button');
-        controlButton.id = 'text-controls-btn';
-        controlButton.className = 'word-list-btn';
-        controlButton.innerHTML = '🔤';
-        controlButton.title = 'Text Controls';
-        controlButton.onclick = () => this.toggleControls();
-        buttonContainer.insertBefore(controlButton, buttonContainer.firstChild);
-    },
+addControlButton() {
+    const buttonContainer = document.querySelector('.toggle-and-list-container');
+    const controlButton = document.createElement('button');
+    controlButton.id = 'text-controls-btn';
+    controlButton.className = 'word-list-btn';
+    controlButton.innerHTML = '&#x2699;';  // Changed to gear symbol
+    controlButton.title = 'Text Controls';
+    controlButton.onclick = () => this.toggleControls();
+    buttonContainer.insertBefore(controlButton, buttonContainer.firstChild);
+}
 
     loadSavedSettings() {
         const saved = localStorage.getItem('textControls');
