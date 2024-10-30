@@ -1076,6 +1076,23 @@ button#view-word-list-btn.word-list-btn:hover {
     transform: none !important;
     box-shadow: none !important;
 }
+
+.emoji-icon img.emoji {
+    height: 24px;
+    width: 24px;
+    margin: 0;
+    vertical-align: middle;
+}
+
+/* Style for buttons with emojis */
+#view-word-list-btn img.emoji,
+#text-controls-btn img.emoji,
+#definition-btn img.emoji {
+    height: 24px;
+    width: 24px;
+    margin: 0;
+    vertical-align: -4px;
+}
  </style>
 </head>
 <body>
@@ -1117,7 +1134,7 @@ button#view-word-list-btn.word-list-btn:hover {
 <!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
     <!-- Word list toggle button with emoji icon -->
-    <button id="view-word-list-btn" class="word-list-btn">📖</button>
+<button id="view-word-list-btn" class="word-list-btn emoji-icon">📖</button>
     <!-- Low light mode toggle switch container -->
     <div class="toggle-container">
         <label class="switch">
@@ -1177,7 +1194,7 @@ button#view-word-list-btn.word-list-btn:hover {
 
 <!-- Context Menu: Appears on text selection -->
 <div id="context-menu">
-    <button id="definition-btn"> Definition</button>
+  <button id="definition-btn" class="emoji-icon">🔍 Definition</button>
     <button id="add-to-list-btn"> Add to Word List</button>
 </div>
 
@@ -1876,7 +1893,6 @@ document.addEventListener('DOMContentLoaded', () => {
     TextControlSystem.init();
 });
 
-  twemoji.parse(document.body);
 
     </script>
 </body>
