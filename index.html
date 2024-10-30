@@ -1487,21 +1487,39 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
-    // Updated pattern to exclude hyphenated words
-    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([^\s])/g;
-    
-    // Pattern to identify valid hyphenated words
+    // Separate patterns for different checks
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
     const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+
+    // First, identify hyphenated words
+    const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
+    const hyphenPositions = [];
     
-    // Check for missing spaces after punctuation, but ignore hyphenated words
-    if (punctuationWithoutSpacePattern.test(userInput)) {
-        const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
-        // Only show spacing error if there's a punctuation spacing issue that's not part of a hyphenated word
-        const testString = hyphenatedWords.reduce((str, word) => 
-            str.replace(word, ''), userInput);
-        missingSpaceFound = punctuationWithoutSpacePattern.test(testString);
+    // Record positions of valid hyphens in hyphenated words
+    hyphenatedWords.forEach(word => {
+        let pos = userInput.indexOf(word);
+        while (pos !== -1) {
+            const hyphens = word.match(/-/g) || [];
+            hyphens.forEach((_, index) => {
+                const hyphenPos = pos + word.indexOf('-', index);
+                hyphenPositions.push(hyphenPos);
+            });
+            pos = userInput.indexOf(word, pos + 1);
+        }
+    });
+
+    // Check for punctuation spacing issues
+    let match;
+    while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
+        const punctuationPos = match.index;
+        // Only count as an error if this punctuation is not part of a hyphenated word
+        if (!hyphenPositions.includes(punctuationPos)) {
+            missingSpaceFound = true;
+            break;
+        }
     }
 
+    // Rest of the comparison logic
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
