@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js"></script>
-
     <title>Writing Imitation Practice</title>
     <style>
       /* Base body styles - Sets up the main page layout and typography */
@@ -1076,23 +1074,6 @@ button#view-word-list-btn.word-list-btn:hover {
     transform: none !important;
     box-shadow: none !important;
 }
-
-.emoji-icon img.emoji {
-    height: 24px;
-    width: 24px;
-    margin: 0;
-    vertical-align: middle;
-}
-
-/* Style for buttons with emojis */
-#view-word-list-btn img.emoji,
-#text-controls-btn img.emoji,
-#definition-btn img.emoji {
-    height: 24px;
-    width: 24px;
-    margin: 0;
-    vertical-align: -4px;
-}
  </style>
 </head>
 <body>
@@ -1134,7 +1115,7 @@ button#view-word-list-btn.word-list-btn:hover {
 <!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
     <!-- Word list toggle button with emoji icon -->
-<button id="view-word-list-btn" class="word-list-btn emoji-icon">📖</button>
+    <button id="view-word-list-btn" class="word-list-btn">📖</button>
     <!-- Low light mode toggle switch container -->
     <div class="toggle-container">
         <label class="switch">
@@ -1194,7 +1175,7 @@ button#view-word-list-btn.word-list-btn:hover {
 
 <!-- Context Menu: Appears on text selection -->
 <div id="context-menu">
-  <button id="definition-btn" class="emoji-icon">🔍 Definition</button>
+    <button id="definition-btn"> Definition</button>
     <button id="add-to-list-btn"> Add to Word List</button>
 </div>
 
@@ -1892,6 +1873,7 @@ const TextControlSystem = {
 document.addEventListener('DOMContentLoaded', () => {
     TextControlSystem.init();
 });
+
 
 
     </script>
