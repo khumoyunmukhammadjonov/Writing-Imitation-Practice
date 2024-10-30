@@ -1768,6 +1768,7 @@ document.getElementById("original-sentence").addEventListener("dragstart", funct
 });
 
 
+// Add this JavaScript
 const TextControlSystem = {
     defaults: {
         fontSize: 18,
@@ -1831,20 +1832,15 @@ const TextControlSystem = {
     },
 
     applySettings() {
-        const originalSentence = document.getElementById('original-sentence');
-        const userInput = document.getElementById('user-input');
-        
-        if (originalSentence && userInput) {
-            // Apply font settings to both elements
-            [originalSentence, userInput].forEach(el => {
+        const elements = ['original-sentence', 'user-input'].map(id => 
+            document.getElementById(id));
+
+        elements.forEach(el => {
+            if (el) {
                 el.style.fontSize = `${this.settings.fontSize}px`;
                 el.style.fontFamily = this.settings.fontFamily;
-            });
-            
-            // Get computed line height from original sentence and apply to user input
-            const computedStyle = window.getComputedStyle(originalSentence);
-            userInput.style.lineHeight = computedStyle.lineHeight;
-        }
+            }
+        });
     },
 
     updateUI() {
@@ -1884,9 +1880,6 @@ const TextControlSystem = {
 document.addEventListener('DOMContentLoaded', () => {
     TextControlSystem.init();
 });
-
-
-
     </script>
 </body>
 </html>
