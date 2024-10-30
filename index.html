@@ -1461,6 +1461,7 @@ function showCompletionMessage() {
     clearProgress();
 }
 
+// Text normalization function with improved hyphenation handling
 function normalizeText(text) {
     return text
         .replace(/'/g, "'")
@@ -1471,7 +1472,8 @@ function normalizeText(text) {
         .replace(/–/g, '-')
         .replace(/—/g, '-')
         .replace(/\u00A0/g, ' ')
-        .replace(/…/g, '...');
+        .replace(/…/g, '...')
+        .trim();
 }
 
 function checkText() {
@@ -1485,11 +1487,19 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
-    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\-—–\/…])([^\s])/g;
-    const apostrophePattern = /\b\w+'\w+\b/g;
+    // Updated pattern to exclude hyphenated words
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([^\s])/g;
     
-    if (punctuationWithoutSpacePattern.test(userInput) && !apostrophePattern.test(userInput)) {
-        missingSpaceFound = true;
+    // Pattern to identify valid hyphenated words
+    const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+    
+    // Check for missing spaces after punctuation, but ignore hyphenated words
+    if (punctuationWithoutSpacePattern.test(userInput)) {
+        const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
+        // Only show spacing error if there's a punctuation spacing issue that's not part of a hyphenated word
+        const testString = hyphenatedWords.reduce((str, word) => 
+            str.replace(word, ''), userInput);
+        missingSpaceFound = punctuationWithoutSpacePattern.test(testString);
     }
 
     for (let i = 0; i < userWords.length; i++) {
