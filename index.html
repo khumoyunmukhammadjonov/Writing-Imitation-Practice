@@ -1775,13 +1775,12 @@ const TextControlSystem = {
         this.loadSavedSettings();
         this.setupEventListeners();
     },
-
 addControlButton() {
     const buttonContainer = document.querySelector('.toggle-and-list-container');
     const controlButton = document.createElement('button');
     controlButton.id = 'text-controls-btn';
     controlButton.className = 'word-list-btn';
-    controlButton.innerHTML = '&#x2699;';  // Changed to gear symbol
+    controlButton.innerHTML = '&#x1F520;'; // Text input symbol
     controlButton.title = 'Text Controls';
     controlButton.onclick = () => this.toggleControls();
     buttonContainer.insertBefore(controlButton, buttonContainer.firstChild);
