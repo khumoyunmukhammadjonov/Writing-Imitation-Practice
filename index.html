@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <title>Writing Imitation Practice</title>
     <style>
       /* Base body styles - Sets up the main page layout and typography */
@@ -386,7 +387,6 @@ input:checked + .slider:before {
 }
 
 #add-to-list-btn::before {
-    content: "📖";
     font-size: 16px;
     margin-right: 4px;
 }
@@ -411,7 +411,6 @@ input:checked + .slider:before {
 
 /* Definition button styling */
 #definition-btn::before {
-    content: "🔍";
     font-size: 16px;
     margin-right: 4px;
 }
@@ -1075,6 +1074,37 @@ button#view-word-list-btn.word-list-btn:hover {
     box-shadow: none !important;
 }
 
+
+/* Update the word list button styles */
+button#view-word-list-btn.word-list-btn,
+button#text-controls-btn.word-list-btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+    color: #333;
+    box-shadow: none !important;
+    margin-right: 10px !important;
+    display: flex;
+    align-items: center;
+    height: 34px;
+    line-height: 34px;
+}
+
+/* Add styles for Flaticon icons */
+.word-list-btn i {
+    font-size: 20px;
+}
+
+#definition-btn i {
+    margin-right: 8px;
+}
+
+/* Update dark mode styles */
+.low-light-mode button#text-controls-btn.word-list-btn i,
+.low-light-mode button#view-word-list-btn.word-list-btn i {
+    color: #E0E0E0;
+}
  </style>
 </head>
 <body>
@@ -1116,7 +1146,7 @@ button#view-word-list-btn.word-list-btn:hover {
 <!-- Top Controls Section: Contains the word list button and low light mode toggle -->
 <div class="toggle-and-list-container">
     <!-- Word list toggle button with emoji icon -->
-    <button id="view-word-list-btn" class="word-list-btn">📖</button>
+<button id="view-word-list-btn" class="word-list-btn"><i class="fi fi-rr-book-alt"></i></button>
     <!-- Low light mode toggle switch container -->
     <div class="toggle-container">
         <label class="switch">
@@ -1176,8 +1206,8 @@ button#view-word-list-btn.word-list-btn:hover {
 
 <!-- Context Menu: Appears on text selection -->
 <div id="context-menu">
-    <button id="definition-btn"> Definition</button>
-    <button id="add-to-list-btn"> Add to Word List</button>
+<button id="definition-btn"><i class="fi fi-rr-search"></i> Definition</button>
+    <button id="add-to-list-btn"><i class="fi fi-rr-book-alt"></i> Add to Word List</button>
 </div>
 
 <!-- Welcome Modal: Shows instructions on first visit -->
@@ -1810,7 +1840,7 @@ const TextControlSystem = {
         const controlButton = document.createElement('button');
         controlButton.id = 'text-controls-btn';
         controlButton.className = 'word-list-btn';
-        controlButton.innerHTML = '🔤';
+      controlButton.innerHTML = '<i class="fi fi-rr-text"></i>';
         controlButton.title = 'Text Controls';
         controlButton.onclick = () => this.toggleControls();
         buttonContainer.insertBefore(controlButton, buttonContainer.firstChild);
