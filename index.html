@@ -1520,15 +1520,27 @@ function showCompletionMessage() {
 // Text normalization function with improved hyphenation handling
 function normalizeText(text) {
     return text
-        .replace(/'/g, "'")
-        .replace(/'/g, "'")
-        .replace(/"/g, '"')
-        .replace(/"/g, '"')
-        .replace(/‐/g, '-')
-        .replace(/–/g, '-')
-        .replace(/—/g, '-')
-        .replace(/\u00A0/g, ' ')
-        .replace(/…/g, '...')
+        // Normalize various types of quotes to straight quotes
+        .replace(/[\u2018\u2019\u201B\u2032\u2035\u0060]/g, "'") // Various single quotes and primes
+        .replace(/[\u201C\u201D\u201F\u2033\u2036]/g, '"')       // Various double quotes and primes
+        
+        // Normalize various types of dashes and hyphens
+        .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\u2212]/g, '-')
+        
+        // Normalize ellipsis
+        .replace(/\u2026/g, '...') // Ellipsis character
+        .replace(/\.{2,}/g, '...') // Multiple dots to ellipsis
+        
+        // Normalize spaces
+        .replace(/[\u00A0\u2002-\u200B\u202F\u205F\u3000]/g, ' ') // Various space characters
+        .replace(/\s+/g, ' ')      // Multiple spaces to single space
+        
+        // Normalize other punctuation
+        .replace(/[\u2010\u2011]/g, '-')  // Various hyphens
+        .replace(/[\u2012\u2013]/g, '-')  // Various dashes
+        .replace(/[\u2014\u2015]/g, '-')  // Em dash and horizontal bar
+        
+        // Trim whitespace
         .trim();
 }
 
