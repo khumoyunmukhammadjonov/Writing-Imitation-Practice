@@ -234,13 +234,24 @@ button:hover {
 .modal-footer {
     text-align: center;
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Modal footer button spacing */
 .modal-footer button {
-    margin: 0 5px;
+    margin: 0;
+    padding: 9px 18px;
+    min-width: 100px; /* Ensure consistent button width */
 }
 
+#rules-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
 /* Modal body link styles */
 .modal-body a {
     font-size: 1rem;
@@ -261,9 +272,9 @@ button:hover {
     right: 10px;
     z-index: 100;
     display: flex;
-    align-items: center; /* Ensures vertical alignment */
-    gap: 10px;
-    height: 34px; /* Match the height of the toggle */
+    align-items: center;
+    gap: 12px; /* Consistent gap between all elements */
+    height: 34px;
 }
 
 /* Toggle container styles */
@@ -271,17 +282,19 @@ button:hover {
     display: flex;
     align-items: center;
     height: 34px;
+    margin: 0;
+    padding: 0;
 }
-
 /* Switch base styles - For low light mode toggle */
 .switch {
     position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     width: 60px;
     height: 34px;
     margin: 0;
+    padding: 0;
 }
-
 /* Switch input styles */
 .switch input {
     opacity: 0;
@@ -335,7 +348,6 @@ input:checked + .slider:before {
     padding: 8px 0;
     border: 1px solid rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    animation: contextMenuFadeIn 0.2s ease-out;
 }
 
 /* Context menu animation */
@@ -364,10 +376,19 @@ input:checked + .slider:before {
     font-size: 14px;
     font-weight: 500;
     transition: all 0.2s ease;
-    gap: 12px;
-    position: relative;
+    gap: 8px; /* Consistent spacing between icon and text */
 }
 
+#context-menu button i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    width: 20px; /* Fixed width for consistent alignment */
+    height: 20px; /* Fixed height for consistent alignment */
+    margin: 0;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
 /* Button hover state */
 #context-menu button:hover {
     background-color: #f5f5f5;
@@ -417,7 +438,7 @@ input:checked + .slider:before {
 
 /* Divider between buttons */
 #context-menu button:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Success state for add to list button */
@@ -547,7 +568,7 @@ input:checked + .slider:before {
 }
 
 .low-light-mode #context-menu button:not(:last-child) {
-    border-bottom-color: #404040;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Dark mode word list styles */
@@ -1076,28 +1097,30 @@ button#view-word-list-btn.word-list-btn:hover {
 
 
 /* Update the word list button styles */
-button#view-word-list-btn.word-list-btn,
-button#text-controls-btn.word-list-btn {
-    background-color: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    cursor: pointer;
-    color: #333;
-    box-shadow: none !important;
-    margin-right: 10px !important;
+button#text-controls-btn.word-list-btn,
+button#view-word-list-btn.word-list-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 34px;
-    line-height: 34px;
+    width: 34px;
+    padding: 0 !important;
+    margin: 0 !important;
+    background-color: transparent !important;
+    border: none !important;
+    cursor: pointer;
 }
 
 /* Add styles for Flaticon icons */
 .word-list-btn i {
     font-size: 20px;
-}
-
-#definition-btn i {
-    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* Update dark mode styles */
@@ -1105,6 +1128,8 @@ button#text-controls-btn.word-list-btn {
 .low-light-mode button#view-word-list-btn.word-list-btn i {
     color: #E0E0E0;
 }
+
+
  </style>
 </head>
 <body>
@@ -1750,6 +1775,11 @@ function showContextMenu(x, y) {
     contextMenu.style.display = 'block';
     contextMenu.style.left = x + 'px';
     contextMenu.style.top = y + 'px';
+    
+    // Reset the Add to Word List button to its original state
+    const addToListBtn = document.getElementById('add-to-list-btn');
+    addToListBtn.classList.remove('success');
+    addToListBtn.innerHTML = '<i class="fi fi-rr-book-alt"></i>Add to Word List';
 }
 
 function hideContextMenu() {
@@ -1801,11 +1831,10 @@ document.getElementById('add-to-list-btn').addEventListener('click', function() 
         localStorage.setItem('wordList', JSON.stringify(currentWordList));
         
         this.classList.add('success');
+        // Show only text during success state
         this.textContent = 'Added to Word List';
         
         setTimeout(() => {
-            this.classList.remove('success');
-            this.textContent = 'Add to Word List';
             hideContextMenu();
         }, 1500);
     } else {
