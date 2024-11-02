@@ -267,14 +267,18 @@ button:hover {
 
 /* Toggle and list container positioning */
 .toggle-and-list-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 100;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
     display: flex;
     align-items: center;
-    gap: 12px; /* Consistent gap between all elements */
-    height: 34px;
+    gap: 0.5rem;
+    background-color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* Toggle container styles */
@@ -1096,19 +1100,44 @@ button#view-word-list-btn.word-list-btn:hover {
 }
 
 
-/* Update the word list button styles */
-button#text-controls-btn.word-list-btn,
-button#view-word-list-btn.word-list-btn {
+/* Add these new control button styles */
+.control-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 34px;
-    width: 34px;
-    padding: 0 !important;
-    margin: 0 !important;
-    background-color: transparent !important;
-    border: none !important;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
     cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: unset;
+}
+
+.control-btn:hover {
+    background-color: #f5f5f5;
+    transform: none !important;
+}
+
+.control-btn i {
+    font-size: 1.25rem;
+    color: #6B7280;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover i {
+    color: #4CAF50;
+}
+
+/* Dark mode styles for control buttons */
+.low-light-mode .control-btn i {
+    color: #E5E7EB;
+}
+
+.low-light-mode .control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Add styles for Flaticon icons */
@@ -1168,17 +1197,18 @@ button#view-word-list-btn.word-list-btn {
         </div>
     </div>
 </div>
-<!-- Top Controls Section: Contains the word list button and low light mode toggle -->
+
+<!-- Update the toggle-and-list-container div -->
 <div class="toggle-and-list-container">
-    <!-- Word list toggle button with emoji icon -->
-<button id="view-word-list-btn" class="word-list-btn"><i class="fi fi-rr-book-alt"></i></button>
-    <!-- Low light mode toggle switch container -->
-    <div class="toggle-container">
-        <label class="switch">
-            <input type="checkbox" id="low-light-toggle">
-            <span class="slider"></span>
-        </label>
-    </div>
+    <button id="text-controls-btn" class="control-btn" title="Text Settings">
+        <i class="fi fi-rr-text"></i>
+    </button>
+    <button id="view-word-list-btn" class="control-btn" title="Word List">
+        <i class="fi fi-rr-book-alt"></i>
+    </button>
+    <button id="theme-toggle-btn" class="control-btn" title="Toggle Theme">
+        <i class="fi fi-rr-moon"></i>
+    </button>
 </div>
 
 <!-- Main Application Container -->
@@ -1283,7 +1313,7 @@ button#view-word-list-btn.word-list-btn {
 </div>
 
     <script>
-// Color Management System
+// 1. Core Management Systems
 const ColorManager = {
     getTextColor(isLowLight) {
         return isLowLight ? "#E0E0E0" : "#333";
@@ -1313,7 +1343,7 @@ const ColorManager = {
     }
 };
 
-// Result Management System
+// 2. Result Management System
 const ResultManager = {
     clearResult() {
         const result = document.getElementById("result");
@@ -1352,121 +1382,119 @@ const ResultManager = {
     }
 };
 
-
 document.getElementById("user-input").addEventListener("input", function() {
+    // Clear "Keep going" message when user starts typing
     const result = document.getElementById("result");
     if (result.innerText === "Keep going, you're getting closer!") {
-        result.innerText = "";
-        result.style.color = "";
+        ResultManager.clearResult();
     }
+    
+    // Handle multiple spaces
+    if (this.value.includes('  ')) {
+        this.value = this.value.replace(/\s+/g, ' ');
+    }
+    
+    hideOriginalSentence();
+    saveProgress();
 });
 
-// Word List UI Management System
-const WordListUI = {
-    showEmptyState(wordListElement) {
-        wordListElement.style.opacity = '0';
-        setTimeout(() => {
-            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
-            wordListElement.style.opacity = '1';
-        }, 300);
-    },
-    
-    createWordListItem(word, index) {
-        const li = document.createElement('li');
-        
-        const wordSpan = document.createElement('span');
-        wordSpan.textContent = word;
-        wordSpan.classList.add('clickable-word');
-        wordSpan.title = 'Click to look up definition';
-wordSpan.onclick = () => {
-    const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US`;
-    window.open(searchQuery, '_blank');
-};
-        
-        const buttonContainer = document.createElement('div');
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.className = 'remove-word-btn';
-        removeButton.setAttribute('data-index', index);
-        
-        buttonContainer.appendChild(removeButton);
-        li.appendChild(wordSpan);
-        li.appendChild(buttonContainer);
-        
-        return li;
+// Clear "Check your spacing" message when user starts typing
+document.getElementById("user-input").addEventListener("input", function() {
+    const result = document.getElementById("result");
+    if (result.innerText === "Check your spacing after punctuation.") {
+        ResultManager.clearResult();
+    }
+    // Handle multiple spaces
+    if (this.value.includes('  ')) {
+        this.value = this.value.replace(/\s+/g, ' ');
+    }
+    hideOriginalSentence();
+    saveProgress();
+});
+// 3. Text Control System
+const TextControlSystem = {
+    defaults: {
+        fontSize: 18,
+        fontFamily: 'Arial, sans-serif'
     },
 
-    setupRemoveButtons() {
-        const removeButtons = document.querySelectorAll('.remove-word-btn');
-        removeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const wordIndex = this.getAttribute('data-index');
-                removeWordFromList(wordIndex);
-            });
-            
-            button.addEventListener('animationend', () => {
-                button.classList.remove('clicked');
+    settings: {},
+
+    init() {
+        this.loadSavedSettings();
+        this.setupEventListeners();
+    },
+
+    loadSavedSettings() {
+        const saved = localStorage.getItem('textControls');
+        this.settings = saved ? JSON.parse(saved) : { ...this.defaults };
+        this.applySettings();
+    },
+
+    setupEventListeners() {
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.updateFontSize(parseInt(btn.dataset.size));
             });
         });
+
+        document.getElementById('font-family-select').addEventListener('change', (e) => {
+            this.updateFontFamily(e.target.value);
+        });
+    },
+
+    updateFontSize(size) {
+        this.settings.fontSize = size;
+        this.applySettings();
+        this.updateUI();
+        this.saveSettings();
+    },
+
+    updateFontFamily(family) {
+        this.settings.fontFamily = family;
+        this.applySettings();
+        this.saveSettings();
+    },
+
+    applySettings() {
+        const elements = ['original-sentence', 'user-input'].map(id => 
+            document.getElementById(id));
+
+        elements.forEach(el => {
+            if (el) {
+                el.style.fontSize = `${this.settings.fontSize}px`;
+                el.style.fontFamily = this.settings.fontFamily;
+            }
+        });
+    },
+
+    updateUI() {
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', 
+                parseInt(btn.dataset.size) === this.settings.fontSize);
+        });
+        document.getElementById('font-family-select').value = this.settings.fontFamily;
+    },
+
+    resetDefaults() {
+        this.settings = { ...this.defaults };
+        this.applySettings();
+        this.updateUI();
+        this.saveSettings();
+    },
+
+    saveSettings() {
+        localStorage.setItem('textControls', JSON.stringify(this.settings));
     }
 };
 
-// Practice State Management
+// 4. Practice State Management
 let sentences = [];
 let currentSentenceIndex = 0;
 let mistakeCount = 0;
+let selectedWord = '';
 
-// Initialize application
-window.onload = function() {
-    displayWordList();
-    loadSavedProgress();
-};
-
-// Progress Management
-function loadSavedProgress() {
-    const savedProgress = localStorage.getItem("writingProgress");
-    if (savedProgress) {
-        const progressData = JSON.parse(savedProgress);
-        currentSentenceIndex = progressData.currentSentenceIndex || 0;
-        mistakeCount = progressData.mistakeCount || 0;
-        sentences = progressData.sentences || [];
-        
-        if (sentences.length > 0) {
-            showSentence();
-            document.getElementById("practice-section").style.display = "block";
-            document.getElementById("start-button").classList.add("hidden");
-            document.getElementById("article-input").classList.add("hidden");
-            updateProgressBar();
-        }
-    } else {
-        document.getElementById("rules-modal").style.display = "flex";
-    }
-}
-
-function saveProgress() {
-    const progressData = {
-        currentSentenceIndex,
-        mistakeCount,
-        sentences,
-        articleInput: document.getElementById("article-input").value,
-        userInput: document.getElementById("user-input").value,
-        practiceVisible: document.getElementById("practice-section").style.display,
-        startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
-        articleInputHidden: document.getElementById("article-input").classList.contains("hidden")
-    };
-    localStorage.setItem("writingProgress", JSON.stringify(progressData));
-}
-
-function clearProgress() {
-    localStorage.removeItem("writingProgress");
-    currentSentenceIndex = 0;
-    mistakeCount = 0;
-    sentences = [];
-    document.getElementById("article-input").value = "";
-    document.getElementById("user-input").value = "";
-}
-
-// Practice Functions
+// 5. Core Practice Functions
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
     
@@ -1490,34 +1518,7 @@ function processArticle() {
     }
 }
 
-function showSentence() {
-    if (currentSentenceIndex < sentences.length) {
-        const originalSentenceElement = document.getElementById("original-sentence");
-        originalSentenceElement.innerText = sentences[currentSentenceIndex].trim();
-        ColorManager.updateOriginalSentenceColor(true);
-        
-        document.getElementById("user-input").value = "";
-        ResultManager.clearResult();
-        updateProgressBar();
-        saveProgress();
-    } else {
-        showCompletionMessage();
-    }
-}
-
-function showCompletionMessage() {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    originalSentenceElement.innerText = "You have completed the practice.";
-    originalSentenceElement.classList.add('completed-message');
-    ColorManager.updateOriginalSentenceColor(true);
-    document.getElementById("user-input").style.display = "none";
-    document.getElementById("check-button").style.display = "none";
-    document.getElementById("show-original-icon").style.display = "none";
-    ResultManager.clearResult();
-    clearProgress();
-}
-
-// Text normalization function with improved hyphenation handling
+// 6. Text Processing Functions
 function normalizeText(text) {
     return text
         // Normalize various types of quotes to straight quotes
@@ -1543,10 +1544,114 @@ function normalizeText(text) {
         // Trim whitespace
         .trim();
 }
+// 7. Word List Management
+function displayWordList() {
+    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    const wordListElement = document.getElementById('word-list');
+    
+    if (wordList.length === 0) {
+        wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
+        return;
+    }
+    
+    wordListElement.innerHTML = '';
+    wordList.forEach((word, index) => {
+        const li = createWordListItem(word, index);
+        wordListElement.appendChild(li);
+    });
+    
+    setupRemoveButtons();
+}
 
+// 8. Event Handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize systems
+    TextControlSystem.init();
+    
+    // Load saved data
+    displayWordList();
+    loadSavedProgress();
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'true') {
+        document.body.classList.add('low-light-mode');
+        document.querySelector('#theme-toggle-btn i').className = 'fi fi-rr-sun';
+        ColorManager.updateOriginalSentenceColor(true);
+        ColorManager.updateErrorMessageColors();
+    }
+});
+
+// 9. Theme Toggle Handler
+document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+    document.body.classList.toggle('low-light-mode');
+    const icon = this.querySelector('i');
+    if (document.body.classList.contains('low-light-mode')) {
+        icon.className = 'fi fi-rr-sun';
+    } else {
+        icon.className = 'fi fi-rr-moon';
+    }
+    localStorage.setItem('theme', document.body.classList.contains('low-light-mode'));
+    
+    const userInput = document.getElementById("user-input").value;
+    if (!userInput || document.getElementById("original-sentence").style.color !== ColorManager.getHiddenColor(document.body.classList.contains('low-light-mode'))) {
+        ColorManager.updateOriginalSentenceColor(true);
+    }
+    ColorManager.updateErrorMessageColors();
+});
+
+// 10. Progress Bar Management
+function updateProgressBar() {
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    const progress = (currentSentenceIndex / sentences.length) * 100;
+    progressBarFill.style.width = progress + "%";
+    progressBarFill.innerText = Math.round(progress) + "%";
+}
+
+// 11. Initialize Application
+window.onload = function() {
+    displayWordList();
+    loadSavedProgress();
+};   
+ 
+// 12. Sentence Management
+function showSentence() {
+    if (currentSentenceIndex < sentences.length) {
+        const originalSentenceElement = document.getElementById("original-sentence");
+        originalSentenceElement.innerText = sentences[currentSentenceIndex].trim();
+        ColorManager.updateOriginalSentenceColor(true);
+        
+        document.getElementById("user-input").value = "";
+        ResultManager.clearResult();
+        updateProgressBar();
+        saveProgress();
+    } else {
+        showCompletionMessage();
+    }
+}
+
+function showCompletionMessage() {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    originalSentenceElement.innerText = "You have completed the practice.";
+    originalSentenceElement.classList.add('completed-message');
+    ColorManager.updateOriginalSentenceColor(true);
+    document.getElementById("user-input").style.display = "none";
+    document.getElementById("check-button").style.display = "none";
+    ResultManager.clearResult();
+    clearProgress();
+}
+
+// 13. Text Checking System
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
+    
+    // Early check for excessive spaces
+    if (userInput.includes('  ')) {
+        document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
+        return;
+    }
+    
     const originalWords = originalSentence.split(' ');
     const userWords = userInput.split(' ');
     let correctWords = "";
@@ -1629,32 +1734,49 @@ function checkText() {
     updateProgressBar();
     saveProgress();
 }
-
-function updateProgressBar() {
-    const progressBarFill = document.getElementById("progress-bar-fill");
-    const progress = (currentSentenceIndex / sentences.length) * 100;
-    progressBarFill.style.width = progress + "%";
-    progressBarFill.innerText = Math.round(progress) + "%";
+// 15. Progress Management
+function saveProgress() {
+    const progressData = {
+        currentSentenceIndex,
+        mistakeCount,
+        sentences,
+        articleInput: document.getElementById("article-input").value,
+        userInput: document.getElementById("user-input").value,
+        practiceVisible: document.getElementById("practice-section").style.display,
+        startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
+        articleInputHidden: document.getElementById("article-input").classList.contains("hidden")
+    };
+    localStorage.setItem("writingProgress", JSON.stringify(progressData));
 }
 
-function restartPractice() {
-    clearProgress();
-    document.getElementById("practice-section").style.display = "none";
-    document.getElementById("start-button").classList.remove("hidden");
-    document.getElementById("article-input").classList.remove("hidden");
+function loadSavedProgress() {
+    const savedProgress = localStorage.getItem("writingProgress");
+    if (savedProgress) {
+        const progressData = JSON.parse(savedProgress);
+        currentSentenceIndex = progressData.currentSentenceIndex || 0;
+        mistakeCount = progressData.mistakeCount || 0;
+        sentences = progressData.sentences || [];
+        
+        if (sentences.length > 0) {
+            showSentence();
+            document.getElementById("practice-section").style.display = "block";
+            document.getElementById("start-button").classList.add("hidden");
+            document.getElementById("article-input").classList.add("hidden");
+            updateProgressBar();
+        }
+    }
+}
+
+function clearProgress() {
+    localStorage.removeItem("writingProgress");
+    currentSentenceIndex = 0;
+    mistakeCount = 0;
+    sentences = [];
     document.getElementById("article-input").value = "";
-    document.getElementById("user-input").style.display = "block";
-    document.getElementById("check-button").style.display = "inline";
-    ResultManager.clearResult();
-    document.getElementById("original-sentence").innerText = "";
-    document.getElementById("original-sentence").classList.remove('completed-message');
-    
-    const progressBarFill = document.getElementById("progress-bar-fill");
-    progressBarFill.style.width = "0%";
-    progressBarFill.innerText = "0%";
+    document.getElementById("user-input").value = "";
 }
 
-// UI Event Functions
+// 16. UI Event Handlers
 function hideOriginalSentence() {
     ColorManager.updateOriginalSentenceColor(false);
     document.getElementById("show-original-icon").style.display = "inline";
@@ -1673,149 +1795,56 @@ function handleKeyDown(event) {
     } else if (event.key === "Alt") {
         event.preventDefault();
         showOriginalSentence();
-    } else {
+    } else if (!event.altKey) {
         hideOriginalSentence();
     }
 }
 
+// 17. Practice Reset
+function restartPractice() {
+    clearProgress();
+    document.getElementById("practice-section").style.display = "none";
+    document.getElementById("start-button").classList.remove("hidden");
+    document.getElementById("article-input").classList.remove("hidden");
+    document.getElementById("article-input").value = "";
+    document.getElementById("user-input").value = "";
+    document.getElementById("user-input").style.display = "block";
+    document.getElementById("check-button").style.display = "inline";
+    ResultManager.clearResult();
+    document.getElementById("original-sentence").innerText = "";
+    document.getElementById("original-sentence").classList.remove('completed-message');
+    
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    progressBarFill.style.width = "0%";
+    progressBarFill.innerText = "0%";
+}
+
+// 18. Utility Functions
 function removeLineBreaks(text) {
     return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// Word List Functions
-function displayWordList() {
-    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-    const wordListElement = document.getElementById('word-list');
-    
-    if (wordList.length === 0 && wordListElement.children.length > 0) {
-        WordListUI.showEmptyState(wordListElement);
-        return;
-    }
-    
-    wordListElement.innerHTML = '';
-    
-    if (wordList.length > 0) {
-        wordList.forEach((word, index) => {
-            const listItem = WordListUI.createWordListItem(word, index);
-            wordListElement.appendChild(listItem);
-        });
-    } else {
-        wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
-    }
-    
-    WordListUI.setupRemoveButtons();
-}
-
-function removeWordFromList(index) {
-    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-    const listItem = document.querySelector(`[data-index="${index}"]`).parentElement.parentElement;
-    const button = document.querySelector(`[data-index="${index}"]`);
-    
-    button.classList.add('clicked');
-    listItem.classList.add('word-list-item-removing');
-    
-    setTimeout(() => {
-        wordList.splice(index, 1);
-        localStorage.setItem('wordList', JSON.stringify(wordList));
-        
-        if (wordList.length === 0) {
-            const wordListElement = document.getElementById('word-list');
-            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
-        } else {
-            displayWordList();
-        }
-    }, 500);
-}
-
-// Context Menu Management
-let selectedWord = '';
-const contextMenu = document.getElementById('context-menu');
-
-// Event Listeners
-document.addEventListener('mouseup', function(event) {
-    const selection = window.getSelection().toString().trim();
-    if (selection) {
-        selectedWord = selection;
-        if (event.button === 2) {
-            event.preventDefault();
-            showContextMenu(event.pageX, event.pageY);
-        }
-    } else {
-        hideContextMenu();
-    }
+// 19. Additional Event Listeners
+document.getElementById("article-input").addEventListener("paste", function(event) {
+    event.preventDefault();
+    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    this.value = removeLineBreaks(pastedText);
 });
 
-document.addEventListener('click', function(event) {
-    if (!contextMenu.contains(event.target)) {
-        hideContextMenu();
-    }
-});
-
-document.addEventListener('contextmenu', event => event.preventDefault());
-
-document.addEventListener('copy', function(event) {
-    const originalSentenceElement = document.getElementById("original-sentence");
-    const selection = window.getSelection();
-    if (selection.containsNode(originalSentenceElement, true)) {
-        event.preventDefault();
-        alert("Copying the original sentence is not allowed!");
-    }
-});
-
-document.getElementById("reload-button").addEventListener("click", restartPractice);
-
-document.getElementById("user-input").addEventListener("input", (event) => {
+document.getElementById("user-input").addEventListener("input", function() {
     hideOriginalSentence();
     ResultManager.clearResult();
     saveProgress();
 });
 
-document.getElementById("article-input").addEventListener("paste", function(event) {
+document.getElementById("reload-button").addEventListener("click", restartPractice);
+
+// Prevent drag-and-drop on the original sentence
+document.getElementById("original-sentence").addEventListener("dragstart", function(event) {
     event.preventDefault();
-    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
-    pastedText = removeLineBreaks(pastedText);
-    document.execCommand("insertText", false, pastedText);
 });
 
-// Modal Management
-function closeModal() {
-    document.getElementById("rules-modal").style.display = "none";
-}
-
-// Context Menu Functions
-function showContextMenu(x, y) {
-    contextMenu.style.display = 'block';
-    contextMenu.style.left = x + 'px';
-    contextMenu.style.top = y + 'px';
-    
-    // Reset the Add to Word List button to its original state
-    const addToListBtn = document.getElementById('add-to-list-btn');
-    addToListBtn.classList.remove('success');
-    addToListBtn.innerHTML = '<i class="fi fi-rr-book-alt"></i>Add to Word List';
-}
-
-function hideContextMenu() {
-    contextMenu.style.display = 'none';
-}
-
-// Low Light Mode Toggle
-const lowLightToggle = document.getElementById('low-light-toggle');
-lowLightToggle.addEventListener('change', function() {
-    const userInput = document.getElementById("user-input").value;
-    document.body.classList.toggle('low-light-mode');
-    
-    if (!userInput || document.getElementById("original-sentence").style.color !== ColorManager.getHiddenColor(this.checked)) {
-        ColorManager.updateOriginalSentenceColor(true);
-    }
-    ColorManager.updateErrorMessageColors();
-});
-
-// Word List Button Handlers
-document.getElementById('view-word-list-btn').addEventListener('click', function() {
-    displayWordList();
-    document.getElementById('word-list-section').style.display = 'block';
-});
-
+// 20. Word List Event Handlers
 document.getElementById('close-word-list-btn').addEventListener('click', function() {
     document.getElementById('word-list-section').style.display = 'none';
 });
@@ -1827,155 +1856,330 @@ document.getElementById('clear-word-list-btn').addEventListener('click', functio
     }
 });
 
-// Definition Button Handler
-document.getElementById('definition-btn').addEventListener('click', function() {
-    const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(selectedWord)}&kad=en_US`;
-    window.open(searchQuery, '_blank');
-    hideContextMenu();
-});
-
-// Add to List Button Handler
-document.getElementById('add-to-list-btn').addEventListener('click', function() {
-    const currentWordList = JSON.parse(localStorage.getItem('wordList')) || [];
-    
-    if (selectedWord && !currentWordList.includes(selectedWord)) {
-        currentWordList.push(selectedWord);
-        localStorage.setItem('wordList', JSON.stringify(currentWordList));
-        
-        this.classList.add('success');
-        // Show only text during success state
-        this.textContent = 'Added to Word List';
-        
+// 21. Word List UI Management
+const WordListUI = {
+    showEmptyState(wordListElement) {
+        wordListElement.style.opacity = '0';
         setTimeout(() => {
-            hideContextMenu();
-        }, 1500);
-    } else {
-        alert(`"${selectedWord}" is already in your word list.`);
-        hideContextMenu();
-    }
-});
-
-// Prevent drag-and-drop on the original sentence
-document.getElementById("original-sentence").addEventListener("dragstart", function(event) {
-    event.preventDefault();
-});
-
-
-// Add this JavaScript
-const TextControlSystem = {
-    defaults: {
-        fontSize: 18,
-        fontFamily: 'Arial, sans-serif'
+            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
+            wordListElement.style.opacity = '1';
+        }, 300);
+    },
+    
+    createWordListItem(word, index) {
+        const li = document.createElement('li');
+        
+        const wordSpan = document.createElement('span');
+        wordSpan.textContent = word;
+        wordSpan.classList.add('clickable-word');
+        wordSpan.title = 'Click to look up definition';
+        wordSpan.onclick = () => {
+            const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US`;
+            window.open(searchQuery, '_blank');
+        };
+        
+        const buttonContainer = document.createElement('div');
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'remove-word-btn';
+        removeButton.setAttribute('data-index', index);
+        
+        buttonContainer.appendChild(removeButton);
+        li.appendChild(wordSpan);
+        li.appendChild(buttonContainer);
+        
+        return li;
     },
 
-    settings: {},
-
-    init() {
-        this.addControlButton();
-        this.loadSavedSettings();
-        this.setupEventListeners();
-    },
-
-    addControlButton() {
-        const buttonContainer = document.querySelector('.toggle-and-list-container');
-        const controlButton = document.createElement('button');
-        controlButton.id = 'text-controls-btn';
-        controlButton.className = 'word-list-btn';
-      controlButton.innerHTML = '<i class="fi fi-rr-text"></i>';
-        controlButton.title = 'Text Controls';
-        controlButton.onclick = () => this.toggleControls();
-        buttonContainer.insertBefore(controlButton, buttonContainer.firstChild);
-    },
-
-    loadSavedSettings() {
-        const saved = localStorage.getItem('textControls');
-        this.settings = saved ? JSON.parse(saved) : { ...this.defaults };
-        this.applySettings();
-    },
-
-    saveSettings() {
-        localStorage.setItem('textControls', JSON.stringify(this.settings));
-    },
-
-    setupEventListeners() {
-        // Font size buttons
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.updateFontSize(parseInt(btn.dataset.size));
+    setupRemoveButtons() {
+        const removeButtons = document.querySelectorAll('.remove-word-btn');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const wordIndex = this.getAttribute('data-index');
+                removeWordFromList(wordIndex);
+            });
+            
+            button.addEventListener('animationend', () => {
+                button.classList.remove('clicked');
             });
         });
-
-        // Font family select
-        document.getElementById('font-family-select').addEventListener('change', (e) => {
-            this.updateFontFamily(e.target.value);
-        });
-    },
-
-    updateFontSize(size) {
-        this.settings.fontSize = size;
-        this.applySettings();
-        this.updateUI();
-        this.saveSettings();
-    },
-
-    updateFontFamily(family) {
-        this.settings.fontFamily = family;
-        this.applySettings();
-        this.saveSettings();
-    },
-
-    applySettings() {
-        const elements = ['original-sentence', 'user-input'].map(id => 
-            document.getElementById(id));
-
-        elements.forEach(el => {
-            if (el) {
-                el.style.fontSize = `${this.settings.fontSize}px`;
-                el.style.fontFamily = this.settings.fontFamily;
-            }
-        });
-    },
-
-    updateUI() {
-        // Update size buttons
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.toggle('active', 
-                parseInt(btn.dataset.size) === this.settings.fontSize);
-        });
-
-        // Update font family select
-        document.getElementById('font-family-select').value = this.settings.fontFamily;
-    },
-
-    toggleControls() {
-        const modal = document.getElementById('text-controls-modal');
-        if (modal.style.display !== 'flex') {
-            modal.style.display = 'flex';
-            this.updateUI();
-        } else {
-            this.closeControls();
-        }
-    },
-
-    closeControls() {
-        document.getElementById('text-controls-modal').style.display = 'none';
-    },
-
-    resetDefaults() {
-        this.settings = { ...this.defaults };
-        this.applySettings();
-        this.updateUI();
-        this.saveSettings();
     }
 };
 
-// Initialize on page load
+// 22. Context Menu System
+const ContextMenu = {
+    menu: document.getElementById('context-menu'),
+    selectedWord: '',
+    
+    init() {
+        this.setupEventListeners();
+        this.setupDefinitionButton();
+        this.setupAddToListButton();
+    },
+    
+    show(x, y) {
+        this.menu.style.display = 'block';
+        
+        // Ensure menu stays within viewport
+        const menuRect = this.menu.getBoundingClientRect();
+        const maxX = window.innerWidth - menuRect.width;
+        const maxY = window.innerHeight - menuRect.height;
+        
+        this.menu.style.left = `${Math.min(x, maxX)}px`;
+        this.menu.style.top = `${Math.min(y, maxY)}px`;
+        
+        // Reset add to list button
+        const addToListBtn = document.getElementById('add-to-list-btn');
+        addToListBtn.classList.remove('success');
+        addToListBtn.innerHTML = '<i class="fi fi-rr-book-alt"></i>Add to Word List';
+    },
+    
+    hide() {
+        this.menu.style.display = 'none';
+    },
+    
+    setupEventListeners() {
+        document.addEventListener('mouseup', (event) => {
+            const selection = window.getSelection().toString().trim();
+            if (selection) {
+                this.selectedWord = selection;
+                if (event.button === 2) {
+                    event.preventDefault();
+                    this.show(event.pageX, event.pageY);
+                }
+            } else {
+                this.hide();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!this.menu.contains(event.target)) {
+                this.hide();
+            }
+        });
+    },
+    
+    setupDefinitionButton() {
+        document.getElementById('definition-btn').addEventListener('click', () => {
+            if (this.selectedWord) {
+                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(this.selectedWord)}&kad=en_US`;
+                window.open(searchQuery, '_blank');
+                this.hide();
+            }
+        });
+    },
+    
+    setupAddToListButton() {
+        document.getElementById('add-to-list-btn').addEventListener('click', () => {
+            const currentWordList = JSON.parse(localStorage.getItem('wordList')) || [];
+            
+            if (this.selectedWord && !currentWordList.includes(this.selectedWord)) {
+                currentWordList.push(this.selectedWord);
+                localStorage.setItem('wordList', JSON.stringify(currentWordList));
+                
+                const addToListBtn = document.getElementById('add-to-list-btn');
+                addToListBtn.classList.add('success');
+                addToListBtn.textContent = 'Added to Word List';
+                
+                setTimeout(() => this.hide(), 1500);
+            } else if (this.selectedWord) {
+                alert(`"${this.selectedWord}" is already in your word list.`);
+                this.hide();
+            }
+        });
+    }
+};
+
+// 23. Modal Management
+// Modal Management System
+const ModalSystem = {
+    init() {
+        this.setupWelcomeModal();
+        this.setupTextControlsModal();
+    },
+
+    setupWelcomeModal() {
+        // Check if user has seen the welcome modal before
+        if (!localStorage.getItem('welcomeModalSeen')) {
+            const rulesModal = document.getElementById('rules-modal');
+            if (rulesModal) {
+                // Ensure modal is visible
+                rulesModal.style.display = 'flex';
+                
+                // Setup close button handler
+                const closeButton = rulesModal.querySelector('.modal-footer button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                        rulesModal.style.display = 'none';
+                        localStorage.setItem('welcomeModalSeen', 'true');
+                    });
+                }
+
+                // Setup click outside modal to close
+                rulesModal.addEventListener('click', (event) => {
+                    if (event.target === rulesModal) {
+                        rulesModal.style.display = 'none';
+                        localStorage.setItem('welcomeModalSeen', 'true');
+                    }
+                });
+            }
+        }
+    },
+
+    setupTextControlsModal() {
+        const modal = document.getElementById('text-controls-modal');
+        if (modal) {
+            const closeBtn = modal.querySelector('.modal-footer button:last-child');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+
+            // Click outside to close
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    }
+};
+
+// Update the initialization code
 document.addEventListener('DOMContentLoaded', () => {
-    TextControlSystem.init();
+    // Clear the welcome modal flag for testing (remove this in production)
+    localStorage.removeItem('welcomeModalSeen');
+    
+    // Initialize the modal system
+    ModalSystem.init();
 });
 
+// Helper function to manually close modal if needed
+function closeModal() {
+    const rulesModal = document.getElementById('rules-modal');
+    if (rulesModal) {
+        rulesModal.style.display = 'none';
+        localStorage.setItem('welcomeModalSeen', 'true');
+    }
+}
 
+// 24. Application Initialization
+function initializeApplication() {
+    // Initialize all systems
+    TextControlSystem.init();
+    ContextMenu.init();
+    ModalSystem.init();
+    
+    // Load saved data
+    loadSavedProgress();
+    displayWordList();
+    
+    // Setup copy protection
+    document.addEventListener('copy', function(event) {
+        const selection = window.getSelection();
+        const originalSentenceElement = document.getElementById("original-sentence");
+        if (selection.containsNode(originalSentenceElement, true)) {
+            event.preventDefault();
+            alert("Copying the original sentence is not allowed!");
+        }
+    });
+    
+    // Prevent default context menu
+    document.addEventListener('contextmenu', event => event.preventDefault());
+}
 
-    </script>
+// 25. Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
+
+// Initialize the application when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeApplication);
+
+// Add these event listeners after the existing ModalSystem.init() in the initializeApplication function
+
+// Text Controls Button Handler
+document.getElementById('text-controls-btn').addEventListener('click', function() {
+    const modal = document.getElementById('text-controls-modal');
+    modal.style.display = 'flex';
+    
+    // Update active state of font size buttons
+    const currentSize = TextControlSystem.settings.fontSize || TextControlSystem.defaults.fontSize;
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.size) === currentSize);
+    });
+    
+    // Update font family select
+    const fontSelect = document.getElementById('font-family-select');
+    fontSelect.value = TextControlSystem.settings.fontFamily || TextControlSystem.defaults.fontFamily;
+});
+
+// Word List Button Handler
+document.getElementById('view-word-list-btn').addEventListener('click', function() {
+    const wordListSection = document.getElementById('word-list-section');
+    if (wordListSection.style.display === 'none' || !wordListSection.style.display) {
+        wordListSection.style.display = 'flex';
+        displayWordList(); // Refresh the word list when showing
+    } else {
+        wordListSection.style.display = 'none';
+    }
+});
+
+// Close text controls modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('text-controls-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+// Add these functions to TextControlSystem object
+Object.assign(TextControlSystem, {
+    closeControls() {
+        document.getElementById('text-controls-modal').style.display = 'none';
+    },
+    
+    showControls() {
+        document.getElementById('text-controls-modal').style.display = 'flex';
+        this.updateUI();
+    }
+});
+
+// Update the displayWordList function to handle empty lists better
+function displayWordList() {
+    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    const wordListElement = document.getElementById('word-list');
+    
+    if (wordList.length === 0) {
+        wordListElement.innerHTML = '<li class="empty-state">Your word list is empty. Select text and use the context menu to add words.</li>';
+        return;
+    }
+    
+    wordListElement.innerHTML = wordList.map((word, index) => `
+        <li>
+            <span class="clickable-word" onclick="window.open('https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US', '_blank')">${word}</span>
+            <div>
+                <button class="remove-word-btn" data-index="${index}">Remove</button>
+            </div>
+        </li>
+    `).join('');
+    
+    // Setup remove buttons
+    document.querySelectorAll('.remove-word-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            const currentList = JSON.parse(localStorage.getItem('wordList')) || [];
+            currentList.splice(index, 1);
+            localStorage.setItem('wordList', JSON.stringify(currentList));
+            displayWordList();
+        });
+    });
+}
+</script>
 </body>
 </html>
