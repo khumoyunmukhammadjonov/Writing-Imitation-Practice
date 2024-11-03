@@ -740,73 +740,6 @@ input:checked + .slider:before {
 }
 
 
-/* Word list item animation */
-const styleSheet = `
-
-#word-list li {
-    transform-origin: center;
-    transition: all 0.3s ease;
-}
-
-.word-list-item-removing {
-    animation: removeItem 0.5s ease forwards;
-    pointer-events: none;
-}
-
-@keyframes removeItem {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(0.9);
-        opacity: 0.5;
-    }
-    100% {
-        transform: scale(0);
-        opacity: 0;
-        margin-top: -60px;
-    }
-}
-
-/* Remove button hover and active states */
-.remove-word-btn {
-    background-color: #dc2626 !important;
-    transition: all 0.2s ease !important;
-    position: relative;
-    overflow: hidden;
-}
-
-.remove-word-btn:hover {
-    background-color: #ef4444 !important;
-    transform: translateY(-1px);
-}
-
-.remove-word-btn:active {
-    transform: translateY(1px);
-}
-
-/* Button click ripple effect */
-.remove-word-btn::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease-out, height 0.3s ease-out;
-}
-
-.remove-word-btn.clicked::after {
-    width: 150%;
-    height: 150%;
-    opacity: 0;
-}
-`;
-
 /* Word list button styles */
 .word-list-btn {
     background: none !important;
@@ -1181,6 +1114,66 @@ button#view-word-list-btn.word-list-btn:hover {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+
+/* Add new animation keyframes */
+@keyframes fadeOutSlide {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+        max-height: 100px;
+        margin-bottom: 12px;
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateX(-10px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-20px);
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+/* Add animation properties to list items */
+#word-list li {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    /* Add these properties for smooth animation */
+    transition: all 0.3s ease;
+    overflow: hidden;
+    max-height: 100px;
+    margin-bottom: 12px;
+}
+
+/* Add class for animation */
+#word-list li.deleting {
+    animation: fadeOutSlide 0.3s ease-out forwards;
+}
+
+/* Update empty state to not animate */
+#word-list li.empty-state {
+    animation: none;
+}
+
+/* Dark mode adjustments */
+.low-light-mode #word-list li {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
+
+/* Add animation properties to list items */
  </style>
 </head>
 <body>
@@ -2208,14 +2201,22 @@ function displayWordList() {
         </li>
     `).join('');
     
-    // Setup remove buttons
+    // Setup remove buttons with animation
     document.querySelectorAll('.remove-word-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const index = parseInt(this.dataset.index);
-            const currentList = JSON.parse(localStorage.getItem('wordList')) || [];
-            currentList.splice(index, 1);
-            localStorage.setItem('wordList', JSON.stringify(currentList));
-            displayWordList();
+            const listItem = this.closest('li');
+            
+            // Add animation class
+            listItem.classList.add('deleting');
+            
+            // Wait for animation to complete before updating the list
+            setTimeout(() => {
+                const currentList = JSON.parse(localStorage.getItem('wordList')) || [];
+                currentList.splice(index, 1);
+                localStorage.setItem('wordList', JSON.stringify(currentList));
+                displayWordList();
+            }, 300); // Match this with animation duration
         });
     });
 }
