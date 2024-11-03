@@ -996,19 +996,22 @@ button#view-word-list-btn.word-list-btn:hover {
 
 /* Modal Footer */
 #text-controls-modal .modal-footer {
-    margin-top: 8px;
-    padding-top: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     display: flex;
-    justify-content: flex-end;
-    gap: 6px;
+    flex-direction: column; /* Stack buttons vertically */
+    width: 100%; /* Ensure full width */
 }
 
 #text-controls-modal .modal-footer button {
-    padding: 4px 8px;
+    width: 100%; /* Make button full width */
+    padding: 8px;
     font-size: 12px;
-    min-width: auto;
     border-radius: 4px;
+    background-color: #f5f5f5;
+    color: #666;
+    border: 0;
 }
 
 .modal-footer button:first-child {
@@ -1016,8 +1019,8 @@ button#view-word-list-btn.word-list-btn:hover {
     color: #6B7280;
 }
 
-.modal-footer button:first-child:hover {
-    background-color: rgba(156, 163, 175, 0.15);
+#text-controls-modal .modal-footer button:hover {
+    background-color: #e8e8e8;
 }
 
 .modal-footer button:last-child {
@@ -1069,13 +1072,13 @@ button#view-word-list-btn.word-list-btn:hover {
     border-color: rgba(255, 255, 255, 0.15);
 }
 
-.low-light-mode .modal-footer button:first-child {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: #9CA3AF;
+.low-light-mode #text-controls-modal .modal-footer button {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
 }
 
-.low-light-mode .modal-footer button:first-child:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+.low-light-mode #text-controls-modal .modal-footer button:hover {
+    background-color: #404040;
 }
 
 .low-light-mode #text-controls-modal .control-section {
@@ -1207,9 +1210,9 @@ button#view-word-list-btn.word-list-btn:hover {
                 <option value="Roboto, sans-serif">Roboto</option>
             </select>
         </div>
-        <div class="modal-footer">
-            <button onclick="TextControlSystem.resetDefaults()">Reset</button>
-        </div>
+ <div class="modal-footer">
+    <button onclick="TextControlSystem.resetDefaults()">Reset to Defaults</button>
+</div>
     </div>
 </div>
 
@@ -2120,12 +2123,19 @@ document.addEventListener('DOMContentLoaded', initializeApplication);
 
 // Text Controls Button Handler
 // Text Controls Button Handler
-document.getElementById('text-controls-btn').addEventListener('click', function() {
+document.getElementById('text-controls-btn').addEventListener('click', function(event) {
+    event.stopPropagation(); // Prevent event from bubbling up
     const modal = document.getElementById('text-controls-modal');
+    
     if (modal.style.display === 'flex') {
         modal.style.display = 'none';
     } else {
+        // Position modal below the button
+        const buttonRect = this.getBoundingClientRect();
         modal.style.display = 'flex';
+        
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.style.top = (buttonRect.bottom + 10) + 'px'; // 10px gap
         
         // Update active state of font size buttons
         const currentSize = TextControlSystem.settings.fontSize || TextControlSystem.defaults.fontSize;
@@ -2139,6 +2149,17 @@ document.getElementById('text-controls-btn').addEventListener('click', function(
     }
 });
 
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('text-controls-modal');
+    const textControlsBtn = document.getElementById('text-controls-btn');
+    
+    if (modal.style.display === 'flex' && 
+        !modal.contains(event.target) && 
+        event.target !== textControlsBtn) {
+        modal.style.display = 'none';
+    }
+});
 // Word List Button Handler
 document.getElementById('view-word-list-btn').addEventListener('click', function() {
     const wordListSection = document.getElementById('word-list-section');
