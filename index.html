@@ -1,2394 +1,2225 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <title>Writing Imitation Practice</title>
     <style>
       /* Base body styles - Sets up the main page layout and typography */
-      body {
-        font-family: 'Arial', sans-serif;
-        background-color: #eef2f5;
-        color: #333;
-        margin: 0;
-        padding: 0;
-        line-height: 1.6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #eef2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-      /* Main container styles - Holds all content with card-like appearance */
-      .container {
-        background-color: white;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
-        width: 100%;
-        border: 1px solid #ccc;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        box-sizing: border-box;
-  max-width: 800px;
-  width: min(90%, 800px);
-  min-height: 500px;
-  margin: 20px auto;
-      }
+/* Main container styles - Holds all content with card-like appearance */
+.container {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
 
-      /* Main heading styles - Green title at the top of the container */
-      h1 {
-        text-align: center;
-        margin: 10px 0;
-font-size: clamp(24px, 3vw, 30px);
-        color: #4caf50;
-      }
+/* Main heading styles - Green title at the top of the container */
+h1 {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 30px;
+    color: #4CAF50;
+}
 
-      textarea {
-   width: 100%;
-min-height: clamp(120px, 15vh, 160px);
-padding: clamp(8px, 1.5vh, 12px);
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-family: 'Arial', sans-serif;
-        resize: none;
-        box-sizing: border-box;
-      }
+textarea {
+    width: 100%;
+    height: 140px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 17px;
+    font-family: 'Arial', sans-serif;
+    resize: none;
+    box-sizing: border-box;
+}
 
-      /* Button container styles - Centers and spaces buttons */
-      .button-container {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 15px;
-      }
+/* Button container styles - Centers and spaces buttons */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
 
-      /* General button styles - Common styling for all buttons */
-      button {
- min-width: clamp(90px, 15vw, 120px);
-  padding: clamp(8px, 1.5vh, 12px) clamp(15px, 2.5vw, 20px);
-        border: none;
-        background-color: #4caf50;
-        color: white;
-  font-size: clamp(14px, 1.8vw, 17px);
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+/* General button styles - Common styling for all buttons */
+button {
+    padding: 9px 18px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 17px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-      /* Add or update button styles */
-      button#check-button,
-      button#reload-button {
-        min-width: 100px !important; /* Set equal minimum width for both buttons */
-        padding: 9px 18px !important;
-      }
 
-      /* Additional styles to ensure equal sizing */
-      .button-container {
-        display: flex;
-        justify-content: center;
-gap: clamp(10px, 2vw, 15px);
- margin: 1rem 0;
-      }
+/* Add or update button styles */
+button#check-button,
+button#reload-button {
+    min-width: 100px !important; /* Set equal minimum width for both buttons */
+    padding: 9px 18px !important;
+}
 
-      .button-container button {
-        flex: 0 0 auto; /* Prevent flex from affecting button width */
-      }
-      /* Button hover effect */
-      button:hover {
-        background-color: #45a049;
-      }
+/* Additional styles to ensure equal sizing */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
 
-      /* Reload button specific style */
-      #reload-button {
-        background-color: #dc2626;
-      }
+.button-container button {
+    flex: 0 0 auto; /* Prevent flex from affecting button width */
+}
+/* Button hover effect */
+button:hover {
+    background-color: #45a049;
+}
 
-      /* Result display area styles */
-      #result {
-        margin-top: 15px;
-        font-size: 17px;
-        text-align: center;
-        height: 24px;
-      }
+/* Reload button specific style */
+#reload-button {
+    background-color: #DC2626;
+}
 
-      /* Practice section initial state */
-      #practice-section {
-        display: none;
-      }
+/* Result display area styles */
+#result {
+    margin-top: 15px;
+    font-size: 17px;
+    text-align: center;
+    height: 24px;
+}
 
-      /* Original sentence display styles */
-      #original-sentence {
-  width: 100%;
-        text-align: center;
-  font-size: clamp(16px, 2vw, 19px);
-        font-weight: bold;
-margin: 1rem 0;
- padding: clamp(12px, 2vh, 20px);
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-  min-height: clamp(80px, 12vh, 120px);
-        cursor: text;
-        color: #333;
-      }
+/* Practice section initial state */
+#practice-section {
+    display: none;
+}
 
-      /* Completion message styles */
-      .completed-message {
-        text-align: center;
-        font-size: 21px;
-        font-weight: bold;
-        margin: 30px 0;
-        padding: 15px;
-        background-color: #e0ffe0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        color: #333;
-      }
 
-      /* Progress bar container styles */
-      .progress-bar {
- width: 100%;
-  height: clamp(16px, 2vh, 20px);
+/* Original sentence display styles */
+#original-sentence {
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+    cursor: text;
+    color: #333;
+}
 
-        background-color: #ccc;
-        border-radius: 4px;
-        overflow: hidden;
-  margin: 0.5rem 0;
-      }
+/* Completion message styles */
+.completed-message {
+    text-align: center;
+    font-size: 21px;
+    font-weight: bold;
+    margin: 30px 0;
+    padding: 15px;
+    background-color: #e0ffe0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+}
 
-      /* Progress bar fill styles */
-      .progress-bar-fill {
+/* Progress bar container styles */
+.progress-bar {
+    width: 100%;
+    background-color: #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+/* Progress bar fill styles */
+.progress-bar-fill {
+    height: 20px;
+    width: 0;
+    background-color: #4CAF50;
+    text-align: center;
+    color: white;
+    line-height: 20px;
+    transition: width 0.4s ease;
+}
+
+/* Hidden element style */
+.hidden {
+    display: none;
+}
+
+/* Icon container styles */
+.icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Show original icon styles */
+#show-original-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+    color: #4CAF50;
+}
+
+/* Modal styles - For rules and instructions */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
     height: 100%;
-  font-size: clamp(12px, 1.5vh, 14px);
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
 
-        width: 0;
-        background-color: #4caf50;
-        text-align: center;
-        color: white;
-        line-height: 20px;
-        transition: width 0.4s ease;
-      }
+/* Modal content container */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    border: 1px solid #ccc;
+}
 
-      /* Hidden element style */
-      .hidden {
-        display: none;
-      }
+/* Modal header styles */
+.modal-header {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #4CAF50;
+    text-align: center;
+}
 
-      /* Icon container styles */
-      .icon-container {
-        position: relative;
-        display: inline-block;
-      }
+/* Modal body text styles */
+.modal-body {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+}
 
-      /* Show original icon styles */
-      #show-original-icon {
-        display: none;
-        cursor: pointer;
-        font-size: 20px;
-        margin-left: 10px;
-        color: #4caf50;
-      }
+/* Modal footer styles */
+.modal-footer {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-      /* Modal styles - For rules and instructions */
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-        justify-content: center;
-        align-items: center;
-      }
+/* Modal footer button spacing */
+.modal-footer button {
+    margin: 0;
+    padding: 9px 18px;
+    min-width: 100px; /* Ensure consistent button width */
+}
 
-      /* Modal content container */
-      .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-        width: 100%;
-        border: 1px solid #ccc;
-      }
+#rules-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+/* Modal body link styles */
+.modal-body a {
+    font-size: 1rem;
+    color: #007bff;
+    text-decoration: none;
+    padding: 0.5rem 0;
+}
 
-      /* Modal header styles */
-      .modal-header {
-        font-size: 24px;
-        margin-bottom: 15px;
-        color: #4caf50;
-        text-align: center;
-      }
+/* Modal body link hover effect */
+.modal-body a:hover {
+    text-decoration: underline;
+}
 
-      /* Modal body text styles */
-      .modal-body {
-        font-size: 16px;
-        color: #333;
-        line-height: 1.6;
-      }
+/* Toggle and list container positioning */
+.toggle-and-list-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 4px;
+    gap: 4px;
+}
 
-      /* Modal footer styles */
-      .modal-footer {
-        text-align: center;
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+/* Toggle container styles */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+}
+/* Switch base styles - For low light mode toggle */
+.switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 60px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+}
+/* Switch input styles */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-      /* Modal footer button spacing */
-      .modal-footer button {
-        margin: 0;
-        padding: 9px 18px;
-        min-width: 100px; /* Ensure consistent button width */
-      }
+/* Switch slider styles */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
 
-      #rules-modal .modal-footer {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-      }
-      /* Modal body link styles */
-      .modal-body a {
-        font-size: 1rem;
-        color: #007bff;
-        text-decoration: none;
-        padding: 0.5rem 0;
-      }
+/* Switch slider knob */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
 
-      /* Modal body link hover effect */
-      .modal-body a:hover {
-        text-decoration: underline;
-      }
+/* Switch checked state */
+input:checked + .slider {
+    background-color: #555;
+}
 
-      /* Toggle and list container positioning */
-      .toggle-and-list-container {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        display: flex;
-        align-items: center;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        padding: 4px;
-        gap: 4px;
-      }
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
 
-      /* Toggle container styles */
-      .toggle-container {
-        display: flex;
-        align-items: center;
-        height: 34px;
-        margin: 0;
-        padding: 0;
-      }
-      /* Switch base styles - For low light mode toggle */
-      .switch {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 60px;
-        height: 34px;
-        margin: 0;
-        padding: 0;
-      }
-      /* Switch input styles */
-      .switch input {
+#context-menu {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 200px;
+    padding: 8px 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Context menu animation */
+@keyframes contextMenuFadeIn {
+    from {
         opacity: 0;
-        width: 0;
-        height: 0;
-      }
-
-      /* Switch slider styles */
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.4s;
-        border-radius: 34px;
-      }
-
-      /* Switch slider knob */
-      .slider:before {
-        position: absolute;
-        content: '';
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: 0.4s;
-        border-radius: 50%;
-      }
-
-      /* Switch checked state */
-      input:checked + .slider {
-        background-color: #555;
-      }
-
-      input:checked + .slider:before {
-        transform: translateX(26px);
-      }
-
-      #context-menu {
-        display: none;
-        position: absolute;
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
-        min-width: 200px;
-        padding: 8px 0;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-      }
-
-      /* Context menu animation */
-      @keyframes contextMenuFadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-
-      /* Context menu buttons base styles */
-      #context-menu button {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 12px 16px;
-        text-align: left;
-        border: none;
-        background: none;
-        cursor: pointer;
-        color: #333333;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        gap: 8px; /* Consistent spacing between icon and text */
-      }
-
-      #context-menu button i {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        width: 20px; /* Fixed width for consistent alignment */
-        height: 20px; /* Fixed height for consistent alignment */
-        margin: 0;
-        flex-shrink: 0; /* Prevent icon from shrinking */
-      }
-      /* Button hover state */
-      #context-menu button:hover {
-        background-color: #f5f5f5;
-        color: #4caf50;
-      }
-
-      /* Button active state */
-      #context-menu button:active {
-        background-color: #e8e8e8;
-        transform: scale(0.98);
-      }
-
-      /* Special styling for Add to Word List button */
-      #add-to-list-btn {
-        color: #2196f3;
-        font-weight: 600;
-      }
-
-      #add-to-list-btn::before {
-        font-size: 16px;
-        margin-right: 4px;
-      }
-
-      /* Add plus indicator */
-      #add-to-list-btn::after {
-        position: absolute;
-        right: 16px;
-        font-size: 18px;
-        font-weight: bold;
-        color: #4caf50;
-        opacity: 0;
-        transform: scale(0.8);
-        transition: all 0.2s ease;
-      }
-
-      /* Show plus on hover */
-      #add-to-list-btn:hover::after {
+        transform: scale(0.95);
+    }
+    to {
         opacity: 1;
         transform: scale(1);
-      }
+    }
+}
 
-      /* Definition button styling */
-      #definition-btn::before {
-        font-size: 16px;
-        margin-right: 4px;
-      }
+/* Context menu buttons base styles */
+#context-menu button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    gap: 8px; /* Consistent spacing between icon and text */
+}
 
-      /* Divider between buttons */
-      #context-menu button:not(:last-child) {
-        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-      }
+#context-menu button i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    width: 20px; /* Fixed width for consistent alignment */
+    height: 20px; /* Fixed height for consistent alignment */
+    margin: 0;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+/* Button hover state */
+#context-menu button:hover {
+    background-color: #f5f5f5;
+    color: #4CAF50;
+}
 
-      /* Success state for add to list button */
-      #add-to-list-btn.success {
-        color: #4caf50;
-        background-color: rgba(76, 175, 80, 0.1);
-      }
+/* Button active state */
+#context-menu button:active {
+    background-color: #e8e8e8;
+    transform: scale(0.98);
+}
 
-      #add-to-list-btn.success::before {
-        content: '✓';
-      }
+/* Special styling for Add to Word List button */
+#add-to-list-btn {
+    color: #2196F3;
+    font-weight: 600;
+}
 
-      /* Low light mode styles */
-      /* Low-light mode (Dark mode) styles */
-      .low-light-mode {
-        background-color: #121212;
-        color: #e0e0e0;
-      }
+#add-to-list-btn::before {
+    font-size: 16px;
+    margin-right: 4px;
+}
 
-      .low-light-mode .container {
-        background-color: #1e1e1e;
-        border-color: #333333;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-      }
+/* Add plus indicator */
+#add-to-list-btn::after {
+    position: absolute;
+    right: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+}
 
-      .low-light-mode h1 {
-        color: #4caf50;
-      }
+/* Show plus on hover */
+#add-to-list-btn:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
 
-      .low-light-mode textarea {
-        background-color: #2d2d2d;
-        color: #e0e0e0;
-        border-color: #404040;
-      }
+/* Definition button styling */
+#definition-btn::before {
+    font-size: 16px;
+    margin-right: 4px;
+}
 
-      .low-light-mode textarea:focus {
-        border-color: #4caf50;
-        outline: none;
-        box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-      }
+/* Divider between buttons */
+#context-menu button:not(:last-child) {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
 
-      .low-light-mode button {
-        background-color: #4caf50;
-        color: #ffffff;
-        border: none;
-      }
+/* Success state for add to list button */
+#add-to-list-btn.success {
+    color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
 
-      .low-light-mode button:hover {
-        background-color: #45a049;
-      }
+#add-to-list-btn.success::before {
+    content: "✓";
+}
 
-      .low-light-mode #reload-button {
-        background-color: #dc2626;
-      }
+/* Low light mode styles */
+/* Low-light mode (Dark mode) styles */
+.low-light-mode {
+    background-color: #121212;
+    color: #E0E0E0;
+}
 
-      .low-light-mode #reload-button:hover {
-        background-color: #b91c1c;
-      }
+.low-light-mode .container {
+    background-color: #1E1E1E;
+    border-color: #333333;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
 
-      .low-light-mode #original-sentence {
-        background-color: #2d2d2d;
-        border-color: #404040;
-        color: #e0e0e0; /* Default visible state in dark mode */
-      }
+.low-light-mode h1 {
+    color: #4CAF50;
+}
 
-      /* Update hideOriginalSentence function behavior for dark mode */
-      .low-light-mode #original-sentence.hidden-sentence {
-        color: #2d2d2d; /* Same as background color when hidden */
-      }
+.low-light-mode textarea {
+    background-color: #2D2D2D;
+    color: #E0E0E0;
+    border-color: #404040;
+}
 
-      .low-light-mode .completed-message {
-        background-color: #1b4332;
-        border-color: #2d6a4f;
-        color: #95d5b2;
-      }
+.low-light-mode textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
 
-      .low-light-mode .progress-bar {
-        background-color: #2d2d2d;
-        border: 1px solid #404040;
-      }
+.low-light-mode button {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    border: none;
+}
 
-      .low-light-mode .progress-bar-fill {
-        background-color: #4caf50;
-        color: #ffffff;
-      }
+.low-light-mode button:hover {
+    background-color: #45a049;
+}
 
-      .low-light-mode .incorrect {
-        color: #ff6b6b;
-        background-color: rgba(255, 107, 107, 0.1);
-        border: 1px solid rgba(255, 107, 107, 0.3);
-      }
+.low-light-mode #reload-button {
+    background-color: #DC2626;
+}
 
-      .low-light-mode .correct {
-        color: #69db7c;
-        background-color: rgba(105, 219, 124, 0.1);
-        border: 1px solid rgba(105, 219, 124, 0.3);
-      }
+.low-light-mode #reload-button:hover {
+    background-color: #B91C1C;
+}
 
-      .low-light-mode .too-many-mistakes {
-        color: #ff8787;
-        text-shadow: none;
-      }
-
-      /* Dark mode context menu styles */
-      .low-light-mode #context-menu {
-        background-color: #2d2d2d;
-        border-color: #404040;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      }
-
-      .low-light-mode #context-menu button {
-        color: #e0e0e0;
-      }
-
-      .low-light-mode #context-menu button:hover {
-        background-color: #404040;
-        color: #4caf50;
-      }
-
-      .low-light-mode #add-to-list-btn {
-        color: #90caf9;
-      }
-
-      .low-light-mode #add-to-list-btn.success {
-        color: #69db7c;
-        background-color: rgba(105, 219, 124, 0.1);
-      }
-
-      .low-light-mode #context-menu button:not(:last-child) {
-        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-      }
-
-      /* Dark mode word list styles */
-      .low-light-mode #word-list-section {
-        background-color: rgba(18, 18, 18, 0.95);
-      }
-
-      .low-light-mode #word-list li {
-        background-color: #2d2d2d;
-        border-color: #404040;
-      }
-
-      .low-light-mode .clickable-word:hover {
-        color: #69db7c;
-        background-color: rgba(255, 255, 255, 0.05);
-      }
-
-      .low-light-mode #clear-word-list-btn {
-        background-color: #dc2626 !important;
-      }
-
-      .low-light-mode #close-word-list-btn {
-        background-color: #2d2d2d;
-        border-color: #404040;
-      }
-
-      .low-light-mode #word-list li.empty-state {
-        border-color: #404040;
-        color: #808080;
-      }
-      /* Word list section styles */
-      #word-list-section {
-        width: 100%;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.85);
-        padding: 40px 20px;
-        overflow-y: auto;
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        backdrop-filter: blur(8px);
-        transition: all 0.3s ease;
-      }
-
-      /* Word list section heading */
-      #word-list-section h2 {
-        color: white;
-        font-size: 2rem;
-        margin-bottom: 2rem;
-        font-weight: 500;
-        text-align: center;
-      }
-
-      /* Word list container */
-      #word-list {
-        list-style-type: none;
-        width: 90%;
-        max-width: 600px;
-        margin: 20px auto;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-
-      /* Individual word list items */
-      #word-list li {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 16px 20px;
-        border-radius: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        font-size: 1.1rem;
-        transition: all 0.2s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        width: 100%;
-      }
-
-      /* Clickable word styles */
-      .clickable-word {
-        cursor: pointer;
-        transition: color 0.2s ease;
-        padding: 4px 8px;
-        border-radius: 4px;
-        margin-right: 8px;
-      }
-
-      /* Hover effect for clickable words */
-      .clickable-word:hover {
-        color: #4caf50;
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      /* Button container styles */
-      #word-list li div {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      /* Word list control buttons container */
-      .word-list-controls {
-        display: flex;
-        gap: 12px;
-        margin: 24px auto;
-        width: 90%;
-        max-width: 600px;
-        justify-content: center;
-        align-items: center;
-      }
-
-      /* Word list control buttons */
-      #clear-word-list-btn,
-      #close-word-list-btn {
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border: none;
-        min-width: 120px;
-        text-align: center;
-      }
-
-      /* Clear word list button specific style */
-      #clear-word-list-btn {
-        background-color: rgba(220, 38, 38, 0.8) !important;
-        color: white;
-      }
-
-      /* Close word list button specific style */
-      #close-word-list-btn {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      /* Word list button hover effects */
-      #clear-word-list-btn:hover,
-      #close-word-list-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Empty word list state */
-      #word-list li.empty-state {
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.6);
-        font-style: italic;
-        background-color: transparent;
-        border: 2px dashed rgba(255, 255, 255, 0.1);
-      }
-
-      /* Remove word button */
-      #word-list .remove-word-btn {
-        background-color: rgba(220, 38, 38, 1) !important;
-      }
-
-      /* Word list button styles */
-      .word-list-btn {
-        background: none !important;
-        border: none !important;
-        padding: 0 !important;
-        font-size: 24px;
-        cursor: pointer;
-        color: #333;
-      }
-
-      /* Word list button styles - with higher specificity */
-      button#view-word-list-btn.word-list-btn {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        font-size: 24px;
-        cursor: pointer;
-        color: #333;
-        box-shadow: none !important;
-        margin-right: 10px !important; /* Add small margin to the right */
-        display: flex;
-        align-items: center;
-        height: 34px; /* Match container height */
-        line-height: 34px; /* Ensure vertical centering of the emoji */
-      }
-
-      /* Dark mode specific style for word list button */
-      .low-light-mode button#view-word-list-btn.word-list-btn {
-        color: #e0e0e0;
-      }
-
-      /* Override hover state */
-      button#view-word-list-btn.word-list-btn:hover {
-        background-color: transparent !important;
-        transform: none !important;
-        box-shadow: none !important;
-      }
-
-      /* Text Controls Modal */
-      #text-controls-modal.modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        background-color: transparent;
-        pointer-events: none;
-      }
-
-      #text-controls-modal .modal-content {
-        position: fixed;
-        top: 60px; /* Position below the text-and-list-container */
-        right: 20px;
-        background-color: white;
-        padding: 12px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        width: 200px; /* Fixed small width */
-        pointer-events: auto;
-        border: 1px solid #e5e7eb;
-        animation: fadeInScale 0.2s ease-out;
-      }
-
-      /* Dark mode styles for modal */
-      .low-light-mode #text-controls-modal .modal-content {
-        background-color: #18181b;
-        border-color: #27272a;
-      }
-
-      .low-light-mode #text-controls-modal .modal-header h2 {
-        color: #f4f4f5;
-      }
-
-      /* Text Controls Modal Base */
-      #text-controls-modal.modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        background-color: transparent;
-        pointer-events: none;
-      }
-
-      #text-controls-modal .modal-content {
-        position: fixed;
-        top: 60px; /* Position below the text-and-list-container */
-        right: 20px;
-        background-color: white;
-        padding: 12px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        width: 200px; /* Fixed small width */
-        pointer-events: auto;
-        border: 1px solid #e5e7eb;
-        animation: fadeInScale 0.2s ease-out;
-      }
-
-      @keyframes fadeInScale {
-        from {
-          opacity: 0;
-          transform: scale(0.95);
+.low-light-mode #original-sentence {
+            background-color: #2D2D2D;
+            border-color: #404040;
+            color: #E0E0E0;  /* Default visible state in dark mode */
         }
-        to {
-          opacity: 1;
-          transform: scale(1);
+
+        /* Update hideOriginalSentence function behavior for dark mode */
+        .low-light-mode #original-sentence.hidden-sentence {
+            color: #2D2D2D;  /* Same as background color when hidden */
         }
-      }
 
-      /* Modal Header */
-      #text-controls-modal .modal-header {
-        font-size: 14px;
-        margin-bottom: 8px;
-        color: #4caf50;
-        text-align: left;
-      }
+.low-light-mode .completed-message {
+    background-color: #1B4332;
+    border-color: #2D6A4F;
+    color: #95D5B2;
+}
 
-      #text-controls-modal .modal-header h2 {
-        font-size: 14px;
-        margin: 0;
-      }
+.low-light-mode .progress-bar {
+    background-color: #2D2D2D;
+    border: 1px solid #404040;
+}
 
-      /* Control Sections */
-      #text-controls-modal .control-section {
-        margin-bottom: 10px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      }
+.low-light-mode .progress-bar-fill {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+}
 
-      #text-controls-modal .control-section:last-child {
-        margin-bottom: 8px;
-        padding-bottom: 0;
-        border-bottom: none;
-      }
+.low-light-mode .incorrect {
+    color: #FF6B6B;
+    background-color: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
 
-      #text-controls-modal .control-section h3 {
-        font-size: 12px;
-        margin-bottom: 6px;
-        color: #666;
-      }
+.low-light-mode .correct {
+    color: #69DB7C;
+    background-color: rgba(105, 219, 124, 0.1);
+    border: 1px solid rgba(105, 219, 124, 0.3);
+}
 
-      /* Size Controls */
-      #text-controls-modal .size-controls {
-        display: flex;
-        gap: 4px;
-      }
+.low-light-mode .too-many-mistakes {
+    color: #FF8787;
+    text-shadow: none;
+}
 
-      #text-controls-modal .size-btn {
-        flex: 1;
-        padding: 4px 8px;
-        font-size: 12px;
-        border-radius: 4px;
-        background: #f5f5f5;
-        border: 1px solid transparent;
-        color: #666;
-      }
+/* Dark mode context menu styles */
+.low-light-mode #context-menu {
+    background-color: #2D2D2D;
+    border-color: #404040;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
 
-      .size-btn:hover {
-        background-color: rgba(156, 163, 175, 0.15);
-      }
+.low-light-mode #context-menu button {
+    color: #E0E0E0;
+}
 
-      #text-controls-modal .size-btn.active {
-        background-color: #e8f5e9;
-        border-color: #4caf50;
-        color: #4caf50;
-      }
+.low-light-mode #context-menu button:hover {
+    background-color: #404040;
+    color: #4CAF50;
+}
 
-      /* Font Select */
-      #text-controls-modal #font-family-select {
-        width: 100%;
-        padding: 4px 8px;
-        font-size: 12px;
-        border-radius: 4px;
-        border: 1px solid #e5e7eb;
-        height: 28px;
-      }
+.low-light-mode #add-to-list-btn {
+    color: #90CAF9;
+}
 
-      #font-family-select:hover {
-        border-color: rgba(156, 163, 175, 0.2);
-      }
+.low-light-mode #add-to-list-btn.success {
+    color: #69DB7C;
+    background-color: rgba(105, 219, 124, 0.1);
+}
 
-      #font-family-select:focus {
-        border-color: #4caf50;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-      }
+.low-light-mode #context-menu button:not(:last-child) {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
 
-      /* Modal Footer */
-      #text-controls-modal .modal-footer {
-        margin-top: 0px;
-        display: flex;
-        flex-direction: column; /* Stack buttons vertically */
-        width: 100%; /* Ensure full width */
-      }
+/* Dark mode word list styles */
+.low-light-mode #word-list-section {
+    background-color: rgba(18, 18, 18, 0.95);
+}
 
-      #text-controls-modal .modal-footer button {
-        width: 100%; /* Make button full width */
-        padding: 8px;
-        font-size: 12px;
-        border-radius: 4px;
-        background-color: #f5f5f5;
-        color: #666;
-        border: 0;
-      }
+.low-light-mode #word-list li {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
 
-      .modal-footer button:first-child {
-        background-color: rgba(156, 163, 175, 0.1);
-        color: #6b7280;
-      }
+.low-light-mode .clickable-word:hover {
+    color: #69DB7C;
+    background-color: rgba(255, 255, 255, 0.05);
+}
 
-      #text-controls-modal .modal-footer button:hover {
-        background-color: #e8e8e8;
-      }
+.low-light-mode #clear-word-list-btn {
+    background-color: #DC2626 !important;
+}
 
-      .modal-footer button:last-child {
-        background-color: #4caf50;
-        color: white;
-      }
+.low-light-mode #close-word-list-btn {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
 
-      .modal-footer button:last-child:hover {
-        background-color: #43a047;
-        transform: translateY(-1px);
-      }
+.low-light-mode #word-list li.empty-state {
+    border-color: #404040;
+    color: #808080;
+}
+/* Word list section styles */
+#word-list-section {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 40px 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
 
-      /* Dark Mode Styles */
-      .low-light-mode #text-controls-modal .modal-content {
-        background-color: #1e1e1e;
-        border-color: #333;
-      }
+/* Word list section heading */
+#word-list-section h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    text-align: center;
+}
 
-      .low-light-mode #text-controls-modal .modal-header h2 {
-        color: #4caf50;
-      }
+/* Word list container */
+#word-list {
+    list-style-type: none;
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
 
-      .low-light-mode #text-controls-modal .control-section h3 {
-        color: #9ca3af;
-      }
+/* Individual word list items */
+#word-list li {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}
 
-      .low-light-mode #text-controls-modal .size-btn {
-        background-color: #2d2d2d;
-        color: #e0e0e0;
-      }
+/* Clickable word styles */
+.clickable-word {
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
 
-      .low-light-mode .size-btn:hover {
-        background-color: rgba(255, 255, 255, 0.08);
-      }
+/* Hover effect for clickable words */
+.clickable-word:hover {
+    color: #4CAF50;
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-      .low-light-mode #text-controls-modal .size-btn.active {
-        background-color: rgba(76, 175, 80, 0.2);
-        border-color: #4caf50;
-        color: #4caf50;
-      }
+/* Button container styles */
+#word-list li div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-      .low-light-mode #text-controls-modal #font-family-select {
-        background-color: #2d2d2d;
-        border-color: #404040;
-        color: #e0e0e0;
-      }
+/* Word list control buttons container */
+.word-list-controls {
+    display: flex;
+    gap: 12px;
+    margin: 24px auto;
+    width: 90%;
+    max-width: 600px;
+    justify-content: center;
+    align-items: center;
+}
 
-      .low-light-mode #font-family-select:hover {
-        border-color: rgba(255, 255, 255, 0.15);
-      }
+/* Word list control buttons */
+#clear-word-list-btn,
+#close-word-list-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 120px;
+    text-align: center;
+}
 
-      .low-light-mode #text-controls-modal .modal-footer button {
-        background-color: #2d2d2d;
-        color: #e0e0e0;
-      }
+/* Clear word list button specific style */
+#clear-word-list-btn {
+    background-color: rgba(220, 38, 38, 0.8) !important;
+    color: white;
+}
 
-      .low-light-mode #text-controls-modal .modal-footer button:hover {
-        background-color: #404040;
-      }
+/* Close word list button specific style */
+#close-word-list-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-      .low-light-mode #text-controls-modal .control-section {
-        border-color: rgba(255, 255, 255, 0.1);
-      }
-      .low-light-mode #text-controls-modal .modal-footer {
-        border-color: rgba(255, 255, 255, 0.1);
-      }
-      /* Word list button styles - with higher specificity */
-      button#text-controls-btn.word-list-btn {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        font-size: 24px;
-        cursor: pointer;
-        color: #333;
-        box-shadow: none !important;
-        margin-right: 10px !important; /* Add small margin to the right */
-        display: flex;
-        align-items: center;
-        height: 34px; /* Match container height */
-        line-height: 34px; /* Ensure vertical centering of the emoji */
-      }
+/* Word list button hover effects */
+#clear-word-list-btn:hover,
+#close-word-list-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
-      /* Dark mode specific style for both buttons */
-      .low-light-mode button#text-controls-btn.word-list-btn,
-      .low-light-mode button#view-word-list-btn.word-list-btn {
-        color: #e0e0e0;
-      }
+/* Empty word list state */
+#word-list li.empty-state {
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    background-color: transparent;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+}
 
-      /* Override hover state for both buttons */
-      button#text-controls-btn.word-list-btn:hover,
-      button#view-word-list-btn.word-list-btn:hover {
-        background-color: transparent !important;
-        transform: none !important;
-        box-shadow: none !important;
-      }
+/* Remove word button */
+#word-list .remove-word-btn {
+    background-color: rgba(220, 38, 38, 1) !important;
+}
 
-      /* Add these new control button styles */
-      .control-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        min-width: unset;
-      }
 
-      .control-btn:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-      }
+/* Word list button styles */
+.word-list-btn {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
 
-      .control-btn i {
-        font-size: 20px;
-        color: #4b5563;
-      }
+/* Word list button styles - with higher specificity */
+button#view-word-list-btn.word-list-btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    box-shadow: none !important;
+    margin-right: 10px !important;  /* Add small margin to the right */
+    display: flex;
+    align-items: center;
+    height: 34px; /* Match container height */
+    line-height: 34px; /* Ensure vertical centering of the emoji */
+}
 
-      .control-btn:hover i {
-        color: #4caf50;
-      }
+/* Dark mode specific style for word list button */
+.low-light-mode button#view-word-list-btn.word-list-btn {
+    color: #E0E0E0;
+}
 
-      .low-light-mode .control-btn i {
-        color: #e5e7eb;
-      }
+/* Override hover state */
+button#view-word-list-btn.word-list-btn:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
 
-      .low-light-mode .control-btn:hover {
-        background-color: rgba(
-          255,
-          255,
-          255,
-          0.15
-        ); /* Increased from 0.05 to 0.15 */
-      }
+/* Text Controls Modal */
+#text-controls-modal.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    background-color: transparent;
+    pointer-events: none;
+}
 
-      .low-light-mode .control-btn {
-        background: rgba(255, 255, 255, 0.05);
-      }
+#text-controls-modal .modal-content {
+    position: fixed;
+    top: 60px; /* Position below the text-and-list-container */
+    right: 20px;
+    background-color: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    width: 200px; /* Fixed small width */
+    pointer-events: auto;
+    border: 1px solid #e5e7eb;
+    animation: fadeInScale 0.2s ease-out;
+}
 
-      /* Add styles for Flaticon icons */
-      .word-list-btn i {
-        font-size: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
+/* Dark mode styles for modal */
+.low-light-mode #text-controls-modal .modal-content {
+    background-color: #18181b;
+    border-color: #27272a;
+}
 
-      /* Update dark mode styles */
-      .low-light-mode button#text-controls-btn.word-list-btn i,
-      .low-light-mode button#view-word-list-btn.word-list-btn i {
-        color: #e0e0e0;
-      }
+.low-light-mode #text-controls-modal .modal-header h2 {
+    color: #f4f4f5;
+}
 
-      .low-light-mode .toggle-and-list-container {
-        background-color: #1e1e1e;
-        border-color: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      }
+/* Text Controls Modal Base */
+#text-controls-modal.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    background-color: transparent;
+    pointer-events: none;
+}
 
-      /* Add new animation keyframes */
-      @keyframes fadeOutSlide {
-        0% {
-          opacity: 1;
-          transform: translateX(0);
-          max-height: 100px;
-          margin-bottom: 12px;
-        }
-        50% {
-          opacity: 0.5;
-          transform: translateX(-10px);
-        }
-        100% {
-          opacity: 0;
-          transform: translateX(-20px);
-          max-height: 0;
-          margin-bottom: 0;
-          padding-top: 0;
-          padding-bottom: 0;
-        }
-      }
 
-      /* Add animation properties to list items */
-      #word-list li {
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 16px 20px;
-        border-radius: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        font-size: 1.1rem;
-        transition: all 0.2s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        width: 100%;
-        /* Add these properties for smooth animation */
-        transition: all 0.3s ease;
-        overflow: hidden;
+#text-controls-modal .modal-content {
+    position: fixed;
+    top: 60px; /* Position below the text-and-list-container */
+    right: 20px;
+    background-color: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    width: 200px; /* Fixed small width */
+    pointer-events: auto;
+    border: 1px solid #e5e7eb;
+    animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Modal Header */
+#text-controls-modal .modal-header {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #4CAF50;
+    text-align: left;
+}
+
+#text-controls-modal .modal-header h2 {
+    font-size: 14px;
+    margin: 0;
+}
+
+
+/* Control Sections */
+#text-controls-modal .control-section {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+#text-controls-modal .control-section:last-child {
+    margin-bottom: 8px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+#text-controls-modal .control-section h3 {
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: #666;
+}
+
+/* Size Controls */
+#text-controls-modal .size-controls {
+    display: flex;
+    gap: 4px;
+}
+
+#text-controls-modal .size-btn {
+    flex: 1;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    background: #f5f5f5;
+    border: 1px solid transparent;
+    color: #666;
+}
+
+.size-btn:hover {
+    background-color: rgba(156, 163, 175, 0.15);
+}
+
+#text-controls-modal .size-btn.active {
+    background-color: #e8f5e9;
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+/* Font Select */
+#text-controls-modal #font-family-select {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    height: 28px;
+}
+
+
+#font-family-select:hover {
+    border-color: rgba(156, 163, 175, 0.2);
+}
+
+#font-family-select:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Modal Footer */
+#text-controls-modal .modal-footer {
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    width: 100%; /* Ensure full width */
+}
+
+#text-controls-modal .modal-footer button {
+    width: 100%; /* Make button full width */
+    padding: 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    color: #666;
+    border: 0;
+}
+
+.modal-footer button:first-child {
+    background-color: rgba(156, 163, 175, 0.1);
+    color: #6B7280;
+}
+
+#text-controls-modal .modal-footer button:hover {
+    background-color: #e8e8e8;
+}
+
+.modal-footer button:last-child {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modal-footer button:last-child:hover {
+    background-color: #43A047;
+    transform: translateY(-1px);
+}
+
+/* Dark Mode Styles */
+.low-light-mode #text-controls-modal .modal-content {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+.low-light-mode #text-controls-modal .modal-header h2 {
+    color: #4CAF50;
+}
+
+.low-light-mode #text-controls-modal .control-section h3 {
+    color: #9CA3AF;
+}
+
+.low-light-mode #text-controls-modal .size-btn {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.low-light-mode .size-btn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.low-light-mode #text-controls-modal .size-btn.active {
+    background-color: rgba(76, 175, 80, 0.2);
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.low-light-mode #text-controls-modal #font-family-select {
+    background-color: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+.low-light-mode #font-family-select:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.low-light-mode #text-controls-modal .modal-footer button {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.low-light-mode #text-controls-modal .modal-footer button:hover {
+    background-color: #404040;
+}
+
+.low-light-mode #text-controls-modal .control-section {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+.low-light-mode #text-controls-modal .modal-footer {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+/* Word list button styles - with higher specificity */
+button#text-controls-btn.word-list-btn {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    box-shadow: none !important;
+    margin-right: 10px !important;  /* Add small margin to the right */
+    display: flex;
+    align-items: center;
+    height: 34px; /* Match container height */
+    line-height: 34px; /* Ensure vertical centering of the emoji */
+}
+
+/* Dark mode specific style for both buttons */
+.low-light-mode button#text-controls-btn.word-list-btn,
+.low-light-mode button#view-word-list-btn.word-list-btn {
+    color: #E0E0E0;
+}
+
+/* Override hover state for both buttons */
+button#text-controls-btn.word-list-btn:hover,
+button#view-word-list-btn.word-list-btn:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+
+/* Add these new control button styles */
+.control-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: unset;
+}
+
+.control-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.control-btn i {
+    font-size: 20px;
+    color: #4B5563;
+}
+
+.control-btn:hover i {
+    color: #4CAF50;
+}
+
+.low-light-mode .control-btn i {
+    color: #E5E7EB;
+}
+
+.low-light-mode .control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);  /* Increased from 0.05 to 0.15 */
+}
+
+.low-light-mode .control-btn {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Add styles for Flaticon icons */
+.word-list-btn i {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Update dark mode styles */
+.low-light-mode button#text-controls-btn.word-list-btn i,
+.low-light-mode button#view-word-list-btn.word-list-btn i {
+    color: #E0E0E0;
+}
+
+.low-light-mode .toggle-and-list-container {
+    background-color: #1E1E1E;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Add new animation keyframes */
+@keyframes fadeOutSlide {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
         max-height: 100px;
         margin-bottom: 12px;
-      }
-
-      /* Add class for animation */
-      #word-list li.deleting {
-        animation: fadeOutSlide 0.3s ease-out forwards;
-      }
-
-      /* Update empty state to not animate */
-      #word-list li.empty-state {
-        animation: none;
-      }
-
-      /* Dark mode adjustments */
-      .low-light-mode #word-list li {
-        background-color: #2d2d2d;
-        border-color: #404040;
-      }
-
-      /* Add animation properties to list items */
-
-* Add media queries for larger screens */
-@media screen and (min-width: 1920px) {
-  .container {
-    max-width: 1000px;
-  }
-  
-  body {
-    font-size: 18px;
-  }
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateX(-10px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-20px);
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
-/* Add media queries for smaller screens */
-@media screen and (max-width: 1024px) {
-  .container {
-    width: 95%;
-    padding: 1.5rem;
-  }
-  
-  .button-container {
-    gap: 10px;
-  }
+/* Add animation properties to list items */
+#word-list li {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    /* Add these properties for smooth animation */
+    transition: all 0.3s ease;
+    overflow: hidden;
+    max-height: 100px;
+    margin-bottom: 12px;
 }
-    </style>
-  </head>
-  <body>
-    <div id="text-controls-modal" class="modal">
-      <div class="modal-content">
+
+/* Add class for animation */
+#word-list li.deleting {
+    animation: fadeOutSlide 0.3s ease-out forwards;
+}
+
+/* Update empty state to not animate */
+#word-list li.empty-state {
+    animation: none;
+}
+
+/* Dark mode adjustments */
+.low-light-mode #word-list li {
+    background-color: #2D2D2D;
+    border-color: #404040;
+}
+
+/* Add animation properties to list items */
+ </style>
+</head>
+<body>
+
+<div id="text-controls-modal" class="modal">
+    <div class="modal-content">
         <div class="modal-header">
-          <h2>Text Settings</h2>
+            <h2>Text Settings</h2>
         </div>
         <div class="control-section">
-          <h3>Font Size</h3>
-          <div class="size-controls">
-            <button class="size-btn" data-size="18">Small</button>
-            <button class="size-btn" data-size="20">Medium</button>
-            <button class="size-btn" data-size="22">Large</button>
-          </div>
+            <h3>Font Size</h3>
+            <div class="size-controls">
+                <button class="size-btn" data-size="18">Small</button>
+                <button class="size-btn" data-size="20">Medium</button>
+                <button class="size-btn" data-size="22">Large</button>
+            </div>
         </div>
         <div class="control-section">
-          <h3>Font Family</h3>
-          <select id="font-family-select">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Roboto, sans-serif">Roboto</option>
-          </select>
+            <h3>Font Family</h3>
+            <select id="font-family-select">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Roboto, sans-serif">Roboto</option>
+            </select>
         </div>
-        <div class="modal-footer">
-          <button onclick="TextControlSystem.resetDefaults()">
-            Reset to Defaults
-          </button>
-        </div>
-      </div>
+ <div class="modal-footer">
+    <button onclick="TextControlSystem.resetDefaults()">Reset to Defaults</button>
+</div>
     </div>
+</div>
 
-    <!-- Update the toggle-and-list-container div -->
-    <div class="toggle-and-list-container">
-      <button id="text-controls-btn" class="control-btn" title="Text Settings">
+<!-- Update the toggle-and-list-container div -->
+<div class="toggle-and-list-container">
+    <button id="text-controls-btn" class="control-btn" title="Text Settings">
         <i class="fi fi-rr-text"></i>
-      </button>
-      <button id="view-word-list-btn" class="control-btn" title="Word List">
+    </button>
+    <button id="view-word-list-btn" class="control-btn" title="Word List">
         <i class="fi fi-rr-book-alt"></i>
-      </button>
-      <button id="theme-toggle-btn" class="control-btn" title="Toggle Theme">
+    </button>
+    <button id="theme-toggle-btn" class="control-btn" title="Toggle Theme">
         <i class="fi fi-rr-moon"></i>
-      </button>
-    </div>
+    </button>
+</div>
 
-    <!-- Main Application Container -->
-    <div class="container">
-      <!-- Application Title -->
-      <h1>Writing Imitation Practice</h1>
-
-      <!-- Text Input Area: For pasting practice text -->
-      <textarea
-        id="article-input"
-        placeholder="Paste your text here..."
+<!-- Main Application Container -->
+<div class="container">
+    <!-- Application Title -->
+    <h1>Writing Imitation Practice</h1>
+    
+    <!-- Text Input Area: For pasting practice text -->
+    <textarea 
+        id="article-input" 
+        placeholder="Paste your text here..." 
         onkeydown="if(event.keyCode===13){event.preventDefault();processArticle();}"
-      ></textarea>
-
-      <!-- Start Button Container -->
-      <div class="button-container">
-        <button onclick="processArticle()" id="start-button">
-          Start Practice
-        </button>
-      </div>
-
-      <!-- Practice Section: Initially hidden, shown after starting practice -->
-      <div id="practice-section">
+    ></textarea>
+    
+    <!-- Start Button Container -->
+    <div class="button-container">
+        <button onclick="processArticle()" id="start-button">Start Practice</button>
+    </div>
+    
+    <!-- Practice Section: Initially hidden, shown after starting practice -->
+    <div id="practice-section">
         <!-- Progress Tracking Bar -->
         <div class="progress-bar">
-          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
         </div>
-
+        
         <!-- Original Sentence Display Area -->
-        <div
-          id="original-sentence"
-          onmouseup="showHighlightButton(event)"
-        ></div>
-
+        <div id="original-sentence" onmouseup="showHighlightButton(event)"></div>
+        
         <!-- User Input Area for Practice -->
-        <textarea
-          id="user-input"
-          placeholder="Write the sentence from memory..."
-          onkeydown="handleKeyDown(event)"
-          oninput="hideOriginalSentence()"
+        <textarea 
+            id="user-input" 
+            placeholder="Write the sentence from memory..." 
+            onkeydown="handleKeyDown(event)" 
+            oninput="hideOriginalSentence()"
         ></textarea>
-
+        
         <!-- Control Buttons Container -->
         <div class="button-container">
-          <div class="icon-container">
-            <button id="check-button" onclick="checkText()">Check</button>
-          </div>
-          <button id="reload-button">Restart</button>
+            <div class="icon-container">
+                <button id="check-button" onclick="checkText()">Check</button>
+            </div>
+            <button id="reload-button">Restart</button>
         </div>
-
+        
         <!-- Results Display Area -->
         <p id="result"></p>
-      </div>
     </div>
+</div>
 
-    <!-- Context Menu: Appears on text selection -->
-    <div id="context-menu">
-      <button id="definition-btn">
-        <i class="fi fi-rr-search"></i>Definition
-      </button>
-      <button id="add-to-list-btn">
-        <i class="fi fi-rr-book-alt"></i>Add to Word List
-      </button>
-    </div>
+<!-- Context Menu: Appears on text selection -->
+<div id="context-menu">
+<button id="definition-btn"><i class="fi fi-rr-search"></i>Definition</button>
+    <button id="add-to-list-btn"><i class="fi fi-rr-book-alt"></i>Add to Word List</button>
+</div>
 
-    <!-- Welcome Modal: Shows instructions on first visit -->
-    <div id="rules-modal" class="modal">
-      <div class="modal-content">
+<!-- Welcome Modal: Shows instructions on first visit -->
+<div id="rules-modal" class="modal">
+    <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">Welcome to Writing Imitation Practice</div>
-
+        
         <!-- Modal Instructions -->
         <div class="modal-body">
-          <p>How it works:</p>
-          <ol>
-            <li>Paste your text and click "Start Practice".</li>
-            <li>Rewrite the displayed sentence from memory.</li>
-            <li>Press "Enter" or click "Check" to compare your input.</li>
-            <li>Progress is shown via the progress bar.</li>
-          </ol>
-
-          <!-- Keyboard Shortcuts Section -->
-          <p><strong>Shortcuts:</strong></p>
-          <ul>
-            <li><strong>Enter:</strong> Check your input.</li>
-            <li>
-              <strong>Alt:</strong> Temporarily reveal the original sentence.
-            </li>
-          </ul>
-
-          <!-- Additional Information -->
-          <p>For full instructions, watch the video tutorial.</p>
-          <p>
-            Contact:
-            <a href="mailto:kmukhammadjonov685@gmail.com"
-              >kmukhammadjonov685@gmail.com</a
-            >
-          </p>
+            <p>How it works:</p>
+            <ol>
+                <li>Paste your text and click "Start Practice".</li>
+                <li>Rewrite the displayed sentence from memory.</li>
+                <li>Press "Enter" or click "Check" to compare your input.</li>
+                <li>Progress is shown via the progress bar.</li>
+            </ol>
+            
+            <!-- Keyboard Shortcuts Section -->
+            <p><strong>Shortcuts:</strong></p>
+            <ul>
+                <li><strong>Enter:</strong> Check your input.</li>
+                <li><strong>Alt:</strong> Temporarily reveal the original sentence.</li>
+            </ul>
+            
+            <!-- Additional Information -->
+            <p>For full instructions, watch the video tutorial.</p>
+            <p>Contact: <a href="mailto:kmukhammadjonov685@gmail.com">kmukhammadjonov685@gmail.com</a></p>
         </div>
-
+        
         <!-- Modal Footer -->
         <div class="modal-footer">
-          <button onclick="closeModal()">Got it!</button>
+            <button onclick="closeModal()">Got it!</button>
         </div>
-      </div>
     </div>
+</div>
 
-    <!-- Word List Section: Full-screen overlay for saved words -->
-    <div id="word-list-section" style="display: none">
-      <h2>Your Word List</h2>
-      <!-- Dynamic Word List Container -->
-      <ul id="word-list"></ul>
-      <!-- Word List Control Buttons -->
-      <div class="word-list-controls">
+<!-- Word List Section: Full-screen overlay for saved words -->
+<div id="word-list-section" style="display: none">
+    <h2>Your Word List</h2>
+    <!-- Dynamic Word List Container -->
+    <ul id="word-list"></ul>
+    <!-- Word List Control Buttons -->
+    <div class="word-list-controls">
         <button id="clear-word-list-btn">Delete All</button>
         <button id="close-word-list-btn">Close</button>
-      </div>
     </div>
+</div>
 
     <script>
-      // 1. Core Management Systems
-      const ColorManager = {
-        getTextColor(isLowLight) {
-          return isLowLight ? '#E0E0E0' : '#333';
-        },
+// 1. Core Management Systems
+const ColorManager = {
+    getTextColor(isLowLight) {
+        return isLowLight ? "#E0E0E0" : "#333";
+    },
+    
+    getHiddenColor(isLowLight) {
+        return isLowLight ? "#2D2D2D" : "#f0f0f0";
+    },
+    
+    updateOriginalSentenceColor(isVisible = true) {
+        const originalSentenceElement = document.getElementById("original-sentence");
+        const isLowLight = document.body.classList.contains('low-light-mode');
+        originalSentenceElement.style.color = isVisible ? 
+            this.getTextColor(isLowLight) : 
+            this.getHiddenColor(isLowLight);
+    },
 
-        getHiddenColor(isLowLight) {
-          return isLowLight ? '#2D2D2D' : '#f0f0f0';
-        },
-
-        updateOriginalSentenceColor(isVisible = true) {
-          const originalSentenceElement =
-            document.getElementById('original-sentence');
-          const isLowLight = document.body.classList.contains('low-light-mode');
-          originalSentenceElement.style.color = isVisible
-            ? this.getTextColor(isLowLight)
-            : this.getHiddenColor(isLowLight);
-        },
-
-        updateErrorMessageColors() {
-          const result = document.getElementById('result');
-          if (result.innerHTML.includes('Incorrect:')) {
-            const incorrectWord = result.querySelector(
-              'span:nth-of-type(2)'
-            ).textContent;
-            const correctWord = result.querySelector(
-              'span:nth-of-type(4)'
-            ).textContent;
-            const isLowLight =
-              document.body.classList.contains('low-light-mode');
+    updateErrorMessageColors() {
+        const result = document.getElementById("result");
+        if (result.innerHTML.includes("Incorrect:")) {
+            const incorrectWord = result.querySelector("span:nth-of-type(2)").textContent;
+            const correctWord = result.querySelector("span:nth-of-type(4)").textContent;
+            const isLowLight = document.body.classList.contains('low-light-mode');
             const textColor = this.getTextColor(isLowLight);
             result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
-          }
-        },
-      };
-
-      // 2. Result Management System
-      const ResultManager = {
-        clearResult() {
-          const result = document.getElementById('result');
-          result.innerText = '';
-          result.innerHTML = '';
-        },
-
-        showErrorMessage(incorrectWord, correctWord) {
-          const result = document.getElementById('result');
-          const textColor = ColorManager.getTextColor(
-            document.body.classList.contains('low-light-mode')
-          );
-          result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
-        },
-
-        showMistakeCount(count) {
-          const result = document.getElementById('result');
-          const errorColor = document.body.classList.contains('low-light-mode')
-            ? '#FF6B6B'
-            : 'red';
-          result.innerHTML += `<br/><span style="color: ${errorColor};">You made ${count} mistakes. Please rewrite it again.</span>`;
-        },
-
-        showSuccess() {
-          const result = document.getElementById('result');
-          result.innerText = 'Correct';
-          result.style.color = 'green';
-        },
-
-        showSpacingError() {
-          const result = document.getElementById('result');
-          result.innerText = 'Check your spacing after punctuation.';
-          result.style.color = 'orange';
-        },
-
-        showProgress() {
-          const result = document.getElementById('result');
-          result.innerText = "Keep going, you're getting closer!";
-          result.style.color = 'green';
-        },
-      };
-
-      document
-        .getElementById('user-input')
-        .addEventListener('input', function () {
-          // Clear "Keep going" message when user starts typing
-          const result = document.getElementById('result');
-          if (result.innerText === "Keep going, you're getting closer!") {
-            ResultManager.clearResult();
-          }
-
-          // Handle multiple spaces
-          if (this.value.includes('  ')) {
-            this.value = this.value.replace(/\s+/g, ' ');
-          }
-
-          hideOriginalSentence();
-          saveProgress();
-        });
-
-      // Clear "Check your spacing" message when user starts typing
-      document
-        .getElementById('user-input')
-        .addEventListener('input', function () {
-          const result = document.getElementById('result');
-          if (result.innerText === 'Check your spacing after punctuation.') {
-            ResultManager.clearResult();
-          }
-          // Handle multiple spaces
-          if (this.value.includes('  ')) {
-            this.value = this.value.replace(/\s+/g, ' ');
-          }
-          hideOriginalSentence();
-          saveProgress();
-        });
-      // 3. Text Control System
-      const TextControlSystem = {
-        defaults: {
-          fontSize: 18,
-          fontFamily: 'Arial, sans-serif',
-        },
-
-        settings: {},
-
-        init() {
-          this.loadSavedSettings();
-          this.setupEventListeners();
-        },
-
-        loadSavedSettings() {
-          const saved = localStorage.getItem('textControls');
-          this.settings = saved ? JSON.parse(saved) : { ...this.defaults };
-          this.applySettings();
-        },
-
-        setupEventListeners() {
-          document.querySelectorAll('.size-btn').forEach((btn) => {
-            btn.addEventListener('click', () => {
-              this.updateFontSize(parseInt(btn.dataset.size));
-            });
-          });
-
-          document
-            .getElementById('font-family-select')
-            .addEventListener('change', (e) => {
-              this.updateFontFamily(e.target.value);
-            });
-        },
-
-        updateFontSize(size) {
-          this.settings.fontSize = size;
-          this.applySettings();
-          this.updateUI();
-          this.saveSettings();
-        },
-
-        updateFontFamily(family) {
-          this.settings.fontFamily = family;
-          this.applySettings();
-          this.saveSettings();
-        },
-
-        applySettings() {
-          const elements = ['original-sentence', 'user-input'].map((id) =>
-            document.getElementById(id)
-          );
-
-          elements.forEach((el) => {
-            if (el) {
-              el.style.fontSize = `${this.settings.fontSize}px`;
-              el.style.fontFamily = this.settings.fontFamily;
-            }
-          });
-        },
-
-        updateUI() {
-          document.querySelectorAll('.size-btn').forEach((btn) => {
-            btn.classList.toggle(
-              'active',
-              parseInt(btn.dataset.size) === this.settings.fontSize
-            );
-          });
-          document.getElementById('font-family-select').value =
-            this.settings.fontFamily;
-        },
-
-        resetDefaults() {
-          this.settings = { ...this.defaults };
-          this.applySettings();
-          this.updateUI();
-          this.saveSettings();
-        },
-
-        saveSettings() {
-          localStorage.setItem('textControls', JSON.stringify(this.settings));
-        },
-      };
-
-      // 4. Practice State Management
-      let sentences = [];
-      let currentSentenceIndex = 0;
-      let mistakeCount = 0;
-      let selectedWord = '';
-
-      // 5. Core Practice Functions
-      function processArticle() {
-        let articleInput = document.getElementById('article-input').value;
-
-        clearProgress();
-        restartPractice();
-
-        sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
-        if (sentences && sentences.length > 0) {
-          currentSentenceIndex = 0;
-          mistakeCount = 0;
-          updateProgressBar();
-          showSentence();
-
-          document.getElementById('practice-section').style.display = 'block';
-          document.getElementById('start-button').classList.add('hidden');
-          document.getElementById('article-input').classList.add('hidden');
-
-          saveProgress();
-        } else {
-          alert('Please paste a valid article.');
         }
-      }
+    }
+};
 
-      // 6. Text Processing Functions
-      function normalizeText(text) {
-        return (
-          text
-            // Normalize various types of quotes to straight quotes
-            .replace(/[\u2018\u2019\u201B\u2032\u2035\u0060]/g, "'") // Various single quotes and primes
-            .replace(/[\u201C\u201D\u201F\u2033\u2036]/g, '"') // Various double quotes and primes
+// 2. Result Management System
+const ResultManager = {
+    clearResult() {
+        const result = document.getElementById("result");
+        result.innerText = "";
+        result.innerHTML = "";
+    },
+    
+    showErrorMessage(incorrectWord, correctWord) {
+        const result = document.getElementById("result");
+        const textColor = ColorManager.getTextColor(document.body.classList.contains('low-light-mode'));
+        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
+    },
+    
+    showMistakeCount(count) {
+        const result = document.getElementById("result");
+        const errorColor = document.body.classList.contains('low-light-mode') ? '#FF6B6B' : 'red';
+        result.innerHTML += `<br/><span style="color: ${errorColor};">You made ${count} mistakes. Please rewrite it again.</span>`;
+    },
 
-            // Normalize various types of dashes and hyphens
-            .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\u2212]/g, '-')
+    showSuccess() {
+        const result = document.getElementById("result");
+        result.innerText = "Correct";
+        result.style.color = "green";
+    },
 
-            // Normalize ellipsis
-            .replace(/\u2026/g, '...') // Ellipsis character
-            .replace(/\.{2,}/g, '...') // Multiple dots to ellipsis
+    showSpacingError() {
+        const result = document.getElementById("result");
+        result.innerText = "Check your spacing after punctuation.";
+        result.style.color = "orange";
+    },
 
-            // Normalize spaces
-            .replace(/[\u00A0\u2002-\u200B\u202F\u205F\u3000]/g, ' ') // Various space characters
-            .replace(/\s+/g, ' ') // Multiple spaces to single space
+    showProgress() {
+        const result = document.getElementById("result");
+        result.innerText = "Keep going, you're getting closer!";
+        result.style.color = "green";
+    }
+};
 
-            // Normalize other punctuation
-            .replace(/[\u2010\u2011]/g, '-') // Various hyphens
-            .replace(/[\u2012\u2013]/g, '-') // Various dashes
-            .replace(/[\u2014\u2015]/g, '-') // Em dash and horizontal bar
-
-            // Trim whitespace
-            .trim()
-        );
-      }
-      // 7. Word List Management
-      function displayWordList() {
-        const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-        const wordListElement = document.getElementById('word-list');
-
-        if (wordList.length === 0) {
-          wordListElement.innerHTML =
-            '<li class="empty-state">No words saved yet.</li>';
-          return;
-        }
-
-        wordListElement.innerHTML = '';
-        wordList.forEach((word, index) => {
-          const li = createWordListItem(word, index);
-          wordListElement.appendChild(li);
-        });
-
-        setupRemoveButtons();
-      }
-
-      // 8. Event Handlers
-      document.addEventListener('DOMContentLoaded', function () {
-        // Initialize systems
-        TextControlSystem.init();
-
-        // Load saved data
-        displayWordList();
-        loadSavedProgress();
-
-        // Check saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'true') {
-          document.body.classList.add('low-light-mode');
-          document.querySelector('#theme-toggle-btn i').className =
-            'fi fi-rr-sun';
-          ColorManager.updateOriginalSentenceColor(true);
-          ColorManager.updateErrorMessageColors();
-        }
-      });
-
-      // 9. Theme Toggle Handler
-      document
-        .getElementById('theme-toggle-btn')
-        .addEventListener('click', function () {
-          document.body.classList.toggle('low-light-mode');
-          const icon = this.querySelector('i');
-          if (document.body.classList.contains('low-light-mode')) {
-            icon.className = 'fi fi-rr-sun';
-          } else {
-            icon.className = 'fi fi-rr-moon';
-          }
-          localStorage.setItem(
-            'theme',
-            document.body.classList.contains('low-light-mode')
-          );
-
-          const userInput = document.getElementById('user-input').value;
-          if (
-            !userInput ||
-            document.getElementById('original-sentence').style.color !==
-              ColorManager.getHiddenColor(
-                document.body.classList.contains('low-light-mode')
-              )
-          ) {
-            ColorManager.updateOriginalSentenceColor(true);
-          }
-          ColorManager.updateErrorMessageColors();
-        });
-
-      // 10. Progress Bar Management
-      function updateProgressBar() {
-        const progressBarFill = document.getElementById('progress-bar-fill');
-        const progress = (currentSentenceIndex / sentences.length) * 100;
-        progressBarFill.style.width = progress + '%';
-        progressBarFill.innerText = Math.round(progress) + '%';
-      }
-
-      // 11. Initialize Application
-      window.onload = function () {
-        displayWordList();
-        loadSavedProgress();
-      };
-
-      // 12. Sentence Management
-      function showSentence() {
-        if (currentSentenceIndex < sentences.length) {
-          const originalSentenceElement =
-            document.getElementById('original-sentence');
-          originalSentenceElement.innerText =
-            sentences[currentSentenceIndex].trim();
-          ColorManager.updateOriginalSentenceColor(true);
-
-          document.getElementById('user-input').value = '';
-          ResultManager.clearResult();
-          updateProgressBar();
-          saveProgress();
-        } else {
-          showCompletionMessage();
-        }
-      }
-
-      function showCompletionMessage() {
-        const originalSentenceElement =
-          document.getElementById('original-sentence');
-        originalSentenceElement.innerText = 'You have completed the practice.';
-        originalSentenceElement.classList.add('completed-message');
-        ColorManager.updateOriginalSentenceColor(true);
-        document.getElementById('user-input').style.display = 'none';
-        document.getElementById('check-button').style.display = 'none';
+document.getElementById("user-input").addEventListener("input", function() {
+    // Clear "Keep going" message when user starts typing
+    const result = document.getElementById("result");
+    if (result.innerText === "Keep going, you're getting closer!") {
         ResultManager.clearResult();
-        clearProgress();
-      }
+    }
+    
+    // Handle multiple spaces
+    if (this.value.includes('  ')) {
+        this.value = this.value.replace(/\s+/g, ' ');
+    }
+    
+    hideOriginalSentence();
+    saveProgress();
+});
 
-      // 13. Text Checking System
-      function checkText() {
-        const originalSentence = normalizeText(
-          sentences[currentSentenceIndex].trim()
-        );
-        const userInput = normalizeText(
-          document.getElementById('user-input').value.trim()
-        );
+// Clear "Check your spacing" message when user starts typing
+document.getElementById("user-input").addEventListener("input", function() {
+    const result = document.getElementById("result");
+    if (result.innerText === "Check your spacing after punctuation.") {
+        ResultManager.clearResult();
+    }
+    // Handle multiple spaces
+    if (this.value.includes('  ')) {
+        this.value = this.value.replace(/\s+/g, ' ');
+    }
+    hideOriginalSentence();
+    saveProgress();
+});
+// 3. Text Control System
+const TextControlSystem = {
+    defaults: {
+        fontSize: 18,
+        fontFamily: 'Arial, sans-serif'
+    },
 
-        // Early check for excessive spaces
-        if (userInput.includes('  ')) {
-          document.getElementById('user-input').value = userInput.replace(
-            /\s+/g,
-            ' '
-          );
-          return;
-        }
+    settings: {},
 
-        const originalWords = originalSentence.split(' ');
-        const userWords = userInput.split(' ');
-        let correctWords = '';
-        let incorrectWordFound = false;
-        let missingSpaceFound = false;
-        let incorrectWord = '';
-        let correctWord = '';
+    init() {
+        this.loadSavedSettings();
+        this.setupEventListeners();
+    },
 
-        // Separate patterns for different checks
-        const punctuationWithoutSpacePattern =
-          /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
-        const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+    loadSavedSettings() {
+        const saved = localStorage.getItem('textControls');
+        this.settings = saved ? JSON.parse(saved) : { ...this.defaults };
+        this.applySettings();
+    },
 
-        // First, identify hyphenated words
-        const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
-        const hyphenPositions = [];
+    setupEventListeners() {
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.updateFontSize(parseInt(btn.dataset.size));
+            });
+        });
 
-        // Record positions of valid hyphens in hyphenated words
-        hyphenatedWords.forEach((word) => {
-          let pos = userInput.indexOf(word);
-          while (pos !== -1) {
+        document.getElementById('font-family-select').addEventListener('change', (e) => {
+            this.updateFontFamily(e.target.value);
+        });
+    },
+
+    updateFontSize(size) {
+        this.settings.fontSize = size;
+        this.applySettings();
+        this.updateUI();
+        this.saveSettings();
+    },
+
+    updateFontFamily(family) {
+        this.settings.fontFamily = family;
+        this.applySettings();
+        this.saveSettings();
+    },
+
+    applySettings() {
+        const elements = ['original-sentence', 'user-input'].map(id => 
+            document.getElementById(id));
+
+        elements.forEach(el => {
+            if (el) {
+                el.style.fontSize = `${this.settings.fontSize}px`;
+                el.style.fontFamily = this.settings.fontFamily;
+            }
+        });
+    },
+
+    updateUI() {
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', 
+                parseInt(btn.dataset.size) === this.settings.fontSize);
+        });
+        document.getElementById('font-family-select').value = this.settings.fontFamily;
+    },
+
+    resetDefaults() {
+        this.settings = { ...this.defaults };
+        this.applySettings();
+        this.updateUI();
+        this.saveSettings();
+    },
+
+    saveSettings() {
+        localStorage.setItem('textControls', JSON.stringify(this.settings));
+    }
+};
+
+// 4. Practice State Management
+let sentences = [];
+let currentSentenceIndex = 0;
+let mistakeCount = 0;
+let selectedWord = '';
+
+// 5. Core Practice Functions
+function processArticle() {
+    let articleInput = document.getElementById("article-input").value;
+    
+    clearProgress();
+    restartPractice();
+
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
+    if (sentences && sentences.length > 0) {
+        currentSentenceIndex = 0;
+        mistakeCount = 0;
+        updateProgressBar();
+        showSentence();
+        
+        document.getElementById("practice-section").style.display = "block";
+        document.getElementById("start-button").classList.add("hidden");
+        document.getElementById("article-input").classList.add("hidden");
+        
+        saveProgress();
+    } else {
+        alert("Please paste a valid article.");
+    }
+}
+
+// 6. Text Processing Functions
+function normalizeText(text) {
+    return text
+        // Normalize various types of quotes to straight quotes
+        .replace(/[\u2018\u2019\u201B\u2032\u2035\u0060]/g, "'") // Various single quotes and primes
+        .replace(/[\u201C\u201D\u201F\u2033\u2036]/g, '"')       // Various double quotes and primes
+        
+        // Normalize various types of dashes and hyphens
+        .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\u2212]/g, '-')
+        
+        // Normalize ellipsis
+        .replace(/\u2026/g, '...') // Ellipsis character
+        .replace(/\.{2,}/g, '...') // Multiple dots to ellipsis
+        
+        // Normalize spaces
+        .replace(/[\u00A0\u2002-\u200B\u202F\u205F\u3000]/g, ' ') // Various space characters
+        .replace(/\s+/g, ' ')      // Multiple spaces to single space
+        
+        // Normalize other punctuation
+        .replace(/[\u2010\u2011]/g, '-')  // Various hyphens
+        .replace(/[\u2012\u2013]/g, '-')  // Various dashes
+        .replace(/[\u2014\u2015]/g, '-')  // Em dash and horizontal bar
+        
+        // Trim whitespace
+        .trim();
+}
+// 7. Word List Management
+function displayWordList() {
+    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    const wordListElement = document.getElementById('word-list');
+    
+    if (wordList.length === 0) {
+        wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
+        return;
+    }
+    
+    wordListElement.innerHTML = '';
+    wordList.forEach((word, index) => {
+        const li = createWordListItem(word, index);
+        wordListElement.appendChild(li);
+    });
+    
+    setupRemoveButtons();
+}
+
+// 8. Event Handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize systems
+    TextControlSystem.init();
+    
+    // Load saved data
+    displayWordList();
+    loadSavedProgress();
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'true') {
+        document.body.classList.add('low-light-mode');
+        document.querySelector('#theme-toggle-btn i').className = 'fi fi-rr-sun';
+        ColorManager.updateOriginalSentenceColor(true);
+        ColorManager.updateErrorMessageColors();
+    }
+});
+
+// 9. Theme Toggle Handler
+document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+    document.body.classList.toggle('low-light-mode');
+    const icon = this.querySelector('i');
+    if (document.body.classList.contains('low-light-mode')) {
+        icon.className = 'fi fi-rr-sun';
+    } else {
+        icon.className = 'fi fi-rr-moon';
+    }
+    localStorage.setItem('theme', document.body.classList.contains('low-light-mode'));
+    
+    const userInput = document.getElementById("user-input").value;
+    if (!userInput || document.getElementById("original-sentence").style.color !== ColorManager.getHiddenColor(document.body.classList.contains('low-light-mode'))) {
+        ColorManager.updateOriginalSentenceColor(true);
+    }
+    ColorManager.updateErrorMessageColors();
+});
+
+// 10. Progress Bar Management
+function updateProgressBar() {
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    const progress = (currentSentenceIndex / sentences.length) * 100;
+    progressBarFill.style.width = progress + "%";
+    progressBarFill.innerText = Math.round(progress) + "%";
+}
+
+// 11. Initialize Application
+window.onload = function() {
+    displayWordList();
+    loadSavedProgress();
+};   
+ 
+// 12. Sentence Management
+function showSentence() {
+    if (currentSentenceIndex < sentences.length) {
+        const originalSentenceElement = document.getElementById("original-sentence");
+        originalSentenceElement.innerText = sentences[currentSentenceIndex].trim();
+        ColorManager.updateOriginalSentenceColor(true);
+        
+        document.getElementById("user-input").value = "";
+        ResultManager.clearResult();
+        updateProgressBar();
+        saveProgress();
+    } else {
+        showCompletionMessage();
+    }
+}
+
+function showCompletionMessage() {
+    const originalSentenceElement = document.getElementById("original-sentence");
+    originalSentenceElement.innerText = "You have completed the practice.";
+    originalSentenceElement.classList.add('completed-message');
+    ColorManager.updateOriginalSentenceColor(true);
+    document.getElementById("user-input").style.display = "none";
+    document.getElementById("check-button").style.display = "none";
+    ResultManager.clearResult();
+    clearProgress();
+}
+
+// 13. Text Checking System
+function checkText() {
+    const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
+    const userInput = normalizeText(document.getElementById("user-input").value.trim());
+    
+    // Early check for excessive spaces
+    if (userInput.includes('  ')) {
+        document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
+        return;
+    }
+    
+    const originalWords = originalSentence.split(' ');
+    const userWords = userInput.split(' ');
+    let correctWords = "";
+    let incorrectWordFound = false;
+    let missingSpaceFound = false;
+    let incorrectWord = "";
+    let correctWord = "";
+
+    // Separate patterns for different checks
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
+    const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+
+    // First, identify hyphenated words
+    const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
+    const hyphenPositions = [];
+    
+    // Record positions of valid hyphens in hyphenated words
+    hyphenatedWords.forEach(word => {
+        let pos = userInput.indexOf(word);
+        while (pos !== -1) {
             const hyphens = word.match(/-/g) || [];
             hyphens.forEach((_, index) => {
-              const hyphenPos = pos + word.indexOf('-', index);
-              hyphenPositions.push(hyphenPos);
+                const hyphenPos = pos + word.indexOf('-', index);
+                hyphenPositions.push(hyphenPos);
             });
             pos = userInput.indexOf(word, pos + 1);
-          }
-        });
+        }
+    });
 
-        // Check for punctuation spacing issues
-        let match;
-        while (
-          (match = punctuationWithoutSpacePattern.exec(userInput)) !== null
-        ) {
-          const punctuationPos = match.index;
-          // Only count as an error if this punctuation is not part of a hyphenated word
-          if (!hyphenPositions.includes(punctuationPos)) {
+    // Check for punctuation spacing issues
+    let match;
+    while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
+        const punctuationPos = match.index;
+        // Only count as an error if this punctuation is not part of a hyphenated word
+        if (!hyphenPositions.includes(punctuationPos)) {
             missingSpaceFound = true;
             break;
-          }
         }
+    }
 
-        // Rest of the comparison logic
-        for (let i = 0; i < userWords.length; i++) {
-          if (userWords[i] === originalWords[i]) {
+    // Rest of the comparison logic
+    for (let i = 0; i < userWords.length; i++) {
+        if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
-          } else {
+        } else {
             incorrectWordFound = true;
             incorrectWord = userWords[i];
             correctWord = originalWords[i];
             break;
-          }
         }
+    }
 
-        if (userInput === originalSentence) {
-          ResultManager.showSuccess();
-          currentSentenceIndex++;
-          saveProgress();
-          setTimeout(() => {
+    if (userInput === originalSentence) {
+        ResultManager.showSuccess();
+        currentSentenceIndex++;
+        saveProgress();
+        setTimeout(() => {
             ResultManager.clearResult();
             showSentence();
-          }, 1000);
+        }, 1000);
 
-          if (mistakeCount >= 2) {
+        if (mistakeCount >= 2) {
             ResultManager.showMistakeCount(mistakeCount);
             mistakeCount = 0;
             currentSentenceIndex--;
-          } else {
-            mistakeCount = 0;
-          }
-        } else if (missingSpaceFound) {
-          ResultManager.showSpacingError();
-        } else if (incorrectWordFound) {
-          ResultManager.showErrorMessage(incorrectWord, correctWord);
-          document.getElementById('user-input').value = correctWords;
-          mistakeCount++;
-          document
-            .getElementById('user-input')
-            .addEventListener('input', ResultManager.clearResult, {
-              once: true,
-            });
         } else {
-          ResultManager.showProgress();
+            mistakeCount = 0;
         }
+    } else if (missingSpaceFound) {
+        ResultManager.showSpacingError();
+    } else if (incorrectWordFound) {
+        ResultManager.showErrorMessage(incorrectWord, correctWord);
+        document.getElementById("user-input").value = correctWords;
+        mistakeCount++;
+        document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
+    } else {
+        ResultManager.showProgress();
+    }
 
-        updateProgressBar();
-        saveProgress();
-      }
-      // 15. Progress Management
-      function saveProgress() {
-        const progressData = {
-          currentSentenceIndex,
-          mistakeCount,
-          sentences,
-          articleInput: document.getElementById('article-input').value,
-          userInput: document.getElementById('user-input').value,
-          practiceVisible:
-            document.getElementById('practice-section').style.display,
-          startButtonHidden: document
-            .getElementById('start-button')
-            .classList.contains('hidden'),
-          articleInputHidden: document
-            .getElementById('article-input')
-            .classList.contains('hidden'),
-        };
-        localStorage.setItem('writingProgress', JSON.stringify(progressData));
-      }
+    updateProgressBar();
+    saveProgress();
+}
+// 15. Progress Management
+function saveProgress() {
+    const progressData = {
+        currentSentenceIndex,
+        mistakeCount,
+        sentences,
+        articleInput: document.getElementById("article-input").value,
+        userInput: document.getElementById("user-input").value,
+        practiceVisible: document.getElementById("practice-section").style.display,
+        startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
+        articleInputHidden: document.getElementById("article-input").classList.contains("hidden")
+    };
+    localStorage.setItem("writingProgress", JSON.stringify(progressData));
+}
 
-      function loadSavedProgress() {
-        const savedProgress = localStorage.getItem('writingProgress');
-        if (savedProgress) {
-          const progressData = JSON.parse(savedProgress);
-          currentSentenceIndex = progressData.currentSentenceIndex || 0;
-          mistakeCount = progressData.mistakeCount || 0;
-          sentences = progressData.sentences || [];
-
-          if (sentences.length > 0) {
+function loadSavedProgress() {
+    const savedProgress = localStorage.getItem("writingProgress");
+    if (savedProgress) {
+        const progressData = JSON.parse(savedProgress);
+        currentSentenceIndex = progressData.currentSentenceIndex || 0;
+        mistakeCount = progressData.mistakeCount || 0;
+        sentences = progressData.sentences || [];
+        
+        if (sentences.length > 0) {
             showSentence();
-            document.getElementById('practice-section').style.display = 'block';
-            document.getElementById('start-button').classList.add('hidden');
-            document.getElementById('article-input').classList.add('hidden');
+            document.getElementById("practice-section").style.display = "block";
+            document.getElementById("start-button").classList.add("hidden");
+            document.getElementById("article-input").classList.add("hidden");
             updateProgressBar();
-          }
         }
-      }
+    }
+}
 
-      function clearProgress() {
-        localStorage.removeItem('writingProgress');
-        currentSentenceIndex = 0;
-        mistakeCount = 0;
-        sentences = [];
-        document.getElementById('article-input').value = '';
-        document.getElementById('user-input').value = '';
-      }
+function clearProgress() {
+    localStorage.removeItem("writingProgress");
+    currentSentenceIndex = 0;
+    mistakeCount = 0;
+    sentences = [];
+    document.getElementById("article-input").value = "";
+    document.getElementById("user-input").value = "";
+}
 
-      // 16. UI Event Handlers
-      function hideOriginalSentence() {
-        ColorManager.updateOriginalSentenceColor(false);
-        document.getElementById('show-original-icon').style.display = 'inline';
-        ResultManager.clearResult();
-      }
+// 16. UI Event Handlers
+function hideOriginalSentence() {
+    ColorManager.updateOriginalSentenceColor(false);
+    document.getElementById("show-original-icon").style.display = "inline";
+    ResultManager.clearResult();
+}
 
-      function showOriginalSentence() {
-        ColorManager.updateOriginalSentenceColor(true);
-        document.getElementById('show-original-icon').style.display = 'none';
-      }
+function showOriginalSentence() {
+    ColorManager.updateOriginalSentenceColor(true);
+    document.getElementById("show-original-icon").style.display = "none";
+}
 
-      function handleKeyDown(event) {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          checkText();
-        } else if (event.key === 'Alt') {
-          event.preventDefault();
-          showOriginalSentence();
-        } else if (!event.altKey) {
-          hideOriginalSentence();
-        }
-      }
+function handleKeyDown(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        checkText();
+    } else if (event.key === "Alt") {
+        event.preventDefault();
+        showOriginalSentence();
+    } else if (!event.altKey) {
+        hideOriginalSentence();
+    }
+}
 
-      // 17. Practice Reset
-      function restartPractice() {
-        clearProgress();
-        document.getElementById('practice-section').style.display = 'none';
-        document.getElementById('start-button').classList.remove('hidden');
-        document.getElementById('article-input').classList.remove('hidden');
-        document.getElementById('article-input').value = '';
-        document.getElementById('user-input').value = '';
-        document.getElementById('user-input').style.display = 'block';
-        document.getElementById('check-button').style.display = 'inline';
-        ResultManager.clearResult();
-        document.getElementById('original-sentence').innerText = '';
-        document
-          .getElementById('original-sentence')
-          .classList.remove('completed-message');
+// 17. Practice Reset
+function restartPractice() {
+    clearProgress();
+    document.getElementById("practice-section").style.display = "none";
+    document.getElementById("start-button").classList.remove("hidden");
+    document.getElementById("article-input").classList.remove("hidden");
+    document.getElementById("article-input").value = "";
+    document.getElementById("user-input").value = "";
+    document.getElementById("user-input").style.display = "block";
+    document.getElementById("check-button").style.display = "inline";
+    ResultManager.clearResult();
+    document.getElementById("original-sentence").innerText = "";
+    document.getElementById("original-sentence").classList.remove('completed-message');
+    
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    progressBarFill.style.width = "0%";
+    progressBarFill.innerText = "0%";
+}
 
-        const progressBarFill = document.getElementById('progress-bar-fill');
-        progressBarFill.style.width = '0%';
-        progressBarFill.innerText = '0%';
-      }
+// 18. Utility Functions
+function removeLineBreaks(text) {
+    return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+}
 
-      // 18. Utility Functions
-      function removeLineBreaks(text) {
-        return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
-      }
+// 19. Additional Event Listeners
+document.getElementById("article-input").addEventListener("paste", function(event) {
+    event.preventDefault();
+    let pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    this.value = removeLineBreaks(pastedText);
+});
 
-      // 19. Additional Event Listeners
-      document
-        .getElementById('article-input')
-        .addEventListener('paste', function (event) {
-          event.preventDefault();
-          let pastedText = (
-            event.clipboardData || window.clipboardData
-          ).getData('text');
-          this.value = removeLineBreaks(pastedText);
-        });
+document.getElementById("user-input").addEventListener("input", function() {
+    hideOriginalSentence();
+    ResultManager.clearResult();
+    saveProgress();
+});
 
-      document
-        .getElementById('user-input')
-        .addEventListener('input', function () {
-          hideOriginalSentence();
-          ResultManager.clearResult();
-          saveProgress();
-        });
+document.getElementById("reload-button").addEventListener("click", restartPractice);
 
-      document
-        .getElementById('reload-button')
-        .addEventListener('click', restartPractice);
+// Prevent drag-and-drop on the original sentence
+document.getElementById("original-sentence").addEventListener("dragstart", function(event) {
+    event.preventDefault();
+});
 
-      // Prevent drag-and-drop on the original sentence
-      document
-        .getElementById('original-sentence')
-        .addEventListener('dragstart', function (event) {
-          event.preventDefault();
-        });
+// 20. Word List Event Handlers
+document.getElementById('close-word-list-btn').addEventListener('click', function() {
+    document.getElementById('word-list-section').style.display = 'none';
+});
 
-      // 20. Word List Event Handlers
-      document
-        .getElementById('close-word-list-btn')
-        .addEventListener('click', function () {
-          document.getElementById('word-list-section').style.display = 'none';
-        });
+document.getElementById('clear-word-list-btn').addEventListener('click', function() {
+    if (confirm("Are you sure you want to clear the word list?")) {
+        localStorage.removeItem('wordList');
+        displayWordList();
+    }
+});
 
-      document
-        .getElementById('clear-word-list-btn')
-        .addEventListener('click', function () {
-          if (confirm('Are you sure you want to clear the word list?')) {
-            localStorage.removeItem('wordList');
-            displayWordList();
-          }
-        });
-
-      // 21. Word List UI Management
-      const WordListUI = {
-        showEmptyState(wordListElement) {
-          wordListElement.style.opacity = '0';
-          setTimeout(() => {
-            wordListElement.innerHTML =
-              '<li class="empty-state">No words saved yet.</li>';
+// 21. Word List UI Management
+const WordListUI = {
+    showEmptyState(wordListElement) {
+        wordListElement.style.opacity = '0';
+        setTimeout(() => {
+            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
             wordListElement.style.opacity = '1';
-          }, 300);
-        },
-
-        createWordListItem(word, index) {
-          const li = document.createElement('li');
-
-          const wordSpan = document.createElement('span');
-          wordSpan.textContent = word;
-          wordSpan.classList.add('clickable-word');
-          wordSpan.title = 'Click to look up definition';
-          wordSpan.onclick = () => {
-            const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(
-              word
-            )}&kad=en_US`;
+        }, 300);
+    },
+    
+    createWordListItem(word, index) {
+        const li = document.createElement('li');
+        
+        const wordSpan = document.createElement('span');
+        wordSpan.textContent = word;
+        wordSpan.classList.add('clickable-word');
+        wordSpan.title = 'Click to look up definition';
+        wordSpan.onclick = () => {
+            const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US`;
             window.open(searchQuery, '_blank');
-          };
+        };
+        
+        const buttonContainer = document.createElement('div');
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'remove-word-btn';
+        removeButton.setAttribute('data-index', index);
+        
+        buttonContainer.appendChild(removeButton);
+        li.appendChild(wordSpan);
+        li.appendChild(buttonContainer);
+        
+        return li;
+    },
 
-          const buttonContainer = document.createElement('div');
-          const removeButton = document.createElement('button');
-          removeButton.textContent = 'Remove';
-          removeButton.className = 'remove-word-btn';
-          removeButton.setAttribute('data-index', index);
-
-          buttonContainer.appendChild(removeButton);
-          li.appendChild(wordSpan);
-          li.appendChild(buttonContainer);
-
-          return li;
-        },
-
-        setupRemoveButtons() {
-          const removeButtons = document.querySelectorAll('.remove-word-btn');
-          removeButtons.forEach((button) => {
-            button.addEventListener('click', function () {
-              const wordIndex = this.getAttribute('data-index');
-              removeWordFromList(wordIndex);
+    setupRemoveButtons() {
+        const removeButtons = document.querySelectorAll('.remove-word-btn');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const wordIndex = this.getAttribute('data-index');
+                removeWordFromList(wordIndex);
             });
-
+            
             button.addEventListener('animationend', () => {
-              button.classList.remove('clicked');
+                button.classList.remove('clicked');
             });
-          });
-        },
-      };
+        });
+    }
+};
 
-      // 22. Context Menu System
-      const ContextMenu = {
-        menu: document.getElementById('context-menu'),
-        selectedWord: '',
-
-        init() {
-          this.setupEventListeners();
-          this.setupDefinitionButton();
-          this.setupAddToListButton();
-        },
-
-        show(x, y) {
-          this.menu.style.display = 'block';
-
-          // Ensure menu stays within viewport
-          const menuRect = this.menu.getBoundingClientRect();
-          const maxX = window.innerWidth - menuRect.width;
-          const maxY = window.innerHeight - menuRect.height;
-
-          this.menu.style.left = `${Math.min(x, maxX)}px`;
-          this.menu.style.top = `${Math.min(y, maxY)}px`;
-
-          // Reset add to list button
-          const addToListBtn = document.getElementById('add-to-list-btn');
-          addToListBtn.classList.remove('success');
-          addToListBtn.innerHTML =
-            '<i class="fi fi-rr-book-alt"></i>Add to Word List';
-        },
-
-        hide() {
-          this.menu.style.display = 'none';
-        },
-
-        setupEventListeners() {
-          document.addEventListener('mouseup', (event) => {
+// 22. Context Menu System
+const ContextMenu = {
+    menu: document.getElementById('context-menu'),
+    selectedWord: '',
+    
+    init() {
+        this.setupEventListeners();
+        this.setupDefinitionButton();
+        this.setupAddToListButton();
+    },
+    
+    show(x, y) {
+        this.menu.style.display = 'block';
+        
+        // Ensure menu stays within viewport
+        const menuRect = this.menu.getBoundingClientRect();
+        const maxX = window.innerWidth - menuRect.width;
+        const maxY = window.innerHeight - menuRect.height;
+        
+        this.menu.style.left = `${Math.min(x, maxX)}px`;
+        this.menu.style.top = `${Math.min(y, maxY)}px`;
+        
+        // Reset add to list button
+        const addToListBtn = document.getElementById('add-to-list-btn');
+        addToListBtn.classList.remove('success');
+        addToListBtn.innerHTML = '<i class="fi fi-rr-book-alt"></i>Add to Word List';
+    },
+    
+    hide() {
+        this.menu.style.display = 'none';
+    },
+    
+    setupEventListeners() {
+        document.addEventListener('mouseup', (event) => {
             const selection = window.getSelection().toString().trim();
             if (selection) {
-              this.selectedWord = selection;
-              if (event.button === 2) {
-                event.preventDefault();
-                this.show(event.pageX, event.pageY);
-              }
+                this.selectedWord = selection;
+                if (event.button === 2) {
+                    event.preventDefault();
+                    this.show(event.pageX, event.pageY);
+                }
             } else {
-              this.hide();
+                this.hide();
             }
-          });
+        });
 
-          document.addEventListener('click', (event) => {
+        document.addEventListener('click', (event) => {
             if (!this.menu.contains(event.target)) {
-              this.hide();
+                this.hide();
             }
-          });
-        },
-
-        setupDefinitionButton() {
-          document
-            .getElementById('definition-btn')
-            .addEventListener('click', () => {
-              if (this.selectedWord) {
-                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(
-                  this.selectedWord
-                )}&kad=en_US`;
+        });
+    },
+    
+    setupDefinitionButton() {
+        document.getElementById('definition-btn').addEventListener('click', () => {
+            if (this.selectedWord) {
+                const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(this.selectedWord)}&kad=en_US`;
                 window.open(searchQuery, '_blank');
                 this.hide();
-              }
-            });
-        },
-
-        setupAddToListButton() {
-          document
-            .getElementById('add-to-list-btn')
-            .addEventListener('click', () => {
-              const currentWordList =
-                JSON.parse(localStorage.getItem('wordList')) || [];
-
-              if (
-                this.selectedWord &&
-                !currentWordList.includes(this.selectedWord)
-              ) {
+            }
+        });
+    },
+    
+    setupAddToListButton() {
+        document.getElementById('add-to-list-btn').addEventListener('click', () => {
+            const currentWordList = JSON.parse(localStorage.getItem('wordList')) || [];
+            
+            if (this.selectedWord && !currentWordList.includes(this.selectedWord)) {
                 currentWordList.push(this.selectedWord);
-                localStorage.setItem(
-                  'wordList',
-                  JSON.stringify(currentWordList)
-                );
-
+                localStorage.setItem('wordList', JSON.stringify(currentWordList));
+                
                 const addToListBtn = document.getElementById('add-to-list-btn');
                 addToListBtn.classList.add('success');
                 addToListBtn.textContent = 'Added to Word List';
-
+                
                 setTimeout(() => this.hide(), 1500);
-              } else if (this.selectedWord) {
+            } else if (this.selectedWord) {
                 alert(`"${this.selectedWord}" is already in your word list.`);
                 this.hide();
-              }
-            });
-        },
-      };
+            }
+        });
+    }
+};
 
-      // 23. Modal Management
-      // Modal Management System
-      const ModalSystem = {
-        init() {
-          this.setupWelcomeModal();
-          this.setupTextControlsModal();
-        },
+// 23. Modal Management
+// Modal Management System
+const ModalSystem = {
+    init() {
+        this.setupWelcomeModal();
+        this.setupTextControlsModal();
+    },
 
-        setupWelcomeModal() {
-          // Check if user has seen the welcome modal before
-          if (!localStorage.getItem('welcomeModalSeen')) {
+    setupWelcomeModal() {
+        // Check if user has seen the welcome modal before
+        if (!localStorage.getItem('welcomeModalSeen')) {
             const rulesModal = document.getElementById('rules-modal');
             if (rulesModal) {
-              // Ensure modal is visible
-              rulesModal.style.display = 'flex';
-
-              // Setup close button handler
-              const closeButton = rulesModal.querySelector(
-                '.modal-footer button'
-              );
-              if (closeButton) {
-                closeButton.addEventListener('click', () => {
-                  rulesModal.style.display = 'none';
-                  localStorage.setItem('welcomeModalSeen', 'true');
-                });
-              }
-
-              // Setup click outside modal to close
-              rulesModal.addEventListener('click', (event) => {
-                if (event.target === rulesModal) {
-                  rulesModal.style.display = 'none';
-                  localStorage.setItem('welcomeModalSeen', 'true');
+                // Ensure modal is visible
+                rulesModal.style.display = 'flex';
+                
+                // Setup close button handler
+                const closeButton = rulesModal.querySelector('.modal-footer button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                        rulesModal.style.display = 'none';
+                        localStorage.setItem('welcomeModalSeen', 'true');
+                    });
                 }
-              });
-            }
-          }
-        },
 
-        setupTextControlsModal() {
-          const modal = document.getElementById('text-controls-modal');
-          if (modal) {
-            const closeBtn = modal.querySelector(
-              '.modal-footer button:last-child'
-            );
+                // Setup click outside modal to close
+                rulesModal.addEventListener('click', (event) => {
+                    if (event.target === rulesModal) {
+                        rulesModal.style.display = 'none';
+                        localStorage.setItem('welcomeModalSeen', 'true');
+                    }
+                });
+            }
+        }
+    },
+
+    setupTextControlsModal() {
+        const modal = document.getElementById('text-controls-modal');
+        if (modal) {
+            const closeBtn = modal.querySelector('.modal-footer button:last-child');
             if (closeBtn) {
-              closeBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-              });
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
             }
 
             // Click outside to close
             window.addEventListener('click', (event) => {
-              if (event.target === modal) {
-                modal.style.display = 'none';
-              }
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
             });
-          }
-        },
-      };
-
-      // Update the initialization code
-      document.addEventListener('DOMContentLoaded', () => {
-        // Clear the welcome modal flag for testing (remove this in production)
-        localStorage.removeItem('welcomeModalSeen');
-
-        // Initialize the modal system
-        ModalSystem.init();
-      });
-
-      // Helper function to manually close modal if needed
-      function closeModal() {
-        const rulesModal = document.getElementById('rules-modal');
-        if (rulesModal) {
-          rulesModal.style.display = 'none';
-          localStorage.setItem('welcomeModalSeen', 'true');
         }
-      }
+    }
+};
 
-      // 24. Application Initialization
-      function initializeApplication() {
-        // Initialize all systems
-        TextControlSystem.init();
-        ContextMenu.init();
-        ModalSystem.init();
+// Update the initialization code
+document.addEventListener('DOMContentLoaded', () => {
+    // Clear the welcome modal flag for testing (remove this in production)
+    localStorage.removeItem('welcomeModalSeen');
+    
+    // Initialize the modal system
+    ModalSystem.init();
+});
 
-        // Load saved data
-        loadSavedProgress();
-        displayWordList();
+// Helper function to manually close modal if needed
+function closeModal() {
+    const rulesModal = document.getElementById('rules-modal');
+    if (rulesModal) {
+        rulesModal.style.display = 'none';
+        localStorage.setItem('welcomeModalSeen', 'true');
+    }
+}
 
-        // Setup copy protection
-        document.addEventListener('copy', function (event) {
-          const selection = window.getSelection();
-          const originalSentenceElement =
-            document.getElementById('original-sentence');
-          if (selection.containsNode(originalSentenceElement, true)) {
+// 24. Application Initialization
+function initializeApplication() {
+    // Initialize all systems
+    TextControlSystem.init();
+    ContextMenu.init();
+    ModalSystem.init();
+    
+    // Load saved data
+    loadSavedProgress();
+    displayWordList();
+    
+    // Setup copy protection
+    document.addEventListener('copy', function(event) {
+        const selection = window.getSelection();
+        const originalSentenceElement = document.getElementById("original-sentence");
+        if (selection.containsNode(originalSentenceElement, true)) {
             event.preventDefault();
-            alert('Copying the original sentence is not allowed!');
-          }
-        });
+            alert("Copying the original sentence is not allowed!");
+        }
+    });
+    
+    // Prevent default context menu
+    document.addEventListener('contextmenu', event => event.preventDefault());
+}
 
-        // Prevent default context menu
-        document.addEventListener('contextmenu', (event) =>
-          event.preventDefault()
-        );
-      }
-
-      // 25. Service Worker Registration
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch((err) => {
+// 25. Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
             console.log('ServiceWorker registration failed: ', err);
-          });
         });
-      }
+    });
+}
 
-      // Initialize the application when DOM is ready
-      document.addEventListener('DOMContentLoaded', initializeApplication);
+// Initialize the application when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeApplication);
 
-      // Add these event listeners after the existing ModalSystem.init() in the initializeApplication function
+// Add these event listeners after the existing ModalSystem.init() in the initializeApplication function
 
-      // Text Controls Button Handler
-      // Text Controls Button Handler
-      document
-        .getElementById('text-controls-btn')
-        .addEventListener('click', function (event) {
-          event.stopPropagation(); // Prevent event from bubbling up
-          const modal = document.getElementById('text-controls-modal');
-
-          if (modal.style.display === 'flex') {
-            modal.style.display = 'none';
-          } else {
-            // Position modal below the button
-            const buttonRect = this.getBoundingClientRect();
-            modal.style.display = 'flex';
-
-            const modalContent = modal.querySelector('.modal-content');
-            modalContent.style.top = buttonRect.bottom + 10 + 'px'; // 10px gap
-
-            // Update active state of font size buttons
-            const currentSize =
-              TextControlSystem.settings.fontSize ||
-              TextControlSystem.defaults.fontSize;
-            document.querySelectorAll('.size-btn').forEach((btn) => {
-              btn.classList.toggle(
-                'active',
-                parseInt(btn.dataset.size) === currentSize
-              );
-            });
-
-            // Update font family select
-            const fontSelect = document.getElementById('font-family-select');
-            fontSelect.value =
-              TextControlSystem.settings.fontFamily ||
-              TextControlSystem.defaults.fontFamily;
-          }
+// Text Controls Button Handler
+// Text Controls Button Handler
+document.getElementById('text-controls-btn').addEventListener('click', function(event) {
+    event.stopPropagation(); // Prevent event from bubbling up
+    const modal = document.getElementById('text-controls-modal');
+    
+    if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+    } else {
+        // Position modal below the button
+        const buttonRect = this.getBoundingClientRect();
+        modal.style.display = 'flex';
+        
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.style.top = (buttonRect.bottom + 10) + 'px'; // 10px gap
+        
+        // Update active state of font size buttons
+        const currentSize = TextControlSystem.settings.fontSize || TextControlSystem.defaults.fontSize;
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.size) === currentSize);
         });
+        
+        // Update font family select
+        const fontSelect = document.getElementById('font-family-select');
+        fontSelect.value = TextControlSystem.settings.fontFamily || TextControlSystem.defaults.fontFamily;
+    }
+});
 
-      // Close modal when clicking outside
-      document.addEventListener('click', function (event) {
-        const modal = document.getElementById('text-controls-modal');
-        const textControlsBtn = document.getElementById('text-controls-btn');
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('text-controls-modal');
+    const textControlsBtn = document.getElementById('text-controls-btn');
+    
+    if (modal.style.display === 'flex' && 
+        !modal.contains(event.target) && 
+        event.target !== textControlsBtn) {
+        modal.style.display = 'none';
+    }
+});
+// Word List Button Handler
+document.getElementById('view-word-list-btn').addEventListener('click', function() {
+    const wordListSection = document.getElementById('word-list-section');
+    if (wordListSection.style.display === 'none' || !wordListSection.style.display) {
+        wordListSection.style.display = 'flex';
+        displayWordList(); // Refresh the word list when showing
+    } else {
+        wordListSection.style.display = 'none';
+    }
+});
 
-        if (
-          modal.style.display === 'flex' &&
-          !modal.contains(event.target) &&
-          event.target !== textControlsBtn
-        ) {
-          modal.style.display = 'none';
-        }
-      });
-      // Word List Button Handler
-      document
-        .getElementById('view-word-list-btn')
-        .addEventListener('click', function () {
-          const wordListSection = document.getElementById('word-list-section');
-          if (
-            wordListSection.style.display === 'none' ||
-            !wordListSection.style.display
-          ) {
-            wordListSection.style.display = 'flex';
-            displayWordList(); // Refresh the word list when showing
-          } else {
-            wordListSection.style.display = 'none';
-          }
-        });
+// Close text controls modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('text-controls-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
 
-      // Close text controls modal when clicking outside
-      window.addEventListener('click', function (event) {
-        const modal = document.getElementById('text-controls-modal');
-        if (event.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
+// Add these functions to TextControlSystem object
+Object.assign(TextControlSystem, {
+    closeControls() {
+        document.getElementById('text-controls-modal').style.display = 'none';
+    },
+    
+    showControls() {
+        document.getElementById('text-controls-modal').style.display = 'flex';
+        this.updateUI();
+    }
+});
 
-      // Add these functions to TextControlSystem object
-      Object.assign(TextControlSystem, {
-        closeControls() {
-          document.getElementById('text-controls-modal').style.display = 'none';
-        },
-
-        showControls() {
-          document.getElementById('text-controls-modal').style.display = 'flex';
-          this.updateUI();
-        },
-      });
-
-      // Update the displayWordList function to handle empty lists better
-      function displayWordList() {
-        const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
-        const wordListElement = document.getElementById('word-list');
-
-        if (wordList.length === 0) {
-          wordListElement.innerHTML =
-            '<li class="empty-state">Your word list is empty. Select text and use the context menu to add words.</li>';
-          return;
-        }
-
-        wordListElement.innerHTML = wordList
-          .map(
-            (word, index) => `
+// Update the displayWordList function to handle empty lists better
+function displayWordList() {
+    const wordList = JSON.parse(localStorage.getItem('wordList')) || [];
+    const wordListElement = document.getElementById('word-list');
+    
+    if (wordList.length === 0) {
+        wordListElement.innerHTML = '<li class="empty-state">Your word list is empty. Select text and use the context menu to add words.</li>';
+        return;
+    }
+    
+    wordListElement.innerHTML = wordList.map((word, index) => `
         <li>
-            <span class="clickable-word" onclick="window.open('https://duckduckgo.com/?q=definition+of+${encodeURIComponent(
-              word
-            )}&kad=en_US', '_blank')">${word}</span>
+            <span class="clickable-word" onclick="window.open('https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US', '_blank')">${word}</span>
             <div>
                 <button class="remove-word-btn" data-index="${index}">Remove</button>
             </div>
         </li>
-    `
-          )
-          .join('');
-
-        // Setup remove buttons with animation
-        document.querySelectorAll('.remove-word-btn').forEach((btn) => {
-          btn.addEventListener('click', function () {
+    `).join('');
+    
+    // Setup remove buttons with animation
+    document.querySelectorAll('.remove-word-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
             const index = parseInt(this.dataset.index);
             const listItem = this.closest('li');
-
+            
             // Add animation class
             listItem.classList.add('deleting');
-
+            
             // Wait for animation to complete before updating the list
             setTimeout(() => {
-              const currentList =
-                JSON.parse(localStorage.getItem('wordList')) || [];
-              currentList.splice(index, 1);
-              localStorage.setItem('wordList', JSON.stringify(currentList));
-              displayWordList();
+                const currentList = JSON.parse(localStorage.getItem('wordList')) || [];
+                currentList.splice(index, 1);
+                localStorage.setItem('wordList', JSON.stringify(currentList));
+                displayWordList();
             }, 300); // Match this with animation duration
-          });
         });
-      }
-    </script>
-  </body>
+    });
+}
+</script>
+</body>
 </html>
