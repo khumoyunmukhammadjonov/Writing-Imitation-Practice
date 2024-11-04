@@ -2382,36 +2382,65 @@ function displayWordList() {
 
 
 // Standalone Timer Implementation
+// Improved Timer Implementation
 (function() {
-    // Create and initialize the PracticeTimer
     const PracticeTimer = {
         startTime: null,
         totalTime: 0,
         timerInterval: null,
         isRunning: false,
+        lastActivityTime: null,
 
         init() {
-            // Load saved timer state
-            const savedTimer = localStorage.getItem('practiceTimerState');
-            if (savedTimer) {
-                const timerData = JSON.parse(savedTimer);
+            this.checkAndClearStaleTimer();
+            this.observePracticeSection();
+            this.setupEventListeners();
+            this.updateDisplay();
+        },
+
+        checkAndClearStaleTimer() {
+            const savedState = localStorage.getItem('practiceTimerState');
+            if (savedState) {
+                const { lastActivityTime } = JSON.parse(savedState);
+                // Clear timer if last activity was more than 30 minutes ago
+                if (!lastActivityTime || Date.now() - lastActivityTime > 30 * 60 * 1000) {
+                    this.clearSavedState();
+                } else {
+                    // Load saved state if it's recent
+                    this.loadSavedState();
+                }
+            }
+        },
+
+        loadSavedState() {
+            const savedState = localStorage.getItem('practiceTimerState');
+            if (savedState) {
+                const timerData = JSON.parse(savedState);
                 this.totalTime = timerData.totalTime || 0;
                 this.startTime = timerData.isRunning ? Date.now() - timerData.elapsed : null;
                 this.isRunning = timerData.isRunning;
+                this.lastActivityTime = timerData.lastActivityTime;
+            }
+        },
+
+        clearSavedState() {
+            localStorage.removeItem('practiceTimerState');
+            this.reset();
+        },
+
+        setupEventListeners() {
+            // Watch for article input changes
+            const articleInput = document.getElementById('article-input');
+            if (articleInput) {
+                articleInput.addEventListener('input', () => {
+                    // Reset timer if user starts typing new content
+                    if (this.totalTime > 0) {
+                        this.reset();
+                    }
+                });
             }
 
-            // Add observers to detect practice state
-            this.observePracticeSection();
-            
-            // Start timer if practice is already in progress
-            if (document.getElementById('practice-section').style.display === 'block') {
-                this.start();
-            }
-
-            // Initialize display
-            this.updateDisplay();
-            
-            // Setup visibility change handler
+            // Handle page visibility
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     this.pause();
@@ -2420,19 +2449,20 @@ function displayWordList() {
                 }
             });
 
-            // Setup page unload handler
-            window.addEventListener('beforeunload', () => {
-                this.saveState();
-            });
+            // Update last activity time on any user interaction
+            document.addEventListener('mousedown', () => this.updateLastActivity());
+            document.addEventListener('keydown', () => this.updateLastActivity());
         },
 
         observePracticeSection() {
-            // Create an observer to watch for practice section visibility changes
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.target.id === 'practice-section') {
                         if (mutation.target.style.display === 'block') {
-                            this.start();
+                            // Only start a new timer if there isn't an active one
+                            if (!this.isRunning && this.totalTime === 0) {
+                                this.start();
+                            }
                         } else if (mutation.target.style.display === 'none') {
                             this.reset();
                         }
@@ -2440,7 +2470,6 @@ function displayWordList() {
                 });
             });
 
-            // Start observing the practice section
             const practiceSection = document.getElementById('practice-section');
             if (practiceSection) {
                 observer.observe(practiceSection, {
@@ -2449,20 +2478,25 @@ function displayWordList() {
                 });
             }
 
-            // Observe the reload button for resets
+            // Handle restart button
             const reloadButton = document.getElementById('reload-button');
             if (reloadButton) {
                 reloadButton.addEventListener('click', () => this.reset());
             }
         },
 
+        updateLastActivity() {
+            this.lastActivityTime = Date.now();
+            this.saveState();
+        },
+
         start() {
             if (!this.isRunning) {
                 this.startTime = Date.now() - this.totalTime;
                 this.isRunning = true;
+                this.updateLastActivity();
                 this.timerInterval = setInterval(() => this.updateDisplay(), 60000);
                 this.updateDisplay();
-                this.saveState();
             }
         },
 
@@ -2471,6 +2505,7 @@ function displayWordList() {
                 clearInterval(this.timerInterval);
                 this.totalTime = Date.now() - this.startTime;
                 this.isRunning = false;
+                this.updateLastActivity();
                 this.saveState();
             }
         },
@@ -2480,8 +2515,9 @@ function displayWordList() {
             this.startTime = null;
             this.totalTime = 0;
             this.isRunning = false;
+            this.lastActivityTime = null;
             this.updateDisplay();
-            this.saveState();
+            this.clearSavedState();
         },
 
         formatTime(ms) {
@@ -2499,7 +2535,8 @@ function displayWordList() {
             const timerData = {
                 totalTime: this.totalTime,
                 isRunning: this.isRunning,
-                elapsed: this.isRunning ? Date.now() - this.startTime : this.totalTime
+                elapsed: this.isRunning ? Date.now() - this.startTime : this.totalTime,
+                lastActivityTime: this.lastActivityTime
             };
             localStorage.setItem('practiceTimerState', JSON.stringify(timerData));
         }
