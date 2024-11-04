@@ -1183,203 +1183,148 @@ html, body {
     width: 100vw;
 }
 
-/* Extra Small Screens (below 576px) */
-@media screen and (max-width: 575px) {
+/* Smaller Desktop Screens (1024px - 1279px) */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
     .container {
-        max-width: 90%;
-        max-height: 90vh;
-        padding: 10px;
-        margin: 0 auto;
-        transform: scale(0.9);
-    }
-
-    textarea {
-        height: 100px;
-        font-size: 15px;
-    }
-
-    h1 {
-        font-size: 22px;
-        margin: 5px 0;
-    }
-
-    #original-sentence {
-        font-size: 16px;
-        padding: 10px;
-        min-height: 60px;
-    }
-
-    .button-container {
-        margin-top: 10px;
-    }
-
-    button {
-        padding: 7px 14px;
-        font-size: 14px;
-    }
-
-    .toggle-and-list-container {
-        top: 5px;
-        right: 5px;
-        gap: 2px;
-        padding: 2px;
-        transform: scale(0.9);
-    }
-
-    .control-btn {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-/* Small Screens (576px - 767px) */
-@media screen and (min-width: 576px) and (max-width: 767px) {
-    .container {
-        max-width: 85%;
-        max-height: 92vh;
-        padding: 12px;
-        transform: scale(0.95);
-    }
-
-    textarea {
-        height: 110px;
-    }
-
-    h1 {
-        font-size: 24px;
-        margin: 8px 0;
-    }
-
-    .toggle-and-list-container {
-        top: 8px;
-        right: 8px;
-    }
-}
-
-/* Medium Screens (768px - 991px) */
-@media screen and (min-width: 768px) and (max-width: 991px) {
-    .container {
-        max-width: 80%;
+        max-width: 750px;
         max-height: 95vh;
         padding: 15px;
+        margin: 20px auto;
     }
 
     .toggle-and-list-container {
-        top: 12px;
-        right: 12px;
+        top: 20px;
+        right: 20px;
+    }
+
+    textarea {
+        height: 130px;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin: 10px 0;
+    }
+
+    #original-sentence {
+        min-height: 80px;
+        padding: 12px;
     }
 }
 
-/* Large Screens (992px - 1199px) */
-@media screen and (min-width: 992px) {
+/* Standard Desktop Screens (1280px - 1439px) */
+@media screen and (min-width: 1280px) and (max-width: 1439px) {
     .container {
         max-width: 800px;
-        max-height: 98vh;
+        max-height: 96vh;
+        padding: 15px;
+        margin: 25px auto;
     }
 
     .toggle-and-list-container {
-        top: 15px;
-        right: 15px;
+        top: 25px;
+        right: 25px;
+    }
+
+    textarea {
+        height: 140px;
     }
 }
 
-/* Modal Responsiveness */
-@media screen and (max-width: 767px) {
-    .modal-content {
-        max-width: 90%;
-        max-height: 90vh;
-        margin: 10px;
-        padding: 12px;
-        overflow-y: auto;
-    }
-
-    #text-controls-modal .modal-content {
-        width: 85%;
-        right: 5%;
-        top: 45px;
-    }
-}
-
-/* Word List Section Responsiveness */
-@media screen and (max-width: 767px) {
-    #word-list-section {
-        padding: 20px 10px;
-    }
-
-    #word-list {
-        width: 95%;
-        max-height: 70vh;
-        overflow-y: auto;
-    }
-
-    #word-list li {
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-}
-
-/* Context Menu Responsiveness */
-@media screen and (max-width: 767px) {
-    #context-menu {
-        min-width: 160px;
-        max-width: 90vw;
-    }
-
-    #context-menu button {
-        padding: 8px 12px;
-        font-size: 13px;
-    }
-}
-
-/* Ensure the progress bar stays within container */
-.progress-bar {
-    margin: 10px 0;
-}
-
-/* Optimize spacing for very small heights */
-@media screen and (max-height: 600px) {
+/* Large Desktop Screens (1440px - 1679px) */
+@media screen and (min-width: 1440px) and (max-width: 1679px) {
     .container {
-        transform: scale(0.85);
+        max-width: 850px;
+        max-height: 97vh;
+        margin: 30px auto;
+    }
+
+    .toggle-and-list-container {
+        top: 30px;
+        right: 30px;
+    }
+}
+
+/* Extra Large Desktop Screens (1680px - 1919px) */
+@media screen and (min-width: 1680px) and (max-width: 1919px) {
+    .container {
+        max-width: 900px;
+        max-height: 98vh;
+        margin: 35px auto;
+    }
+
+    .toggle-and-list-container {
+        top: 35px;
+        right: 35px;
+    }
+}
+
+/* 2K and Higher Resolution Screens (1920px and above) */
+@media screen and (min-width: 1920px) {
+    .container {
+        max-width: 950px;
+        max-height: 98vh;
+        margin: 40px auto;
+    }
+
+    .toggle-and-list-container {
+        top: 40px;
+        right: 40px;
+    }
+}
+
+/* Height-based adjustments for shorter screens */
+@media screen and (max-height: 800px) {
+    .container {
+        margin: 15px auto;
+        transform: scale(0.95);
         transform-origin: top center;
     }
 
     textarea {
-        height: 80px;
+        height: 120px;
     }
 
     #original-sentence {
-        min-height: 50px;
-        padding: 8px;
-    }
-
-    .button-container {
-        margin-top: 8px;
-    }
-
-    h1 {
-        margin: 5px 0;
+        min-height: 70px;
     }
 }
 
-/* Handle landscape orientation on small devices */
-@media screen and (max-height: 500px) and (orientation: landscape) {
+/* Height-based adjustments for taller screens */
+@media screen and (min-height: 1000px) {
     .container {
-        transform: scale(0.8);
-        transform-origin: top center;
-    }
-
-    h1 {
-        font-size: 20px;
-        margin: 3px 0;
+        margin: 45px auto;
     }
 
     textarea {
-        height: 70px;
+        height: 150px;
     }
 
     #original-sentence {
-        min-height: 45px;
+        min-height: 90px;
     }
+}
+
+/* Modal adjustments for desktop */
+#text-controls-modal .modal-content {
+    max-width: 250px;
+    right: 30px;
+    top: 80px;
+}
+
+/* Word list section adjustments */
+#word-list-section {
+    padding: 40px 20px;
+}
+
+#word-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Context menu adjustments */
+#context-menu {
+    min-width: 200px;
 }
  </style>
 </head>
