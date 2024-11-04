@@ -1174,31 +1174,40 @@ button#view-word-list-btn.word-list-btn:hover {
 }
 
 /* Add animation properties to list items */
-/* Base styles to prevent scrolling */
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-}
 
-/* Smaller Desktop Screens (1024px - 1279px) */
-@media screen and (min-width: 1024px) and (max-width: 1279px) {
+/* Small laptop screens (up to 1366px) */
+@media screen and (max-width: 1366px) {
     .container {
-        max-width: 750px;
-        max-height: 95vh;
-        padding: 15px;
+        max-width: 700px;
+        width: 90%;
         margin: 20px auto;
+        padding: 12px;
     }
 
-    .toggle-and-list-container {
-        top: 20px;
-        right: 20px;
+    h1 {
+        font-size: 26px;
+        margin: 8px 0;
     }
 
     textarea {
-        height: 130px;
+        height: 120px;
+        font-size: 16px;
+    }
+
+    #original-sentence {
+        min-height: 80px;
+        font-size: 17px;
+        padding: 12px;
+    }
+}
+
+/* Medium laptop screens (1367px to 1600px) */
+@media screen and (min-width: 1367px) and (max-width: 1600px) {
+    .container {
+        max-width: 800px;
+        width: 85%;
+        margin: 25px auto;
+        padding: 15px;
     }
 
     h1 {
@@ -1206,125 +1215,78 @@ html, body {
         margin: 10px 0;
     }
 
-    #original-sentence {
-        min-height: 80px;
-        padding: 12px;
-    }
-}
-
-/* Standard Desktop Screens (1280px - 1439px) */
-@media screen and (min-width: 1280px) and (max-width: 1439px) {
-    .container {
-        max-width: 800px;
-        max-height: 96vh;
-        padding: 15px;
-        margin: 25px auto;
-    }
-
-    .toggle-and-list-container {
-        top: 25px;
-        right: 25px;
-    }
-
     textarea {
         height: 140px;
-    }
-}
-
-/* Large Desktop Screens (1440px - 1679px) */
-@media screen and (min-width: 1440px) and (max-width: 1679px) {
-    .container {
-        max-width: 850px;
-        max-height: 97vh;
-        margin: 30px auto;
-    }
-
-    .toggle-and-list-container {
-        top: 30px;
-        right: 30px;
-    }
-}
-
-/* Extra Large Desktop Screens (1680px - 1919px) */
-@media screen and (min-width: 1680px) and (max-width: 1919px) {
-    .container {
-        max-width: 900px;
-        max-height: 98vh;
-        margin: 35px auto;
-    }
-
-    .toggle-and-list-container {
-        top: 35px;
-        right: 35px;
-    }
-}
-
-/* 2K and Higher Resolution Screens (1920px and above) */
-@media screen and (min-width: 1920px) {
-    .container {
-        max-width: 950px;
-        max-height: 98vh;
-        margin: 40px auto;
-    }
-
-    .toggle-and-list-container {
-        top: 40px;
-        right: 40px;
-    }
-}
-
-/* Height-based adjustments for shorter screens */
-@media screen and (max-height: 800px) {
-    .container {
-        margin: 15px auto;
-        transform: scale(0.95);
-        transform-origin: top center;
-    }
-
-    textarea {
-        height: 120px;
-    }
-
-    #original-sentence {
-        min-height: 70px;
-    }
-}
-
-/* Height-based adjustments for taller screens */
-@media screen and (min-height: 1000px) {
-    .container {
-        margin: 45px auto;
-    }
-
-    textarea {
-        height: 150px;
+        font-size: 17px;
     }
 
     #original-sentence {
         min-height: 90px;
+        font-size: 19px;
+        padding: 15px;
     }
 }
 
-/* Modal adjustments for desktop */
-#text-controls-modal .modal-content {
-    max-width: 250px;
-    right: 30px;
-    top: 80px;
+/* Large desktop screens (1601px to 1920px) */
+@media screen and (min-width: 1601px) and (max-width: 1920px) {
+    .container {
+        max-width: 900px;
+        width: 80%;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 30px;
+        margin: 12px 0;
+    }
+
+    textarea {
+        height: 160px;
+        font-size: 18px;
+    }
+
+    #original-sentence {
+        min-height: 100px;
+        font-size: 20px;
+        padding: 18px;
+    }
 }
 
-/* Word list section adjustments */
-#word-list-section {
-    padding: 40px 20px;
+/* Extra large desktop screens (above 1920px) */
+@media screen and (min-width: 1921px) {
+    .container {
+        max-width: 1000px;
+        width: 75%;
+        margin: 35px auto;
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin: 15px 0;
+    }
+
+    textarea {
+        height: 180px;
+        font-size: 19px;
+    }
+
+    #original-sentence {
+        min-height: 110px;
+        font-size: 21px;
+        padding: 20px;
+    }
 }
 
-#word-list {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* Context menu adjustments */
-#context-menu {
-    min-width: 200px;
+/* Ensure minimum width for all screen sizes */
+@media screen and (max-width: 800px) {
+    .container {
+        min-width: 600px;
+        width: 95%;
+        margin: 15px auto;
+        padding: 10px;
+    }
 }
  </style>
 </head>
