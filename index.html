@@ -1174,6 +1174,196 @@ button#view-word-list-btn.word-list-btn:hover {
 }
 
 /* Add animation properties to list items */
+
+/* Extra Small Screens (below 576px) */
+@media screen and (max-width: 575px) {
+    .container {
+        max-width: 90%;
+        margin: 20px auto;
+        padding: 10px;
+    }
+
+    .toggle-and-list-container {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        gap: 2px;
+        padding: 2px;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin: 8px 0;
+    }
+
+    textarea {
+        font-size: 15px;
+        height: 120px;
+    }
+
+    #original-sentence {
+        font-size: 16px;
+        padding: 12px;
+        min-height: 70px;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+
+    .control-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .control-btn i {
+        font-size: 16px;
+    }
+}
+
+/* Small Screens (576px - 767px) */
+@media screen and (min-width: 576px) and (max-width: 767px) {
+    .container {
+        max-width: 540px;
+        margin: 30px auto;
+    }
+
+    .toggle-and-list-container {
+        top: 15px;
+        right: 15px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    textarea {
+        font-size: 16px;
+        height: 130px;
+    }
+}
+
+/* Medium Screens (768px - 991px) */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .container {
+        max-width: 720px;
+        margin: 40px auto;
+    }
+
+    .toggle-and-list-container {
+        top: 20px;
+        right: 20px;
+    }
+
+    body {
+        padding: 20px;
+    }
+}
+
+/* Large Screens (992px - 1199px) */
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+    }
+
+    body {
+        padding: 25px;
+    }
+}
+
+/* Extra Large Screens (1200px - 1399px) */
+@media screen and (min-width: 1200px) and (max-width: 1399px) {
+    .container {
+        max-width: 800px;
+        margin: 60px auto;
+    }
+
+    body {
+        padding: 30px;
+    }
+}
+
+/* XXL Screens (1400px and above) */
+@media screen and (min-width: 1400px) {
+    .container {
+        max-width: 800px;
+        margin: 70px auto;
+    }
+
+    body {
+        padding: 35px;
+    }
+}
+
+/* Height-based media queries for better vertical spacing */
+@media screen and (max-height: 700px) {
+    .container {
+        margin: 20px auto;
+    }
+
+    textarea {
+        height: 100px;
+    }
+
+    #original-sentence {
+        min-height: 60px;
+    }
+}
+
+/* Modal Responsiveness */
+@media screen and (max-width: 767px) {
+    .modal-content {
+        width: 90%;
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .modal-header {
+        font-size: 20px;
+    }
+
+    #text-controls-modal .modal-content {
+        width: 90%;
+        right: 5%;
+        top: 50px;
+    }
+}
+
+/* Word List Section Responsiveness */
+@media screen and (max-width: 767px) {
+    #word-list {
+        width: 95%;
+    }
+
+    #word-list li {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
+    .word-list-controls {
+        width: 95%;
+    }
+
+    #clear-word-list-btn,
+    #close-word-list-btn {
+        padding: 10px 20px;
+        min-width: 100px;
+    }
+}
+
+/* Context Menu Responsiveness */
+@media screen and (max-width: 767px) {
+    #context-menu {
+        min-width: 180px;
+    }
+
+    #context-menu button {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
  </style>
 </head>
 <body>
