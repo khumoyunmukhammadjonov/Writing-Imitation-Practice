@@ -1289,9 +1289,52 @@ button#view-word-list-btn.word-list-btn:hover {
         padding: 10px;
     }
 }
+
+.practice-timer {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 6px 12px;
+    font-family: 'Arial', sans-serif;
+    gap: 6px;
+}
+
+.practice-timer .timer-icon {
+    color: #4B5563;
+    font-size: 15px;
+}
+
+.practice-timer .timer-display {
+    color: #4B5563;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Dark mode styles */
+.low-light-mode .practice-timer {
+    background-color: #1E1E1E;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.low-light-mode .practice-timer .timer-icon,
+.low-light-mode .practice-timer .timer-display {
+    color: #E0E0E0;
+}
  </style>
 </head>
 <body>
+
+<div class="practice-timer">
+    <i class="fi fi-rr-clock timer-icon"></i>
+    <span class="timer-display">0 minutes</span>
+</div>
 
 <div id="text-controls-modal" class="modal">
     <div class="modal-content">
@@ -2335,6 +2378,140 @@ function displayWordList() {
         });
     });
 }
+
+
+
+// Standalone Timer Implementation
+(function() {
+    // Create and initialize the PracticeTimer
+    const PracticeTimer = {
+        startTime: null,
+        totalTime: 0,
+        timerInterval: null,
+        isRunning: false,
+
+        init() {
+            // Load saved timer state
+            const savedTimer = localStorage.getItem('practiceTimerState');
+            if (savedTimer) {
+                const timerData = JSON.parse(savedTimer);
+                this.totalTime = timerData.totalTime || 0;
+                this.startTime = timerData.isRunning ? Date.now() - timerData.elapsed : null;
+                this.isRunning = timerData.isRunning;
+            }
+
+            // Add observers to detect practice state
+            this.observePracticeSection();
+            
+            // Start timer if practice is already in progress
+            if (document.getElementById('practice-section').style.display === 'block') {
+                this.start();
+            }
+
+            // Initialize display
+            this.updateDisplay();
+            
+            // Setup visibility change handler
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    this.pause();
+                } else if (document.getElementById('practice-section').style.display === 'block') {
+                    this.start();
+                }
+            });
+
+            // Setup page unload handler
+            window.addEventListener('beforeunload', () => {
+                this.saveState();
+            });
+        },
+
+        observePracticeSection() {
+            // Create an observer to watch for practice section visibility changes
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.target.id === 'practice-section') {
+                        if (mutation.target.style.display === 'block') {
+                            this.start();
+                        } else if (mutation.target.style.display === 'none') {
+                            this.reset();
+                        }
+                    }
+                });
+            });
+
+            // Start observing the practice section
+            const practiceSection = document.getElementById('practice-section');
+            if (practiceSection) {
+                observer.observe(practiceSection, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            }
+
+            // Observe the reload button for resets
+            const reloadButton = document.getElementById('reload-button');
+            if (reloadButton) {
+                reloadButton.addEventListener('click', () => this.reset());
+            }
+        },
+
+        start() {
+            if (!this.isRunning) {
+                this.startTime = Date.now() - this.totalTime;
+                this.isRunning = true;
+                this.timerInterval = setInterval(() => this.updateDisplay(), 60000);
+                this.updateDisplay();
+                this.saveState();
+            }
+        },
+
+        pause() {
+            if (this.isRunning) {
+                clearInterval(this.timerInterval);
+                this.totalTime = Date.now() - this.startTime;
+                this.isRunning = false;
+                this.saveState();
+            }
+        },
+
+        reset() {
+            clearInterval(this.timerInterval);
+            this.startTime = null;
+            this.totalTime = 0;
+            this.isRunning = false;
+            this.updateDisplay();
+            this.saveState();
+        },
+
+        formatTime(ms) {
+            const minutes = Math.floor(ms / (1000 * 60));
+            return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+        },
+
+        updateDisplay() {
+            const display = document.querySelector('.practice-timer .timer-display');
+            const elapsed = this.isRunning ? Date.now() - this.startTime : this.totalTime;
+            display.textContent = this.formatTime(elapsed);
+        },
+
+        saveState() {
+            const timerData = {
+                totalTime: this.totalTime,
+                isRunning: this.isRunning,
+                elapsed: this.isRunning ? Date.now() - this.startTime : this.totalTime
+            };
+            localStorage.setItem('practiceTimerState', JSON.stringify(timerData));
+        }
+    };
+
+    // Initialize timer when DOM is loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => PracticeTimer.init());
+    } else {
+        PracticeTimer.init();
+    }
+})();
 </script>
 </body>
 </html>
