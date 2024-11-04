@@ -1174,21 +1174,75 @@ button#view-word-list-btn.word-list-btn:hover {
 }
 
 /* Add animation properties to list items */
+/* Base styles to prevent scrolling */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
 
 /* Extra Small Screens (below 576px) */
 @media screen and (max-width: 575px) {
     .container {
         max-width: 90%;
-        margin: 20px auto;
+        max-height: 90vh;
         padding: 10px;
+        margin: 0 auto;
+        transform: scale(0.9);
+    }
+
+    textarea {
+        height: 100px;
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 22px;
+        margin: 5px 0;
+    }
+
+    #original-sentence {
+        font-size: 16px;
+        padding: 10px;
+        min-height: 60px;
+    }
+
+    .button-container {
+        margin-top: 10px;
+    }
+
+    button {
+        padding: 7px 14px;
+        font-size: 14px;
     }
 
     .toggle-and-list-container {
-        position: fixed;
-        top: 10px;
-        right: 10px;
+        top: 5px;
+        right: 5px;
         gap: 2px;
         padding: 2px;
+        transform: scale(0.9);
+    }
+
+    .control-btn {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Small Screens (576px - 767px) */
+@media screen and (min-width: 576px) and (max-width: 767px) {
+    .container {
+        max-width: 85%;
+        max-height: 92vh;
+        padding: 12px;
+        transform: scale(0.95);
+    }
+
+    textarea {
+        height: 110px;
     }
 
     h1 {
@@ -1196,172 +1250,135 @@ button#view-word-list-btn.word-list-btn:hover {
         margin: 8px 0;
     }
 
-    textarea {
-        font-size: 15px;
-        height: 120px;
-    }
-
-    #original-sentence {
-        font-size: 16px;
-        padding: 12px;
-        min-height: 70px;
-    }
-
-    button {
-        padding: 8px 16px;
-        font-size: 15px;
-    }
-
-    .control-btn {
-        width: 32px;
-        height: 32px;
-    }
-
-    .control-btn i {
-        font-size: 16px;
-    }
-}
-
-/* Small Screens (576px - 767px) */
-@media screen and (min-width: 576px) and (max-width: 767px) {
-    .container {
-        max-width: 540px;
-        margin: 30px auto;
-    }
-
     .toggle-and-list-container {
-        top: 15px;
-        right: 15px;
-    }
-
-    h1 {
-        font-size: 26px;
-    }
-
-    textarea {
-        font-size: 16px;
-        height: 130px;
+        top: 8px;
+        right: 8px;
     }
 }
 
 /* Medium Screens (768px - 991px) */
 @media screen and (min-width: 768px) and (max-width: 991px) {
     .container {
-        max-width: 720px;
-        margin: 40px auto;
+        max-width: 80%;
+        max-height: 95vh;
+        padding: 15px;
     }
 
     .toggle-and-list-container {
-        top: 20px;
-        right: 20px;
-    }
-
-    body {
-        padding: 20px;
+        top: 12px;
+        right: 12px;
     }
 }
 
 /* Large Screens (992px - 1199px) */
-@media screen and (min-width: 992px) and (max-width: 1199px) {
+@media screen and (min-width: 992px) {
     .container {
         max-width: 800px;
-        margin: 50px auto;
+        max-height: 98vh;
     }
 
-    body {
-        padding: 25px;
-    }
-}
-
-/* Extra Large Screens (1200px - 1399px) */
-@media screen and (min-width: 1200px) and (max-width: 1399px) {
-    .container {
-        max-width: 800px;
-        margin: 60px auto;
-    }
-
-    body {
-        padding: 30px;
-    }
-}
-
-/* XXL Screens (1400px and above) */
-@media screen and (min-width: 1400px) {
-    .container {
-        max-width: 800px;
-        margin: 70px auto;
-    }
-
-    body {
-        padding: 35px;
-    }
-}
-
-/* Height-based media queries for better vertical spacing */
-@media screen and (max-height: 700px) {
-    .container {
-        margin: 20px auto;
-    }
-
-    textarea {
-        height: 100px;
-    }
-
-    #original-sentence {
-        min-height: 60px;
+    .toggle-and-list-container {
+        top: 15px;
+        right: 15px;
     }
 }
 
 /* Modal Responsiveness */
 @media screen and (max-width: 767px) {
     .modal-content {
-        width: 90%;
-        margin: 20px;
-        padding: 15px;
-    }
-
-    .modal-header {
-        font-size: 20px;
+        max-width: 90%;
+        max-height: 90vh;
+        margin: 10px;
+        padding: 12px;
+        overflow-y: auto;
     }
 
     #text-controls-modal .modal-content {
-        width: 90%;
+        width: 85%;
         right: 5%;
-        top: 50px;
+        top: 45px;
     }
 }
 
 /* Word List Section Responsiveness */
 @media screen and (max-width: 767px) {
+    #word-list-section {
+        padding: 20px 10px;
+    }
+
     #word-list {
         width: 95%;
+        max-height: 70vh;
+        overflow-y: auto;
     }
 
     #word-list li {
-        padding: 12px 15px;
+        padding: 10px;
         font-size: 0.9rem;
-    }
-
-    .word-list-controls {
-        width: 95%;
-    }
-
-    #clear-word-list-btn,
-    #close-word-list-btn {
-        padding: 10px 20px;
-        min-width: 100px;
     }
 }
 
 /* Context Menu Responsiveness */
 @media screen and (max-width: 767px) {
     #context-menu {
-        min-width: 180px;
+        min-width: 160px;
+        max-width: 90vw;
     }
 
     #context-menu button {
-        padding: 10px 14px;
+        padding: 8px 12px;
         font-size: 13px;
+    }
+}
+
+/* Ensure the progress bar stays within container */
+.progress-bar {
+    margin: 10px 0;
+}
+
+/* Optimize spacing for very small heights */
+@media screen and (max-height: 600px) {
+    .container {
+        transform: scale(0.85);
+        transform-origin: top center;
+    }
+
+    textarea {
+        height: 80px;
+    }
+
+    #original-sentence {
+        min-height: 50px;
+        padding: 8px;
+    }
+
+    .button-container {
+        margin-top: 8px;
+    }
+
+    h1 {
+        margin: 5px 0;
+    }
+}
+
+/* Handle landscape orientation on small devices */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .container {
+        transform: scale(0.8);
+        transform-origin: top center;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin: 3px 0;
+    }
+
+    textarea {
+        height: 70px;
+    }
+
+    #original-sentence {
+        min-height: 45px;
     }
 }
  </style>
