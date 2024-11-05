@@ -1289,6 +1289,179 @@ button#view-word-list-btn.word-list-btn:hover {
         padding: 10px;
     }
 }
+
+
+
+/* Statistics Panel Styles */
+.statistics-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.statistics-panel.active {
+    right: 0;
+}
+
+.low-light-mode .statistics-panel {
+    background-color: #1E1E1E;
+    border-left: 1px solid #333;
+}
+
+.statistics-content {
+    padding: 20px;
+}
+
+.statistics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.statistics-header h2 {
+    margin: 0;
+    color: #4CAF50;
+    font-size: 1.5rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+}
+
+.low-light-mode .close-btn {
+    color: #999;
+}
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.low-light-mode .stat-card {
+    background-color: #2D2D2D;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.stat-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.low-light-mode .stat-title {
+    color: #999;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.recent-mistakes {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.low-light-mode .recent-mistakes {
+    background-color: #2D2D2D;
+}
+
+.recent-mistakes h3 {
+    margin: 0 0 15px 0;
+    color: #4CAF50;
+}
+
+.mistakes-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mistake-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.low-light-mode .mistake-item {
+    border-bottom-color: #333;
+}
+
+.empty-mistakes {
+    text-align: center;
+    color: #666;
+    padding: 20px 0;
+}
+
+.low-light-mode .empty-mistakes {
+    color: #999;
+}
+
+.practice-summary {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.low-light-mode .practice-summary {
+    background-color: #2D2D2D;
+}
+
+.practice-summary h3 {
+    margin: 0 0 15px 0;
+    color: #4CAF50;
+}
+
+.history-graph {
+    height: 150px;
+    /* Graph will be populated by JavaScript */
+}
+
+/* Responsive Design */
+@media screen and (max-width: 480px) {
+    .statistics-panel {
+        width: 100%;
+        right: -100%;
+    }
+
+    .statistics-grid {
+        grid-template-columns: 1fr;
+    }
+}
  </style>
 </head>
 <body>
@@ -1333,6 +1506,10 @@ button#view-word-list-btn.word-list-btn:hover {
     <button id="theme-toggle-btn" class="control-btn" title="Toggle Theme">
         <i class="fi fi-rr-moon"></i>
     </button>
+<!-- Change this button in your toggle-and-list-container div -->
+<button id="statistics-btn" class="control-btn" title="Practice Statistics">
+    <i class="fi fi-rr-chart-line"></i>
+</button>
 </div>
 
 <!-- Main Application Container -->
@@ -1433,6 +1610,64 @@ button#view-word-list-btn.word-list-btn:hover {
     <div class="word-list-controls">
         <button id="clear-word-list-btn">Delete All</button>
         <button id="close-word-list-btn">Close</button>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="statistics-panel" class="statistics-panel">
+    <div class="statistics-content">
+        <div class="statistics-header">
+            <h2>Practice Statistics</h2>
+            <button id="close-statistics-btn" class="close-btn">
+                <i class="fi fi-rr-cross"></i>
+            </button>
+        </div>
+
+        <div class="statistics-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-title">Daily Streak</div>
+                <div class="stat-value" id="daily-streak">0</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-title">Total Practice Time</div>
+                <div class="stat-value" id="total-time">0 min</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-title">Total Practices</div>
+                <div class="stat-value" id="total-practices">0</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <div class="stat-title">First Try Success</div>
+                <div class="stat-value" id="first-try-rate">0%</div>
+            </div>
+        </div>
+
+        <div class="recent-mistakes">
+            <h3>Recent Mistakes</h3>
+            <div class="mistakes-list" id="mistakes-list">
+                <!-- Mistakes will be populated dynamically -->
+                <div class="empty-mistakes">No mistakes recorded yet.</div>
+            </div>
+        </div>
+
+        <div class="practice-summary">
+            <h3>Practice History</h3>
+            <div class="history-graph" id="practice-history">
+                <!-- History graph will be populated dynamically -->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2335,6 +2570,291 @@ function displayWordList() {
         });
     });
 }
+
+
+
+
+// Practice Statistics System
+const StatisticsSystem = {
+    stats: {
+        totalPractices: 0,
+        totalSentences: 0,
+        correctFirstTry: 0,
+        averageMistakes: 0,
+        practiceTime: 0,
+        lastPracticeDate: null,
+        dailyStreak: 0,
+        commonMistakes: [],
+        practiceHistory: []
+    },
+
+    init() {
+        this.loadStats();
+        this.setupTracking();
+        this.updateStreak();
+        this.updateDisplay(); // Initial display update
+    },
+
+    loadStats() {
+        try {
+            const savedStats = localStorage.getItem('practiceStats');
+            if (savedStats) {
+                this.stats = { ...this.stats, ...JSON.parse(savedStats) };
+            }
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    },
+
+    saveStats() {
+        try {
+            localStorage.setItem('practiceStats', JSON.stringify(this.stats));
+            this.updateDisplay(); // Update display whenever stats change
+        } catch (error) {
+            console.error('Error saving stats:', error);
+        }
+    },
+
+    setupTracking() {
+        let startTime;
+        
+        // Safety check for elements
+        const startButton = document.getElementById('start-button');
+        const originalSentence = document.getElementById('original-sentence');
+
+        if (startButton) {
+            startButton.addEventListener('click', () => {
+                startTime = Date.now();
+                this.stats.totalPractices++;
+                this.stats.lastPracticeDate = new Date().toISOString().split('T')[0];
+                this.saveStats();
+            });
+        }
+
+        if (originalSentence) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'childList' && 
+                        mutation.target.innerText.includes('You have completed the practice')) {
+                        const practiceTime = (Date.now() - startTime) / 1000;
+                        this.stats.practiceTime += practiceTime;
+                        this.updatePracticeHistory();
+                        this.saveStats();
+                        this.showPracticeSummary(practiceTime);
+                    }
+                });
+            });
+
+            observer.observe(originalSentence, { childList: true, subtree: true });
+        }
+    },
+
+    updateStreak() {
+        const today = new Date().toISOString().split('T')[0];
+        const lastPractice = this.stats.lastPracticeDate;
+        
+        if (lastPractice === today) {
+            return;
+        }
+
+        if (lastPractice) {
+            const lastDate = new Date(lastPractice);
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (lastDate.toISOString().split('T')[0] === yesterday.toISOString().split('T')[0]) {
+                this.stats.dailyStreak++;
+            } else {
+                this.stats.dailyStreak = 0;
+            }
+        }
+        
+        this.saveStats();
+    },
+
+    trackMistake(incorrectWord, correctWord) {
+        if (incorrectWord && correctWord) {
+            this.stats.commonMistakes.push({ incorrect: incorrectWord, correct: correctWord });
+            if (this.stats.commonMistakes.length > 50) {
+                this.stats.commonMistakes.shift();
+            }
+            this.saveStats();
+        }
+    },
+
+    updatePracticeHistory() {
+        const today = new Date().toISOString().split('T')[0];
+        const todayEntry = this.stats.practiceHistory.find(entry => entry.date === today);
+        
+        if (todayEntry) {
+            todayEntry.count++;
+        } else {
+            this.stats.practiceHistory.push({ date: today, count: 1 });
+        }
+
+        if (this.stats.practiceHistory.length > 30) {
+            this.stats.practiceHistory.shift();
+        }
+    },
+
+    updateDisplay() {
+        try {
+            const elements = {
+                dailyStreak: document.getElementById('daily-streak'),
+                totalTime: document.getElementById('total-time'),
+                totalPractices: document.getElementById('total-practices'),
+                firstTryRate: document.getElementById('first-try-rate'),
+                mistakesList: document.getElementById('mistakes-list')
+            };
+
+            // Only update if elements exist
+            if (elements.dailyStreak) {
+                elements.dailyStreak.textContent = this.stats.dailyStreak;
+            }
+            if (elements.totalTime) {
+                elements.totalTime.textContent = `${Math.round(this.stats.practiceTime / 60)} min`;
+            }
+            if (elements.totalPractices) {
+                elements.totalPractices.textContent = this.stats.totalPractices;
+            }
+            if (elements.firstTryRate) {
+                const successRate = this.stats.totalSentences > 0 
+                    ? Math.round((this.stats.correctFirstTry / this.stats.totalSentences) * 100) 
+                    : 0;
+                elements.firstTryRate.textContent = `${successRate}%`;
+            }
+            if (elements.mistakesList && this.stats.commonMistakes.length > 0) {
+                elements.mistakesList.innerHTML = this.stats.commonMistakes
+                    .slice(-5)
+                    .map(mistake => `
+                        <div class="mistake-item">
+                            <span class="incorrect">${mistake.incorrect}</span>
+                            <span class="arrow">→</span>
+                            <span class="correct">${mistake.correct}</span>
+                        </div>
+                    `).join('');
+            } else if (elements.mistakesList) {
+                elements.mistakesList.innerHTML = '<div class="empty-mistakes">No mistakes recorded yet.</div>';
+            }
+        } catch (error) {
+            console.error('Error updating display:', error);
+        }
+    },
+
+    showPracticeSummary(practiceTime) {
+        const summaryHTML = `
+            <div class="statistics-summary">
+                <h3>Practice Summary</h3>
+                <p>Time: ${Math.round(practiceTime)} seconds</p>
+                <p>Daily Streak: ${this.stats.dailyStreak} days</p>
+                <p>Total Practices: ${this.stats.totalPractices}</p>
+                ${this.stats.commonMistakes.length > 0 ? 
+                    `<p>Recent Mistake: "${this.stats.commonMistakes[this.stats.commonMistakes.length-1].incorrect}" 
+                     → "${this.stats.commonMistakes[this.stats.commonMistakes.length-1].correct}"</p>` 
+                    : ''}
+            </div>
+        `;
+
+        const existingSummary = document.querySelector('.statistics-summary');
+        if (existingSummary) {
+            existingSummary.remove();
+        }
+
+        const container = document.querySelector('.container');
+        if (container) {
+            container.insertAdjacentHTML('beforeend', summaryHTML);
+        }
+    }
+};
+
+// Initialization and event handling
+(() => {
+    // Wait for DOM and main script load
+    window.addEventListener('load', () => {
+        // Initialize Statistics System
+        StatisticsSystem.init();
+
+        // Setup UI controls
+        const setupUIControls = () => {
+            const elements = {
+                statisticsBtn: document.getElementById('statistics-btn'),
+                statisticsPanel: document.getElementById('statistics-panel'),
+                closeStatisticsBtn: document.getElementById('close-statistics-btn')
+            };
+
+            if (elements.statisticsBtn && elements.statisticsPanel && elements.closeStatisticsBtn) {
+                elements.statisticsBtn.addEventListener('click', () => {
+                    elements.statisticsPanel.classList.toggle('active');
+                    StatisticsSystem.updateDisplay(); // Update when panel opens
+                });
+
+                elements.closeStatisticsBtn.addEventListener('click', () => {
+                    elements.statisticsPanel.classList.remove('active');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!elements.statisticsPanel.contains(event.target) && 
+                        event.target !== elements.statisticsBtn && 
+                        elements.statisticsPanel.classList.contains('active')) {
+                        elements.statisticsPanel.classList.remove('active');
+                    }
+                });
+
+                elements.statisticsPanel.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+            }
+        };
+
+        // Setup function proxies after ensuring original functions exist
+        const setupFunctionProxies = () => {
+            if (typeof window.checkText === 'function') {
+                const originalCheckText = window.checkText;
+                window.checkText = function() {
+                    try {
+                        const userInput = document.getElementById("user-input").value.trim();
+                        const originalSentence = sentences[currentSentenceIndex].trim();
+
+                        if (userInput !== originalSentence) {
+                            const userWords = userInput.split(' ');
+                            const originalWords = originalSentence.split(' ');
+                            
+                            for (let i = 0; i < userWords.length; i++) {
+                                if (userWords[i] !== originalWords[i]) {
+                                    StatisticsSystem.trackMistake(userWords[i], originalWords[i]);
+                                    break;
+                                }
+                            }
+                        }
+                        return originalCheckText.apply(this, arguments);
+                    } catch (error) {
+                        console.error('Error in statistics tracking:', error);
+                        return originalCheckText.apply(this, arguments);
+                    }
+                };
+            }
+
+            if (typeof window.processArticle === 'function') {
+                const originalProcessArticle = window.processArticle;
+                window.processArticle = function() {
+                    try {
+                        StatisticsSystem.stats.totalPractices++;
+                        StatisticsSystem.stats.lastPracticeDate = new Date().toISOString().split('T')[0];
+                        StatisticsSystem.saveStats();
+                    } catch (error) {
+                        console.error('Error updating statistics:', error);
+                    }
+                    return originalProcessArticle.apply(this, arguments);
+                };
+            }
+        };
+
+        setupUIControls();
+        setupFunctionProxies();
+    });
+})();
+
+
 </script>
 </body>
 </html>
