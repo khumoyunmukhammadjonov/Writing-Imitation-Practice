@@ -55,13 +55,6 @@ textarea {
     box-sizing: border-box;
 }
 
-/* Button container styles - Centers and spaces buttons */
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
-}
 
 /* General button styles - Common styling for all buttons */
 button {
@@ -174,96 +167,8 @@ button:hover {
     display: none;
 }
 
-/* Icon container styles */
-.icon-container {
-    position: relative;
-    display: inline-block;
-}
 
-/* Show original icon styles */
-#show-original-icon {
-    display: none;
-    cursor: pointer;
-    font-size: 20px;
-    margin-left: 10px;
-    color: #4CAF50;
-}
 
-/* Modal styles - For rules and instructions */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    justify-content: center;
-    align-items: center;
-}
-
-/* Modal content container */
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
-    border: 1px solid #ccc;
-}
-
-/* Modal header styles */
-.modal-header {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #4CAF50;
-    text-align: center;
-}
-
-/* Modal body text styles */
-.modal-body {
-    font-size: 16px;
-    color: #333;
-    line-height: 1.6;
-}
-
-/* Modal footer styles */
-.modal-footer {
-    text-align: center;
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Modal footer button spacing */
-.modal-footer button {
-    margin: 0;
-    padding: 9px 18px;
-    min-width: 100px; /* Ensure consistent button width */
-}
-
-#rules-modal .modal-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-/* Modal body link styles */
-.modal-body a {
-    font-size: 1rem;
-    color: #007bff;
-    text-decoration: none;
-    padding: 0.5rem 0;
-}
-
-/* Modal body link hover effect */
-.modal-body a:hover {
-    text-decoration: underline;
-}
 
 /* Toggle and list container positioning */
 .toggle-and-list-container {
@@ -281,65 +186,7 @@ button:hover {
     gap: 4px;
 }
 
-/* Toggle container styles */
-.toggle-container {
-    display: flex;
-    align-items: center;
-    height: 34px;
-    margin: 0;
-    padding: 0;
-}
-/* Switch base styles - For low light mode toggle */
-.switch {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 60px;
-    height: 34px;
-    margin: 0;
-    padding: 0;
-}
-/* Switch input styles */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
 
-/* Switch slider styles */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
-
-/* Switch slider knob */
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-/* Switch checked state */
-input:checked + .slider {
-    background-color: #555;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
 
 #context-menu {
     display: none;
@@ -405,40 +252,6 @@ input:checked + .slider:before {
     transform: scale(0.98);
 }
 
-/* Special styling for Add to Word List button */
-#add-to-list-btn {
-    color: #2196F3;
-    font-weight: 600;
-}
-
-#add-to-list-btn::before {
-    font-size: 16px;
-    margin-right: 4px;
-}
-
-/* Add plus indicator */
-#add-to-list-btn::after {
-    position: absolute;
-    right: 16px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #4CAF50;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.2s ease;
-}
-
-/* Show plus on hover */
-#add-to-list-btn:hover::after {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Definition button styling */
-#definition-btn::before {
-    font-size: 16px;
-    margin-right: 4px;
-}
 
 /* Divider between buttons */
 #context-menu button:not(:last-child) {
@@ -1389,41 +1202,6 @@ button#view-word-list-btn.word-list-btn:hover {
     <button id="add-to-list-btn"><i class="fi fi-rr-book-alt"></i>Add to Word List</button>
 </div>
 
-<!-- Welcome Modal: Shows instructions on first visit -->
-<div id="rules-modal" class="modal">
-    <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">Welcome to Writing Imitation Practice</div>
-        
-        <!-- Modal Instructions -->
-        <div class="modal-body">
-            <p>How it works:</p>
-            <ol>
-                <li>Paste your text and click "Start Practice".</li>
-                <li>Rewrite the displayed sentence from memory.</li>
-                <li>Press "Enter" or click "Check" to compare your input.</li>
-                <li>Progress is shown via the progress bar.</li>
-            </ol>
-            
-            <!-- Keyboard Shortcuts Section -->
-            <p><strong>Shortcuts:</strong></p>
-            <ul>
-                <li><strong>Enter:</strong> Check your input.</li>
-                <li><strong>Alt:</strong> Temporarily reveal the original sentence.</li>
-            </ul>
-            
-            <!-- Additional Information -->
-            <p>For full instructions, watch the video tutorial.</p>
-            <p>Contact: <a href="mailto:kmukhammadjonov685@gmail.com">kmukhammadjonov685@gmail.com</a></p>
-        </div>
-        
-        <!-- Modal Footer -->
-        <div class="modal-footer">
-            <button onclick="closeModal()">Got it!</button>
-        </div>
-    </div>
-</div>
-
 <!-- Word List Section: Full-screen overlay for saved words -->
 <div id="word-list-section" style="display: none">
     <h2>Your Word List</h2>
@@ -1616,7 +1394,6 @@ const TextControlSystem = {
 let sentences = [];
 let currentSentenceIndex = 0;
 let mistakeCount = 0;
-let selectedWord = '';
 
 // 5. Core Practice Functions
 function processArticle() {
@@ -1678,13 +1455,12 @@ function displayWordList() {
         return;
     }
     
-    wordListElement.innerHTML = '';
+
     wordList.forEach((word, index) => {
-        const li = createWordListItem(word, index);
-        wordListElement.appendChild(li);
+
     });
     
-    setupRemoveButtons();
+
 }
 
 // 8. Event Handlers
@@ -1732,11 +1508,7 @@ function updateProgressBar() {
     progressBarFill.innerText = Math.round(progress) + "%";
 }
 
-// 11. Initialize Application
-window.onload = function() {
-    displayWordList();
-    loadSavedProgress();
-};   
+ 
  
 // 12. Sentence Management
 function showSentence() {
@@ -1903,13 +1675,11 @@ function clearProgress() {
 // 16. UI Event Handlers
 function hideOriginalSentence() {
     ColorManager.updateOriginalSentenceColor(false);
-    document.getElementById("show-original-icon").style.display = "inline";
     ResultManager.clearResult();
 }
 
 function showOriginalSentence() {
     ColorManager.updateOriginalSentenceColor(true);
-    document.getElementById("show-original-icon").style.display = "none";
 }
 
 function handleKeyDown(event) {
@@ -1981,54 +1751,6 @@ document.getElementById('clear-word-list-btn').addEventListener('click', functio
 });
 
 // 21. Word List UI Management
-const WordListUI = {
-    showEmptyState(wordListElement) {
-        wordListElement.style.opacity = '0';
-        setTimeout(() => {
-            wordListElement.innerHTML = '<li class="empty-state">No words saved yet.</li>';
-            wordListElement.style.opacity = '1';
-        }, 300);
-    },
-    
-    createWordListItem(word, index) {
-        const li = document.createElement('li');
-        
-        const wordSpan = document.createElement('span');
-        wordSpan.textContent = word;
-        wordSpan.classList.add('clickable-word');
-        wordSpan.title = 'Click to look up definition';
-        wordSpan.onclick = () => {
-            const searchQuery = `https://duckduckgo.com/?q=definition+of+${encodeURIComponent(word)}&kad=en_US`;
-            window.open(searchQuery, '_blank');
-        };
-        
-        const buttonContainer = document.createElement('div');
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.className = 'remove-word-btn';
-        removeButton.setAttribute('data-index', index);
-        
-        buttonContainer.appendChild(removeButton);
-        li.appendChild(wordSpan);
-        li.appendChild(buttonContainer);
-        
-        return li;
-    },
-
-    setupRemoveButtons() {
-        const removeButtons = document.querySelectorAll('.remove-word-btn');
-        removeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const wordIndex = this.getAttribute('data-index');
-                removeWordFromList(wordIndex);
-            });
-            
-            button.addEventListener('animationend', () => {
-                button.classList.remove('clicked');
-            });
-        });
-    }
-};
 
 // 22. Context Menu System
 const ContextMenu = {
@@ -2118,36 +1840,7 @@ const ContextMenu = {
 // Modal Management System
 const ModalSystem = {
     init() {
-        this.setupWelcomeModal();
         this.setupTextControlsModal();
-    },
-
-    setupWelcomeModal() {
-        // Check if user has seen the welcome modal before
-        if (!localStorage.getItem('welcomeModalSeen')) {
-            const rulesModal = document.getElementById('rules-modal');
-            if (rulesModal) {
-                // Ensure modal is visible
-                rulesModal.style.display = 'flex';
-                
-                // Setup close button handler
-                const closeButton = rulesModal.querySelector('.modal-footer button');
-                if (closeButton) {
-                    closeButton.addEventListener('click', () => {
-                        rulesModal.style.display = 'none';
-                        localStorage.setItem('welcomeModalSeen', 'true');
-                    });
-                }
-
-                // Setup click outside modal to close
-                rulesModal.addEventListener('click', (event) => {
-                    if (event.target === rulesModal) {
-                        rulesModal.style.display = 'none';
-                        localStorage.setItem('welcomeModalSeen', 'true');
-                    }
-                });
-            }
-        }
     },
 
     setupTextControlsModal() {
@@ -2172,21 +1865,11 @@ const ModalSystem = {
 
 // Update the initialization code
 document.addEventListener('DOMContentLoaded', () => {
-    // Clear the welcome modal flag for testing (remove this in production)
-    localStorage.removeItem('welcomeModalSeen');
-    
-    // Initialize the modal system
+
+  // Initialize the modal system
     ModalSystem.init();
 });
 
-// Helper function to manually close modal if needed
-function closeModal() {
-    const rulesModal = document.getElementById('rules-modal');
-    if (rulesModal) {
-        rulesModal.style.display = 'none';
-        localStorage.setItem('welcomeModalSeen', 'true');
-    }
-}
 
 // 24. Application Initialization
 function initializeApplication() {
@@ -2213,14 +1896,6 @@ function initializeApplication() {
     document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
-// 25. Service Worker Registration
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-        });
-    });
-}
 
 // Initialize the application when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApplication);
@@ -2285,17 +1960,6 @@ window.addEventListener('click', function(event) {
     }
 });
 
-// Add these functions to TextControlSystem object
-Object.assign(TextControlSystem, {
-    closeControls() {
-        document.getElementById('text-controls-modal').style.display = 'none';
-    },
-    
-    showControls() {
-        document.getElementById('text-controls-modal').style.display = 'flex';
-        this.updateUI();
-    }
-});
 
 // Update the displayWordList function to handle empty lists better
 function displayWordList() {
