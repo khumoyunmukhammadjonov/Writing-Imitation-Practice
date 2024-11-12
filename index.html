@@ -1926,10 +1926,12 @@ function saveProgress() {
         userInput: document.getElementById("user-input").value,
         practiceVisible: document.getElementById("practice-section").style.display,
         startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
-        articleInputHidden: document.getElementById("article-input").classList.contains("hidden")
+        articleInputHidden: document.getElementById("article-input").classList.contains("hidden"),
+        isCompleted: currentSentenceIndex >= sentences.length && sentences.length > 0 // Add this line
     };
     localStorage.setItem("writingProgress", JSON.stringify(progressData));
 }
+
 
 function loadSavedProgress() {
     const savedProgress = localStorage.getItem("writingProgress");
@@ -1940,10 +1942,23 @@ function loadSavedProgress() {
         sentences = progressData.sentences || [];
         
         if (sentences.length > 0) {
-            showSentence();
-            document.getElementById("practice-section").style.display = "block";
-            document.getElementById("start-button").classList.add("hidden");
-            document.getElementById("article-input").classList.add("hidden");
+            if (progressData.isCompleted) {
+                // Show completion state
+                const originalSentenceElement = document.getElementById("original-sentence");
+                originalSentenceElement.innerText = "You have completed the practice.";
+                originalSentenceElement.classList.add('completed-message');
+                document.getElementById("user-input").style.display = "none";
+                document.getElementById("check-button").style.display = "none";
+                document.getElementById("practice-section").style.display = "block";
+                document.getElementById("start-button").classList.add("hidden");
+                document.getElementById("article-input").classList.add("hidden");
+            } else {
+                // Show normal progress
+                showSentence();
+                document.getElementById("practice-section").style.display = "block";
+                document.getElementById("start-button").classList.add("hidden");
+                document.getElementById("article-input").classList.add("hidden");
+            }
             updateProgressBar();
         }
     }
@@ -1956,6 +1971,7 @@ function clearProgress() {
     sentences = [];
     document.getElementById("article-input").value = "";
     document.getElementById("user-input").value = "";
+    document.getElementById("original-sentence").classList.remove('completed-message');
 }
 
 // 16. UI Event Handlers
