@@ -2338,198 +2338,128 @@ function displayWordList() {
 
 
 // Statistics Manager Class
-// Modify the StatisticsManager class
-
+// Statistics Manager Class
 class StatisticsManager {
-  constructor() {
-    this.sessionStartTime = null;
-    this.timerInterval = null;
-    this.stats = this.loadStats();
-    this.todayStats = this.loadTodayStats();
-    this.currentSessionMistakes = 0;
-    
-    // Load saved session state
-    const savedSession = localStorage.getItem('practiceSession');
-    if (savedSession) {
-      const sessionData = JSON.parse(savedSession);
-      if (sessionData.inProgress) {
-        this.sessionStartTime = new Date(sessionData.startTime);
-        this.startTimer();
-      }
-    }
-    
-    this.bindEvents();
-    this.updateUI();
-  }
-
-  startTimer() {
-    if (this.timerInterval) return;
-    
-    this.sessionStartTime = this.sessionStartTime || new Date();
-    // Save session state
-    localStorage.setItem('practiceSession', JSON.stringify({
-      inProgress: true,
-      startTime: this.sessionStartTime
-    }));
-    
-    this.timerInterval = setInterval(() => {
-      const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-      this.todayStats.practiceTime = elapsedMinutes;
-      this.saveTodayStats();
-      this.updateUI();
-    }, 30000); // Update every 30 seconds
-  }
-
-  stopTimer() {
-    if (!this.timerInterval) return;
-    
-    clearInterval(this.timerInterval);
-    this.timerInterval = null;
-    
-    if (this.sessionStartTime) {
-      const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-      this.todayStats.practiceTime = finalMinutes;
-      this.sessionStartTime = null;
-      this.saveTodayStats();
-    }
-    
-    // Clear session state
-    localStorage.removeItem('practiceSession');
-  }
-
-  startPracticeSession() {
-    this.startTimer();
-    this.currentSessionMistakes = 0;
-    this.todayStats.sentences = 0;
-    this.todayStats.firstTrySuccesses = 0;
-    this.saveTodayStats();
-    this.updateUI();
-  }
-
-  endPracticeSession(completedSentences) {
-    this.stopTimer();
-    this.saveTodayStats();
-    this.updateUI();
-  }
-
-  resetDailyStats() {
-    this.stopTimer();
-    this.currentSessionMistakes = 0;
-    this.todayStats.sentences = 0;
-    this.todayStats.firstTrySuccesses = 0;
-    this.todayStats.practiceTime = 0;
-    this.sessionStartTime = null;
-    localStorage.removeItem('practiceSession');
-    this.saveTodayStats();
-    this.updateUI();
-  }
-
-  saveTodayStats() {
-    localStorage.setItem('todayStats', JSON.stringify(this.todayStats));
-  }
-
-updateUI() {
-    // Update practice time
-    const practiceTimeElement = document.getElementById('practice-time');
-    if (practiceTimeElement) {
-      practiceTimeElement.textContent = this.formatTime(this.todayStats.practiceTime);
+    constructor() {
+        this.sessionStartTime = null;
+        this.timerInterval = null;
+        this.stats = this.loadStats();
+        this.todayStats = this.loadTodayStats();
+        this.currentSessionMistakes = 0;
+        
+        this.bindEvents();
+        this.checkDayReset();
+        this.updateUI();
     }
 
-    // Update streak count
-    const streakElement = document.getElementById('streak-count');
-    if (streakElement) {
-      streakElement.textContent = `${this.stats.streak} days`;
+    loadStats() {
+        return JSON.parse(localStorage.getItem('practiceStats')) || {
+            streak: 0,
+            totalPractices: 0,
+            lastPracticeDate: null,
+            practiceHistory: []
+        };
     }
 
-    // Update today's practice time
-    const todaysPracticeElement = document.getElementById('practice-time');
-    if (todaysPracticeElement) {
-      todaysPracticeElement.textContent = this.formatTime(this.todayStats.practiceTime);
+    loadTodayStats() {
+        const today = new Date().toDateString();
+        const saved = JSON.parse(localStorage.getItem('todayStats')) || {};
+        
+        if (saved.date !== today) {
+            return {
+                date: today,
+                practiceTime: 0,
+                mistakes: [],
+                sentences: 0,
+                firstTrySuccesses: 0
+            };
+        }
+        return saved;
     }
 
-    // Update total practices
-    const totalPracticesElement = document.getElementById('total-practices');
-    if (totalPracticesElement) {
-      totalPracticesElement.textContent = this.todayStats.sentences.toString();
+    saveTodayStats() {
+        localStorage.setItem('todayStats', JSON.stringify(this.todayStats));
     }
 
-    // Update success rate
-    const successRateElement = document.getElementById('success-rate');
-    if (successRateElement) {
-      const successRate = this.todayStats.sentences > 0
-        ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
-        : 0;
-      successRateElement.textContent = `${successRate}%`;
+    saveStats() {
+        localStorage.setItem('practiceStats', JSON.stringify(this.stats));
     }
 
-    // Update recent mistakes list
-    const mistakesList = document.getElementById('recent-mistakes');
-    if (mistakesList) {
-      if (this.todayStats.mistakes && this.todayStats.mistakes.length > 0) {
-        mistakesList.innerHTML = this.todayStats.mistakes
-          .map(mistake => `
-            <div class="mistake-item">
-              <div style="color: #FF6666;">Incorrect: ${mistake.incorrect}</div>
-              <div style="color: #66BB66;">Correct: ${mistake.correct}</div>
-              <div style="color: #999999; font-size: 0.875rem;">
-                ${new Date(mistake.timestamp).toLocaleTimeString()}
-              </div>
-            </div>
-          `)
-          .join('');
-      } else {
-        mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today.</p>';
-      }
+    bindEvents() {
+        document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
+            const dashboard = document.getElementById('statistics-dashboard');
+            const button = document.getElementById('stats-dashboard-btn');
+            
+            if (dashboard.classList.contains('open')) {
+                dashboard.classList.remove('open');
+                button.classList.remove('active');
+            } else {
+                dashboard.classList.add('open');
+                button.classList.add('active');
+                this.updateUI();
+            }
+        });
+
+        document.getElementById('close-stats-btn').addEventListener('click', () => {
+            document.getElementById('statistics-dashboard').classList.remove('open');
+            document.getElementById('stats-dashboard-btn').classList.remove('active');
+        });
+
+        window.addEventListener('focus', () => this.checkDayReset());
     }
 
-    // Update practice history
-    const historyList = document.getElementById('practice-history');
-    if (historyList) {
-      if (this.stats.practiceHistory && this.stats.practiceHistory.length > 0) {
-        historyList.innerHTML = this.stats.practiceHistory
-          .map(session => `
-            <div style="display: flex; justify-content: space-between; margin-top: 4px">
-              <span>${new Date(session.date).toLocaleDateString()}</span>
-              <div style="display: flex; justify-content: space-between;">
-                <div style="margin-right: 16px">
-                  Time: ${this.formatTime(session.duration)}
-                </div>
-                <div style="color: ${session.mistakes === 0 ? '#10B981' : '#EF4444'}">
-                  Mistakes: ${session.mistakes}
-                </div>
-              </div>
-              <div style="display: flex; margin-top: 4px">
-                Success Rate:
-                <span style="color: ${
-                  session.successRate >= 90 ? '#10B981' :
-                  session.successRate >= 70 ? '#F59E0B' : '#EF4444'
-                }">
-                  ${session.successRate}%
-                </span>
-              </div>
-            </div>
-          `)
-          .join('');
-      } else {
-        historyList.innerHTML = '<p class="empty-state">No practice history available.</p>';
-      }
+    startTimer() {
+        if (this.timerInterval) return;
+
+        this.sessionStartTime = Date.now();
+        
+        this.timerInterval = setInterval(() => {
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = elapsedMinutes;
+            this.saveTodayStats();
+            this.updateUI();
+        }, 30000);
     }
 
-    // Update dashboard visibility based on practice state
-    const dashboardElement = document.querySelector('.statistics-dashboard');
-    const closeStatsBtn = document.getElementById('stats-dashboard-btn');
-    if (dashboardElement && closeStatsBtn) {
-      const isOpen = dashboardElement.classList.contains('open');
-      closeStatsBtn.classList.toggle('active', isOpen);
-    }
-  }
+    stopTimer() {
+        if (!this.timerInterval) return;
 
-  formatTime(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
-  }
-}
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+
+        if (this.sessionStartTime) {
+            const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = finalMinutes;
+            this.saveTodayStats();
+            this.sessionStartTime = null;
+        }
+    }
+
+    checkDayReset() {
+        const today = new Date().toDateString();
+        const lastReset = localStorage.getItem('lastStatsReset');
+
+        if (lastReset !== today) {
+            this.todayStats = {
+                date: today,
+                practiceTime: 0,
+                mistakes: [],
+                sentences: 0,
+                firstTrySuccesses: 0
+            };
+            
+            this.saveTodayStats();
+            localStorage.setItem('lastStatsReset', today);
+            this.stopTimer();
+            this.updateUI();
+        }
+    }
+
+    formatTime(minutes) {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+    }
 
     updateUI() {
         document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
