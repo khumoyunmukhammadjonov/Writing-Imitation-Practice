@@ -2346,11 +2346,37 @@ class StatisticsManager {
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
-        this.isActive = false;
+        this.isActive = this.loadSessionState();
         
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
+        
+        // Resume timer if session was active
+        if (this.isActive) {
+            this.resumeTimer();
+        }
+    }
+
+    loadSessionState() {
+        const sessionState = localStorage.getItem('practiceSessionState');
+        if (sessionState) {
+            const { isActive, startTime } = JSON.parse(sessionState);
+            this.sessionStartTime = startTime;
+            return isActive;
+        }
+        return false;
+    }
+
+    saveSessionState() {
+        localStorage.setItem('practiceSessionState', JSON.stringify({
+            isActive: this.isActive,
+            startTime: this.sessionStartTime
+        }));
+    }
+
+    clearSessionState() {
+        localStorage.removeItem('practiceSessionState');
     }
 
     loadStats() {
@@ -2417,12 +2443,10 @@ class StatisticsManager {
 
         // Handle page unload
         window.addEventListener('beforeunload', () => {
-            this.stopTimer();
-        });
-
-        // Handle page close
-        window.addEventListener('unload', () => {
-            this.stopTimer();
+            if (this.isActive) {
+                this.pauseTimer();
+                this.saveSessionState();
+            }
         });
     }
 
@@ -2430,7 +2454,11 @@ class StatisticsManager {
         if (this.timerInterval) return;
 
         this.isActive = true;
-        this.sessionStartTime = Date.now();
+        if (!this.sessionStartTime) {
+            this.sessionStartTime = Date.now() - (this.todayStats.practiceTime * 60000);
+        }
+        
+        this.saveSessionState();
         
         this.timerInterval = setInterval(() => {
             if (this.isActive && this.sessionStartTime) {
@@ -2450,11 +2478,14 @@ class StatisticsManager {
         }
         clearInterval(this.timerInterval);
         this.timerInterval = null;
+        this.saveSessionState();
     }
 
     resumeTimer() {
         if (this.isActive) {
-            this.sessionStartTime = Date.now() - (this.todayStats.practiceTime * 60000);
+            if (!this.sessionStartTime) {
+                this.sessionStartTime = Date.now() - (this.todayStats.practiceTime * 60000);
+            }
             this.startTimer();
         }
     }
@@ -2469,6 +2500,7 @@ class StatisticsManager {
         clearInterval(this.timerInterval);
         this.timerInterval = null;
         this.sessionStartTime = null;
+        this.clearSessionState();
     }
 
     checkDayReset() {
@@ -2635,6 +2667,7 @@ class StatisticsManager {
         this.todayStats.practiceTime = 0;
         this.sessionStartTime = null;
         this.isActive = false;
+        this.clearSessionState();
         this.saveTodayStats();
         this.updateUI();
     }
