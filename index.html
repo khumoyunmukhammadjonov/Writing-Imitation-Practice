@@ -2347,52 +2347,9 @@ class StatisticsManager {
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
         
-        // Load saved session state if exists
-        this.loadSessionState();
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
-        this.setupVisibilityHandlers();
-    }
-
-    // New method to load session state
-    loadSessionState() {
-        const savedState = localStorage.getItem('sessionState');
-        if (savedState) {
-            const state = JSON.parse(savedState);
-            if (state.sessionStartTime) {
-                // Only restore if the saved session is from today
-                const savedDate = new Date(state.sessionStartTime);
-                const now = new Date();
-                if (savedDate.toDateString() === now.toDateString()) {
-                    this.sessionStartTime = state.sessionStartTime;
-                    this.startTimer(true); // Restart timer with saved time
-                }
-            }
-        }
-    }
-
-    // New method to save session state
-    saveSessionState() {
-        const state = {
-            sessionStartTime: this.sessionStartTime
-        };
-        localStorage.setItem('sessionState', JSON.stringify(state));
-    }
-
-    // New method to handle visibility changes
-    setupVisibilityHandlers() {
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.saveSessionState();
-            } else {
-                this.loadSessionState();
-            }
-        });
-
-        window.addEventListener('beforeunload', () => {
-            this.saveSessionState();
-        });
     }
 
     loadStats() {
@@ -2451,27 +2408,19 @@ class StatisticsManager {
         window.addEventListener('focus', () => this.checkDayReset());
     }
 
-    // Modified startTimer method
-    startTimer(isRestoring = false) {
+    startTimer() {
         if (this.timerInterval) return;
 
-        if (!this.sessionStartTime && !isRestoring) {
-            this.sessionStartTime = new Date().toISOString();
-            this.saveSessionState();
-        }
-
+        this.sessionStartTime = Date.now();
+        
         this.timerInterval = setInterval(() => {
-            const elapsedMinutes = Math.floor(
-                (Date.now() - new Date(this.sessionStartTime).getTime()) / 60000
-            );
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
             this.todayStats.practiceTime = elapsedMinutes;
             this.saveTodayStats();
-            this.saveSessionState();
             this.updateUI();
-        }, 1000);
+        }, 30000);
     }
 
-    // Modified stopTimer method
     stopTimer() {
         if (!this.timerInterval) return;
 
@@ -2479,13 +2428,10 @@ class StatisticsManager {
         this.timerInterval = null;
 
         if (this.sessionStartTime) {
-            const finalMinutes = Math.floor(
-                (Date.now() - new Date(this.sessionStartTime).getTime()) / 60000
-            );
+            const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
             this.todayStats.practiceTime = finalMinutes;
             this.saveTodayStats();
             this.sessionStartTime = null;
-            this.saveSessionState(); // Clear saved session state
         }
     }
 
@@ -2505,8 +2451,6 @@ class StatisticsManager {
             this.saveTodayStats();
             localStorage.setItem('lastStatsReset', today);
             this.stopTimer();
-            // Clear session state on day reset
-            localStorage.removeItem('sessionState');
             this.updateUI();
         }
     }
@@ -2647,18 +2591,17 @@ class StatisticsManager {
         this.updateUI();
     }
 
-    resetDailyStats() {
-        this.stopTimer();
-        this.currentSessionMistakes = 0;
-        this.todayStats.sentences = 0;
-        this.todayStats.firstTrySuccesses = 0;
-        this.todayStats.practiceTime = 0;
-        this.sessionStartTime = null;
-        this.timerInterval = null;
-        localStorage.removeItem('sessionState'); // Clear session state
-        this.saveTodayStats();
-        this.updateUI();
-    }
+resetDailyStats() {
+    this.stopTimer();
+    this.currentSessionMistakes = 0;
+    this.todayStats.sentences = 0;
+    this.todayStats.firstTrySuccesses = 0;
+    this.todayStats.practiceTime = 0;
+    this.sessionStartTime = null;
+    this.timerInterval = null;
+    this.saveTodayStats();
+    this.updateUI();
+  }
 }
 
 // Initialize statistics manager
