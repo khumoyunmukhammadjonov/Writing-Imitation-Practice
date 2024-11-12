@@ -2338,6 +2338,7 @@ function displayWordList() {
 
 
 // Statistics Manager Class
+// Statistics Manager Class
 class StatisticsManager {
     constructor() {
         this.sessionStartTime = null;
@@ -2345,49 +2346,10 @@ class StatisticsManager {
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
-        this.lastActiveTime = null;
         
-        // Load saved session state
-        const savedState = this.loadSessionState();
-        if (savedState) {
-            this.sessionStartTime = savedState.startTime;
-            this.lastActiveTime = savedState.lastActiveTime;
-            // Calculate elapsed time while away
-            if (this.lastActiveTime) {
-                const timeAway = Math.floor((Date.now() - this.lastActiveTime) / 60000);
-                this.todayStats.practiceTime += timeAway;
-            }
-        } else {
-            this.clearSessionState();
-        }
-
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
-    }
-
-    loadSessionState() {
-        try {
-            const state = localStorage.getItem('practiceSessionState');
-            return state ? JSON.parse(state) : null;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    saveSessionState() {
-        const state = {
-            startTime: this.sessionStartTime,
-            lastActiveTime: Date.now(),
-            practiceTime: this.todayStats.practiceTime
-        };
-        localStorage.setItem('practiceSessionState', JSON.stringify(state));
-    }
-
-    clearSessionState() {
-        localStorage.removeItem('practiceSessionState');
-        this.sessionStartTime = null;
-        this.lastActiveTime = null;
     }
 
     loadStats() {
@@ -2424,26 +2386,6 @@ class StatisticsManager {
     }
 
     bindEvents() {
-        // Handle page visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.handlePageHide();
-            } else {
-                this.handlePageShow();
-            }
-        });
-
-        // Handle page unload
-        window.addEventListener('beforeunload', () => {
-            this.handlePageHide();
-        });
-
-        // Handle page close
-        window.addEventListener('unload', () => {
-            this.handlePageHide();
-        });
-
-        // Dashboard controls
         document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
             const dashboard = document.getElementById('statistics-dashboard');
             const button = document.getElementById('stats-dashboard-btn');
@@ -2462,48 +2404,123 @@ class StatisticsManager {
             document.getElementById('statistics-dashboard').classList.remove('open');
             document.getElementById('stats-dashboard-btn').classList.remove('active');
         });
-    }
 
-    handlePageHide() {
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
-        this.lastActiveTime = Date.now();
-        this.saveSessionState();
-    }
-
-    handlePageShow() {
-        const savedState = this.loadSessionState();
-        if (savedState) {
-            const timeAway = Math.floor((Date.now() - savedState.lastActiveTime) / 60000);
-            this.todayStats.practiceTime = savedState.practiceTime + timeAway;
-            this.saveTodayStats();
-            this.startTimer();
-        }
-        this.updateUI();
+        window.addEventListener('focus', () => this.checkDayReset());
     }
 
     startTimer() {
         if (this.timerInterval) return;
 
-        if (!this.sessionStartTime) {
-            this.sessionStartTime = Date.now();
-        }
-
+        this.sessionStartTime = Date.now();
+        
         this.timerInterval = setInterval(() => {
             const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
             this.todayStats.practiceTime = elapsedMinutes;
             this.saveTodayStats();
-            this.saveSessionState();
             this.updateUI();
-        }, 1000);
+        }, 30000);
     }
 
-    stopTimer() {
+  stopTimer() {
+        if (!this.timerInterval) return;
+
         clearInterval(this.timerInterval);
         this.timerInterval = null;
-        this.clearSessionState();
-        this.saveTodayStats();
+
+        if (this.sessionStartTime) {
+            const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = finalMinutes;
+            this.saveTodayStats();
+            this.sessionStartTime = null;
+            
+            // Clear timer state when stopping manually
+            timerPersistence.clearTimerState();
+        }
     }
+}
+
+
+class TimerPersistence {
+    constructor() {
+        // Bind methods
+        this.saveTimerState = this.saveTimerState.bind(this);
+        this.restoreTimerState = this.restoreTimerState.bind(this);
+        this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+        
+        // Initialize visibility change listener
+        document.addEventListener('visibilitychange', this.handleVisibilityChange);
+        
+        // Handle page close/unload
+        window.addEventListener('beforeunload', this.saveTimerState);
+        
+        // Restore timer state when page loads
+        window.addEventListener('load', this.restoreTimerState);
+    }
+
+    saveTimerState() {
+        const timerState = {
+            sessionStartTime: statisticsManager.sessionStartTime ? 
+                statisticsManager.sessionStartTime.toISOString() : null,
+            currentSessionMistakes: statisticsManager.currentSessionMistakes,
+            practiceTime: statisticsManager.todayStats.practiceTime,
+            lastSaved: new Date().toISOString()
+        };
+        
+        localStorage.setItem('timerState', JSON.stringify(timerState));
+    }
+
+    restoreTimerState() {
+        const savedState = localStorage.getItem('timerState');
+        
+        if (!savedState) return;
+        
+        try {
+            const timerState = JSON.parse(savedState);
+            
+            // Calculate elapsed time since last save
+            const lastSaved = new Date(timerState.lastSaved);
+            const now = new Date();
+            const elapsedMs = now - lastSaved;
+            
+            // Only restore if last save was within 24 hours
+            if (elapsedMs <= 24 * 60 * 60 * 1000) {
+                if (timerState.sessionStartTime) {
+                    statisticsManager.sessionStartTime = new Date(timerState.sessionStartTime);
+                    
+                    // Update practice time including elapsed time
+                    statisticsManager.todayStats.practiceTime = 
+                        timerState.practiceTime + Math.floor(elapsedMs / 60000);
+                }
+                
+                statisticsManager.currentSessionMistakes = timerState.currentSessionMistakes;
+                statisticsManager.updateUI();
+            } else {
+                // Clear saved state if more than 24 hours old
+                localStorage.removeItem('timerState');
+            }
+        } catch (error) {
+            console.error('Error restoring timer state:', error);
+            localStorage.removeItem('timerState');
+        }
+    }
+
+    handleVisibilityChange() {
+        if (document.hidden) {
+            // Page is being hidden (user switching tabs or minimizing)
+            this.saveTimerState();
+        } else {
+            // Page is being shown again
+            this.restoreTimerState();
+        }
+    }
+
+    clearTimerState() {
+        localStorage.removeItem('timerState');
+    }
+}
+
+const statisticsManager = new StatisticsManager();
+const timerPersistence = new TimerPersistence();
 
     checkDayReset() {
         const today = new Date().toDateString();
@@ -2541,7 +2558,6 @@ class StatisticsManager {
             : 0;
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
-        // Update mistakes list
         const mistakesList = document.getElementById('recent-mistakes');
         if (this.todayStats.mistakes.length > 0) {
             mistakesList.innerHTML = this.todayStats.mistakes
@@ -2558,7 +2574,6 @@ class StatisticsManager {
             mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
         }
 
-        // Update practice history
         const historyList = document.getElementById('practice-history');
         if (this.stats.practiceHistory.length > 0) {
             historyList.innerHTML = this.stats.practiceHistory
@@ -2595,6 +2610,8 @@ class StatisticsManager {
         this.startTimer();
         this.updateStreak();
         this.currentSessionMistakes = 0;
+        this.todayStats.sentences = 0;
+        this.todayStats.firstTrySuccesses = 0;
         this.saveTodayStats();
         this.saveStats();
         this.updateUI();
@@ -2617,6 +2634,7 @@ class StatisticsManager {
         });
 
         this.stats.practiceHistory = this.stats.practiceHistory.slice(0, 30);
+        
         this.saveStats();
         this.updateUI();
     }
@@ -2660,18 +2678,17 @@ class StatisticsManager {
         this.updateUI();
     }
 
-    resetDailyStats() {
-        this.stopTimer();
-        this.currentSessionMistakes = 0;
-        this.todayStats.sentences = 0;
-        this.todayStats.firstTrySuccesses = 0;
-        this.todayStats.practiceTime = 0;
-        this.sessionStartTime = null;
-        this.lastActiveTime = null;
-        this.clearSessionState();
-        this.saveTodayStats();
-        this.updateUI();
-    }
+resetDailyStats() {
+    this.stopTimer();
+    this.currentSessionMistakes = 0;
+    this.todayStats.sentences = 0;
+    this.todayStats.firstTrySuccesses = 0;
+    this.todayStats.practiceTime = 0;
+    this.sessionStartTime = null;
+    this.timerInterval = null;
+    this.saveTodayStats();
+    this.updateUI();
+  }
 }
 
 // Initialize statistics manager
