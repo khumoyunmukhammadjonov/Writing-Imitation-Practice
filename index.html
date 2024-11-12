@@ -2346,15 +2346,18 @@ class StatisticsManager {
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
+        this.lastUpdateTime = this.loadLastUpdateTime();
         
         this.bindEvents();
         this.checkDayReset();
-        this.updateUI();
         
         // Resume timer if there was an active session
         if (this.sessionStartTime) {
+            this.updatePracticeTime();
             this.startTimer(true);
         }
+        
+        this.updateUI();
     }
 
     loadSessionStartTime() {
@@ -2362,11 +2365,31 @@ class StatisticsManager {
         return savedTime ? parseInt(savedTime) : null;
     }
 
+    loadLastUpdateTime() {
+        const savedTime = localStorage.getItem('lastUpdateTime');
+        return savedTime ? parseInt(savedTime) : null;
+    }
+
     saveSessionStartTime() {
         if (this.sessionStartTime) {
             localStorage.setItem('sessionStartTime', this.sessionStartTime.toString());
+            localStorage.setItem('lastUpdateTime', Date.now().toString());
         } else {
             localStorage.removeItem('sessionStartTime');
+            localStorage.removeItem('lastUpdateTime');
+        }
+    }
+
+    updatePracticeTime() {
+        if (!this.sessionStartTime) return;
+
+        const now = Date.now();
+        const elapsedMinutes = Math.floor((now - this.sessionStartTime) / 60000);
+        
+        if (elapsedMinutes !== this.todayStats.practiceTime) {
+            this.todayStats.practiceTime = elapsedMinutes;
+            this.saveTodayStats();
+            this.updateUI();
         }
     }
 
@@ -2414,6 +2437,7 @@ class StatisticsManager {
             } else {
                 dashboard.classList.add('open');
                 button.classList.add('active');
+                this.updatePracticeTime();
                 this.updateUI();
             }
         });
@@ -2426,14 +2450,14 @@ class StatisticsManager {
         // Handle page visibility changes
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                // Save the current state when page is hidden
                 this.saveSessionStartTime();
             } else {
-                // Check for day reset when page becomes visible
                 this.checkDayReset();
-                // Resume timer if there was an active session
-                if (this.sessionStartTime && !this.timerInterval) {
-                    this.startTimer(true);
+                if (this.sessionStartTime) {
+                    this.updatePracticeTime();
+                    if (!this.timerInterval) {
+                        this.startTimer(true);
+                    }
                 }
             }
         });
@@ -2452,13 +2476,12 @@ class StatisticsManager {
         }
         
         this.saveSessionStartTime();
+        this.updatePracticeTime();
         
+        // Update every second for smooth UI updates
         this.timerInterval = setInterval(() => {
-            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-            this.todayStats.practiceTime = elapsedMinutes;
-            this.saveTodayStats();
-            this.updateUI();
-        }, 30000); // Update every 30 seconds
+            this.updatePracticeTime();
+        }, 1000);
     }
 
     stopTimer() {
@@ -2468,9 +2491,7 @@ class StatisticsManager {
         this.timerInterval = null;
 
         if (this.sessionStartTime) {
-            const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-            this.todayStats.practiceTime = finalMinutes;
-            this.saveTodayStats();
+            this.updatePracticeTime();
             this.sessionStartTime = null;
             this.saveSessionStartTime();
         }
@@ -2492,7 +2513,6 @@ class StatisticsManager {
             this.saveTodayStats();
             localStorage.setItem('lastStatsReset', today);
             
-            // Only stop timer if it's a new day
             if (this.sessionStartTime) {
                 this.stopTimer();
             }
