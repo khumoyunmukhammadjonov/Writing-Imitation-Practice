@@ -2341,7 +2341,7 @@ function displayWordList() {
 // Statistics Manager Class
 class StatisticsManager {
     constructor() {
-        this.sessionStartTime = null;
+        this.sessionStartTime = this.loadSessionStartTime();
         this.timerInterval = null;
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
@@ -2350,6 +2350,24 @@ class StatisticsManager {
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
+        
+        // Resume timer if there was an active session
+        if (this.sessionStartTime) {
+            this.startTimer(true);
+        }
+    }
+
+    loadSessionStartTime() {
+        const savedTime = localStorage.getItem('sessionStartTime');
+        return savedTime ? parseInt(savedTime) : null;
+    }
+
+    saveSessionStartTime() {
+        if (this.sessionStartTime) {
+            localStorage.setItem('sessionStartTime', this.sessionStartTime.toString());
+        } else {
+            localStorage.removeItem('sessionStartTime');
+        }
     }
 
     loadStats() {
@@ -2405,20 +2423,42 @@ class StatisticsManager {
             document.getElementById('stats-dashboard-btn').classList.remove('active');
         });
 
-        window.addEventListener('focus', () => this.checkDayReset());
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Save the current state when page is hidden
+                this.saveSessionStartTime();
+            } else {
+                // Check for day reset when page becomes visible
+                this.checkDayReset();
+                // Resume timer if there was an active session
+                if (this.sessionStartTime && !this.timerInterval) {
+                    this.startTimer(true);
+                }
+            }
+        });
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            this.saveSessionStartTime();
+        });
     }
 
-    startTimer() {
+    startTimer(resume = false) {
         if (this.timerInterval) return;
 
-        this.sessionStartTime = Date.now();
+        if (!resume) {
+            this.sessionStartTime = Date.now();
+        }
+        
+        this.saveSessionStartTime();
         
         this.timerInterval = setInterval(() => {
             const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
             this.todayStats.practiceTime = elapsedMinutes;
             this.saveTodayStats();
             this.updateUI();
-        }, 30000);
+        }, 30000); // Update every 30 seconds
     }
 
     stopTimer() {
@@ -2432,6 +2472,7 @@ class StatisticsManager {
             this.todayStats.practiceTime = finalMinutes;
             this.saveTodayStats();
             this.sessionStartTime = null;
+            this.saveSessionStartTime();
         }
     }
 
@@ -2450,7 +2491,12 @@ class StatisticsManager {
             
             this.saveTodayStats();
             localStorage.setItem('lastStatsReset', today);
-            this.stopTimer();
+            
+            // Only stop timer if it's a new day
+            if (this.sessionStartTime) {
+                this.stopTimer();
+            }
+            
             this.updateUI();
         }
     }
@@ -2591,17 +2637,17 @@ class StatisticsManager {
         this.updateUI();
     }
 
-resetDailyStats() {
-    this.stopTimer();
-    this.currentSessionMistakes = 0;
-    this.todayStats.sentences = 0;
-    this.todayStats.firstTrySuccesses = 0;
-    this.todayStats.practiceTime = 0;
-    this.sessionStartTime = null;
-    this.timerInterval = null;
-    this.saveTodayStats();
-    this.updateUI();
-  }
+    resetDailyStats() {
+        this.stopTimer();
+        this.currentSessionMistakes = 0;
+        this.todayStats.sentences = 0;
+        this.todayStats.firstTrySuccesses = 0;
+        this.todayStats.practiceTime = 0;
+        this.sessionStartTime = null;
+        this.saveSessionStartTime();
+        this.saveTodayStats();
+        this.updateUI();
+    }
 }
 
 // Initialize statistics manager
