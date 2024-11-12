@@ -2346,8 +2346,14 @@ class StatisticsManager {
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
-        this.isActive = this.loadSessionState();
         
+        // Load session state
+        const sessionState = this.loadSessionState();
+        this.isActive = sessionState.isActive;
+        if (sessionState.startTime) {
+            this.sessionStartTime = sessionState.startTime;
+        }
+
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
@@ -2359,20 +2365,20 @@ class StatisticsManager {
     }
 
     loadSessionState() {
-        const sessionState = localStorage.getItem('practiceSessionState');
-        if (sessionState) {
-            const { isActive, startTime } = JSON.parse(sessionState);
-            this.sessionStartTime = startTime;
-            return isActive;
+        const state = localStorage.getItem('practiceSessionState');
+        if (state) {
+            return JSON.parse(state);
         }
-        return false;
+        return { isActive: false, startTime: null };
     }
 
     saveSessionState() {
-        localStorage.setItem('practiceSessionState', JSON.stringify({
+        const state = {
             isActive: this.isActive,
-            startTime: this.sessionStartTime
-        }));
+            startTime: this.sessionStartTime,
+            lastUpdated: Date.now()
+        };
+        localStorage.setItem('practiceSessionState', JSON.stringify(state));
     }
 
     clearSessionState() {
@@ -2413,6 +2419,7 @@ class StatisticsManager {
     }
 
     bindEvents() {
+        // Dashboard toggle
         document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
             const dashboard = document.getElementById('statistics-dashboard');
             const button = document.getElementById('stats-dashboard-btn');
@@ -2427,21 +2434,31 @@ class StatisticsManager {
             }
         });
 
+        // Close button
         document.getElementById('close-stats-btn').addEventListener('click', () => {
             document.getElementById('statistics-dashboard').classList.remove('open');
             document.getElementById('stats-dashboard-btn').classList.remove('active');
         });
 
-        // Handle page visibility changes
+        // Page visibility handling
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.pauseTimer();
-            } else if (this.isActive) {
-                this.resumeTimer();
+            } else {
+                // Check if session is still valid when page becomes visible
+                const sessionState = this.loadSessionState();
+                if (sessionState.isActive && sessionState.lastUpdated) {
+                    const timeDiff = Date.now() - sessionState.lastUpdated;
+                    if (timeDiff < 24 * 60 * 60 * 1000) { // 24 hours
+                        this.resumeTimer();
+                    } else {
+                        this.stopTimer();
+                    }
+                }
             }
         });
 
-        // Handle page unload
+        // Before unload handling
         window.addEventListener('beforeunload', () => {
             if (this.isActive) {
                 this.pauseTimer();
@@ -2466,6 +2483,7 @@ class StatisticsManager {
                 this.todayStats.practiceTime = elapsedMinutes;
                 this.saveTodayStats();
                 this.updateUI();
+                this.saveSessionState(); // Update last active timestamp
             }
         }, 1000);
     }
@@ -2483,10 +2501,11 @@ class StatisticsManager {
 
     resumeTimer() {
         if (this.isActive) {
-            if (!this.sessionStartTime) {
-                this.sessionStartTime = Date.now() - (this.todayStats.practiceTime * 60000);
+            const sessionState = this.loadSessionState();
+            if (sessionState.startTime) {
+                this.sessionStartTime = sessionState.startTime;
+                this.startTimer();
             }
-            this.startTimer();
         }
     }
 
@@ -2508,6 +2527,7 @@ class StatisticsManager {
         const lastReset = localStorage.getItem('lastStatsReset');
 
         if (lastReset !== today) {
+            // Reset daily stats
             this.todayStats = {
                 date: today,
                 practiceTime: 0,
@@ -2518,6 +2538,8 @@ class StatisticsManager {
             
             this.saveTodayStats();
             localStorage.setItem('lastStatsReset', today);
+            
+            // Stop any active session
             this.stopTimer();
             this.updateUI();
         }
@@ -2530,15 +2552,22 @@ class StatisticsManager {
     }
 
     updateUI() {
+        // Update streak count
         document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
+        
+        // Update practice time
         document.getElementById('practice-time').textContent = this.formatTime(this.todayStats.practiceTime);
+        
+        // Update total practices
         document.getElementById('total-practices').textContent = this.stats.totalPractices;
 
+        // Calculate and update success rate
         const successRate = this.todayStats.sentences > 0
             ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
             : 0;
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
+        // Update mistakes list
         const mistakesList = document.getElementById('recent-mistakes');
         if (this.todayStats.mistakes.length > 0) {
             mistakesList.innerHTML = this.todayStats.mistakes
@@ -2555,6 +2584,7 @@ class StatisticsManager {
             mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
         }
 
+        // Update practice history
         const historyList = document.getElementById('practice-history');
         if (this.stats.practiceHistory.length > 0) {
             historyList.innerHTML = this.stats.practiceHistory
@@ -2591,8 +2621,6 @@ class StatisticsManager {
         this.startTimer();
         this.updateStreak();
         this.currentSessionMistakes = 0;
-        this.todayStats.sentences = 0;
-        this.todayStats.firstTrySuccesses = 0;
         this.saveTodayStats();
         this.saveStats();
         this.updateUI();
@@ -2614,6 +2642,7 @@ class StatisticsManager {
             successRate: successRate
         });
 
+        // Keep only last 30 sessions
         this.stats.practiceHistory = this.stats.practiceHistory.slice(0, 30);
         
         this.saveStats();
