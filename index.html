@@ -1815,8 +1815,11 @@ function showCompletionMessage() {
     document.getElementById("check-button").style.display = "none";
     ResultManager.clearResult();
     statisticsManager.endPracticeSession(currentSentenceIndex);
-    clearProgress();
+    
+    // Save progress with completion state
+    saveProgress();
 }
+
 
 // 13. Text Checking System
 function checkText() {
@@ -1927,7 +1930,12 @@ function saveProgress() {
         practiceVisible: document.getElementById("practice-section").style.display,
         startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
         articleInputHidden: document.getElementById("article-input").classList.contains("hidden"),
-        isCompleted: currentSentenceIndex >= sentences.length && sentences.length > 0 // Add this line
+        // Add completion state
+        isCompleted: currentSentenceIndex >= sentences.length && sentences.length > 0,
+        // Store UI state
+        userInputDisplay: document.getElementById("user-input").style.display,
+        checkButtonDisplay: document.getElementById("check-button").style.display,
+        completionMessage: document.getElementById("original-sentence").innerText
     };
     localStorage.setItem("writingProgress", JSON.stringify(progressData));
 }
@@ -1942,21 +1950,25 @@ function loadSavedProgress() {
         sentences = progressData.sentences || [];
         
         if (sentences.length > 0) {
+            // Handle completion state
             if (progressData.isCompleted) {
-                // Show completion state
                 const originalSentenceElement = document.getElementById("original-sentence");
-                originalSentenceElement.innerText = "You have completed the practice.";
+                originalSentenceElement.innerText = progressData.completionMessage || "You have completed the practice.";
                 originalSentenceElement.classList.add('completed-message');
-                document.getElementById("user-input").style.display = "none";
-                document.getElementById("check-button").style.display = "none";
-                document.getElementById("practice-section").style.display = "block";
-                document.getElementById("start-button").classList.add("hidden");
-                document.getElementById("article-input").classList.add("hidden");
+                ColorManager.updateOriginalSentenceColor(true);
+                
+                // Restore UI state for completion
+                document.getElementById("user-input").style.display = progressData.userInputDisplay || "none";
+                document.getElementById("check-button").style.display = progressData.checkButtonDisplay || "none";
             } else {
-                // Show normal progress
                 showSentence();
-                document.getElementById("practice-section").style.display = "block";
+            }
+            
+            document.getElementById("practice-section").style.display = progressData.practiceVisible || "block";
+            if (progressData.startButtonHidden) {
                 document.getElementById("start-button").classList.add("hidden");
+            }
+            if (progressData.articleInputHidden) {
                 document.getElementById("article-input").classList.add("hidden");
             }
             updateProgressBar();
@@ -1971,7 +1983,16 @@ function clearProgress() {
     sentences = [];
     document.getElementById("article-input").value = "";
     document.getElementById("user-input").value = "";
+    document.getElementById("original-sentence").innerText = "";
     document.getElementById("original-sentence").classList.remove('completed-message');
+    document.getElementById("user-input").style.display = "block";
+    document.getElementById("check-button").style.display = "inline";
+    ResultManager.clearResult();
+    
+    // Reset progress bar
+    const progressBarFill = document.getElementById("progress-bar-fill");
+    progressBarFill.style.width = "0%";
+    progressBarFill.innerText = "0%";
 }
 
 // 16. UI Event Handlers
