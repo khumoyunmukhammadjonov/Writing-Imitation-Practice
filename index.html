@@ -1102,9 +1102,284 @@ button#view-word-list-btn.word-list-btn:hover {
         padding: 10px;
     }
 }
+
+
+
+
+
+
+
+
+
+/* Statistics Dashboard Base */
+.statistics-dashboard {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    overflow-y: auto;
+    border-left: 1px solid #e5e7eb;
+}
+
+.statistics-dashboard.open {
+    transform: translateX(0);
+}
+
+/* Dashboard Content */
+.dashboard-content {
+    padding: 24px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.dashboard-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #4CAF50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: rgba(76, 175, 80, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 20px;
+    color: #4CAF50;
+}
+
+.stat-info h3 {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin: 4px 0 0 0;
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.dashboard-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Lists */
+.mistakes-list, .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mistake-item, .history-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.empty-state {
+    color: #6b7280;
+    text-align: center;
+    padding: 24px;
+    font-style: italic;
+}
+
+/* Dark Mode */
+.low-light-mode .statistics-dashboard {
+    background-color: #1e1e1e;
+    border-left: 1px solid #333;
+}
+
+.low-light-mode .stat-card {
+    background-color: #2d2d2d;
+}
+
+.low-light-mode .stat-info h3 {
+    color: #9ca3af;
+}
+
+.low-light-mode .stat-value {
+    color: #e5e7eb;
+}
+
+.low-light-mode .dashboard-section {
+    background-color: #2d2d2d;
+}
+
+.low-light-mode .mistake-item,
+.low-light-mode .history-item {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+.low-light-mode .empty-state {
+    color: #9ca3af;
+}
+
+.low-light-mode .close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .statistics-dashboard {
+        width: 100%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
  </style>
 </head>
 <body>
+<div id="statistics-dashboard" class="statistics-dashboard">
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <h2><i class="fi fi-rr-stats"></i> Practice Statistics</h2>
+            <button id="close-stats-btn" class="close-btn">
+                <i class="fi fi-rr-cross"></i>
+            </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <!-- Streak Card -->
+            <div class="stat-card streak-card">
+                <div class="stat-icon">
+                    <i class="fi fi-rr-flame"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Daily Streak</h3>
+                    <p class="stat-value" id="streak-count">0 days</p>
+                </div>
+            </div>
+
+            <!-- Practice Time Card -->
+            <div class="stat-card time-card">
+                <div class="stat-icon">
+                    <i class="fi fi-rr-time-fast"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Today's Practice</h3>
+                    <p class="stat-value" id="practice-time">0h 0m</p>
+                </div>
+            </div>
+
+            <!-- Total Practices Card -->
+            <div class="stat-card practices-card">
+                <div class="stat-icon">
+                    <i class="fi fi-rr-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Practices</h3>
+                    <p class="stat-value" id="total-practices">0</p>
+                </div>
+            </div>
+
+            <!-- Success Rate Card -->
+            <div class="stat-card success-card">
+                <div class="stat-icon">
+                    <i class="fi fi-rr-badge"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>First Try Success</h3>
+                    <p class="stat-value" id="success-rate">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Mistakes Section -->
+    <div class="dashboard-section">
+    <h3><i class="fi fi-rr-exclamation"></i> Today's Mistakes</h3>
+    <div id="recent-mistakes" class="mistakes-list">
+        <p class="empty-state">No mistakes recorded today</p>
+    </div>
+</div>
+
+        <!-- Practice History Section -->
+        <div class="dashboard-section">
+            <h3><i class="fi fi-rr-time-past"></i> Practice History</h3>
+            <div id="practice-history" class="history-list">
+                <p class="empty-state">No practice history available</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+  
 
 <div id="text-controls-modal" class="modal">
     <div class="modal-content">
@@ -1146,6 +1421,9 @@ button#view-word-list-btn.word-list-btn:hover {
     <button id="theme-toggle-btn" class="control-btn" title="Toggle Theme">
         <i class="fi fi-rr-moon"></i>
     </button>
+ <button id="stats-dashboard-btn" class="control-btn" title="Statistics">
+    <i class="fi fi-rr-stats"></i>
+</button>
 </div>
 
 <!-- Main Application Container -->
@@ -1412,6 +1690,9 @@ function processArticle() {
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
         
+         // Add this line to start tracking the practice session
+        statisticsManager.startPracticeSession();
+        
         saveProgress();
     } else {
         alert("Please paste a valid article.");
@@ -1533,6 +1814,7 @@ function showCompletionMessage() {
     document.getElementById("user-input").style.display = "none";
     document.getElementById("check-button").style.display = "none";
     ResultManager.clearResult();
+    statisticsManager.endPracticeSession(currentSentenceIndex);
     clearProgress();
 }
 
@@ -1601,6 +1883,10 @@ function checkText() {
 
     if (userInput === originalSentence) {
         ResultManager.showSuccess();
+        
+        if (mistakeCount === 0) {
+            statisticsManager.recordFirstTrySuccess();
+        }
         currentSentenceIndex++;
         saveProgress();
         setTimeout(() => {
@@ -1621,6 +1907,7 @@ function checkText() {
         ResultManager.showErrorMessage(incorrectWord, correctWord);
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
+        statisticsManager.recordMistake(incorrectWord, correctWord);
         document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
         ResultManager.showProgress();
@@ -1706,6 +1993,8 @@ function restartPractice() {
     ResultManager.clearResult();
     document.getElementById("original-sentence").innerText = "";
     document.getElementById("original-sentence").classList.remove('completed-message');
+    
+    statisticsManager.resetDailyStats();
     
     const progressBarFill = document.getElementById("progress-bar-fill");
     progressBarFill.style.width = "0%";
@@ -1998,6 +2287,286 @@ function displayWordList() {
         });
     });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Statistics Manager Class
+// Statistics Manager Class
+class StatisticsManager {
+    constructor() {
+        this.sessionStartTime = null;
+        this.timerInterval = null;
+        this.stats = this.loadStats();
+        this.todayStats = this.loadTodayStats();
+        this.currentSessionMistakes = 0;
+        
+        this.bindEvents();
+        this.checkDayReset();
+        this.updateUI();
+    }
+
+    loadStats() {
+        return JSON.parse(localStorage.getItem('practiceStats')) || {
+            streak: 0,
+            totalPractices: 0,
+            lastPracticeDate: null,
+            practiceHistory: []
+        };
+    }
+
+    loadTodayStats() {
+        const today = new Date().toDateString();
+        const saved = JSON.parse(localStorage.getItem('todayStats')) || {};
+        
+        if (saved.date !== today) {
+            return {
+                date: today,
+                practiceTime: 0,
+                mistakes: [],
+                sentences: 0,
+                firstTrySuccesses: 0
+            };
+        }
+        return saved;
+    }
+
+    saveTodayStats() {
+        localStorage.setItem('todayStats', JSON.stringify(this.todayStats));
+    }
+
+    saveStats() {
+        localStorage.setItem('practiceStats', JSON.stringify(this.stats));
+    }
+
+    bindEvents() {
+        document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
+            const dashboard = document.getElementById('statistics-dashboard');
+            const button = document.getElementById('stats-dashboard-btn');
+            
+            if (dashboard.classList.contains('open')) {
+                dashboard.classList.remove('open');
+                button.classList.remove('active');
+            } else {
+                dashboard.classList.add('open');
+                button.classList.add('active');
+                this.updateUI();
+            }
+        });
+
+        document.getElementById('close-stats-btn').addEventListener('click', () => {
+            document.getElementById('statistics-dashboard').classList.remove('open');
+            document.getElementById('stats-dashboard-btn').classList.remove('active');
+        });
+
+        window.addEventListener('focus', () => this.checkDayReset());
+    }
+
+    startTimer() {
+        if (this.timerInterval) return;
+
+        this.sessionStartTime = Date.now();
+        
+        this.timerInterval = setInterval(() => {
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = elapsedMinutes;
+            this.saveTodayStats();
+            this.updateUI();
+        }, 30000);
+    }
+
+    stopTimer() {
+        if (!this.timerInterval) return;
+
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+
+        if (this.sessionStartTime) {
+            const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = finalMinutes;
+            this.saveTodayStats();
+            this.sessionStartTime = null;
+        }
+    }
+
+    checkDayReset() {
+        const today = new Date().toDateString();
+        const lastReset = localStorage.getItem('lastStatsReset');
+
+        if (lastReset !== today) {
+            this.todayStats = {
+                date: today,
+                practiceTime: 0,
+                mistakes: [],
+                sentences: 0,
+                firstTrySuccesses: 0
+            };
+            
+            this.saveTodayStats();
+            localStorage.setItem('lastStatsReset', today);
+            this.stopTimer();
+            this.updateUI();
+        }
+    }
+
+    formatTime(minutes) {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+    }
+
+    updateUI() {
+        document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
+        document.getElementById('practice-time').textContent = this.formatTime(this.todayStats.practiceTime);
+        document.getElementById('total-practices').textContent = this.stats.totalPractices;
+
+        const successRate = this.todayStats.sentences > 0
+            ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
+            : 0;
+        document.getElementById('success-rate').textContent = `${successRate}%`;
+
+        const mistakesList = document.getElementById('recent-mistakes');
+        if (this.todayStats.mistakes.length > 0) {
+            mistakesList.innerHTML = this.todayStats.mistakes
+                .map(mistake => `
+                    <div class="mistake-item">
+                        <div style="color: #EF4444;">Incorrect: ${mistake.incorrect}</div>
+                        <div style="color: #10B981;">Correct: ${mistake.correct}</div>
+                        <div style="color: #6B7280; font-size: 0.8rem;">
+                            ${new Date(mistake.timestamp).toLocaleTimeString()}
+                        </div>
+                    </div>
+                `).join('');
+        } else {
+            mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
+        }
+
+        const historyList = document.getElementById('practice-history');
+        if (this.stats.practiceHistory.length > 0) {
+            historyList.innerHTML = this.stats.practiceHistory
+                .map(session => `
+                    <div class="history-item">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>${new Date(session.date).toLocaleDateString()}</span>
+                            <span>${session.sentences} sentences</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <div style="color: #6B7280; font-size: 0.875rem;">
+                                Time: ${this.formatTime(session.duration)}
+                            </div>
+                            <div style="color: ${session.mistakes === 0 ? '#10B981' : '#EF4444'}; font-size: 0.875rem;">
+                                Mistakes: ${session.mistakes}
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                            <div style="font-size: 0.875rem;">
+                                Success Rate: <span style="color: ${
+                                    session.successRate >= 80 ? '#10B981' : 
+                                    session.successRate >= 50 ? '#FCD34D' : '#EF4444'
+                                }">${session.successRate}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        } else {
+            historyList.innerHTML = '<p class="empty-state">No practice history available</p>';
+        }
+    }
+
+    startPracticeSession() {
+        this.startTimer();
+        this.updateStreak();
+        this.currentSessionMistakes = 0;
+        this.todayStats.sentences = 0;
+        this.todayStats.firstTrySuccesses = 0;
+        this.saveTodayStats();
+        this.saveStats();
+        this.updateUI();
+    }
+
+    endPracticeSession(completedSentences) {
+        this.stopTimer();
+        this.stats.totalPractices++;
+
+        const successRate = this.todayStats.sentences > 0
+            ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
+            : 0;
+
+        this.stats.practiceHistory.unshift({
+            date: new Date().toISOString(),
+            sentences: completedSentences,
+            duration: this.todayStats.practiceTime,
+            mistakes: this.currentSessionMistakes,
+            successRate: successRate
+        });
+
+        this.stats.practiceHistory = this.stats.practiceHistory.slice(0, 30);
+        
+        this.saveStats();
+        this.updateUI();
+    }
+
+    updateStreak() {
+        const today = new Date().toDateString();
+        const lastPractice = this.stats.lastPracticeDate ? 
+            new Date(this.stats.lastPracticeDate).toDateString() : null;
+
+        if (!lastPractice) {
+            this.stats.streak = 1;
+        } else if (lastPractice === today) {
+            return;
+        } else {
+            const daysDiff = (new Date(today) - new Date(lastPractice)) / (1000 * 60 * 60 * 24);
+            this.stats.streak = daysDiff === 1 ? this.stats.streak + 1 : 1;
+        }
+
+        this.stats.lastPracticeDate = new Date().toISOString();
+        this.saveStats();
+    }
+
+    recordMistake(incorrect, correct) {
+        const mistake = {
+            incorrect,
+            correct,
+            timestamp: new Date().toISOString()
+        };
+        
+        this.todayStats.mistakes.unshift(mistake);
+        this.todayStats.sentences++;
+        this.currentSessionMistakes++;
+        this.saveTodayStats();
+        this.updateUI();
+    }
+
+    recordFirstTrySuccess() {
+        this.todayStats.sentences++;
+        this.todayStats.firstTrySuccesses++;
+        this.saveTodayStats();
+        this.updateUI();
+    }
+
+    resetDailyStats() {
+        this.stopTimer();
+        this.currentSessionMistakes = 0;
+        this.todayStats.sentences = 0;
+        this.todayStats.firstTrySuccesses = 0;
+        this.saveTodayStats();
+        this.updateUI();
+    }
+}
+
+// Initialize statistics manager
+const statisticsManager = new StatisticsManager();
+window.statisticsManager = statisticsManager;
 </script>
 </body>
 </html>
