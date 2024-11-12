@@ -2345,10 +2345,10 @@ class StatisticsManager {
         this.timerInterval = null;
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
-        this.checkOngoingSession();
+this.checkOngoingSession();
 
         this.currentSessionMistakes = 0;
-
+        
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
@@ -2408,55 +2408,50 @@ class StatisticsManager {
         });
 
         window.addEventListener('focus', () => this.checkDayReset());
-        window.addEventListener('beforeunload', () => this.saveSessionTime());
     }
 
-    startTimer() {
-        if (this.timerInterval) return;
+startTimer() {
+    if (this.timerInterval) return;
 
-        if (!this.sessionStartTime) {
-            this.sessionStartTime = Date.now();
-            localStorage.setItem('sessionStartTime', this.sessionStartTime);
-        }
-
-        this.timerInterval = setInterval(() => this.updatePracticeTime(), 1000); // Update every second for accuracy
+    // If there's no session start time, set it and save it in localStorage
+    if (!this.sessionStartTime) {
+        this.sessionStartTime = Date.now();
+        localStorage.setItem('sessionStartTime', this.sessionStartTime);
     }
 
+    this.timerInterval = setInterval(() => {
+        const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+        this.todayStats.practiceTime = elapsedMinutes;
+        this.saveTodayStats();
+        this.updateUI();
+    }, 30000); // Update every 30 seconds
+}
 
 
 stopTimer() {
-        if (!this.timerInterval) return;
+    if (!this.timerInterval) return;
 
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
 
-        if (this.sessionStartTime) {
-            this.updatePracticeTime(true); // Save final time
-            this.sessionStartTime = null;
-            localStorage.removeItem('sessionStartTime'); // Clear start time from localStorage
-        }
+    if (this.sessionStartTime) {
+        const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+        this.todayStats.practiceTime = finalMinutes;
+        this.saveTodayStats();
+        this.sessionStartTime = null;
+        localStorage.removeItem('sessionStartTime'); // Clear from localStorage
     }
- saveSessionTime() {
-        if (this.sessionStartTime) {
-            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-            this.todayStats.practiceTime = elapsedMinutes;
-            this.saveTodayStats();
-        }
-    }
+}
 
- updatePracticeTime(isFinal = false) {
-        const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-        this.todayStats.practiceTime = elapsedMinutes;
-        if (isFinal) this.saveTodayStats(); // Save only at the end to minimize storage writes
-        this.updateUI();
-    }
 checkOngoingSession() {
-        const savedStartTime = localStorage.getItem('sessionStartTime');
-        if (savedStartTime) {
-            this.sessionStartTime = Number(savedStartTime);
-            this.startTimer();
-        }
+    const savedStartTime = localStorage.getItem('sessionStartTime');
+
+    if (savedStartTime) {
+        // Convert to number and resume timing
+        this.sessionStartTime = Number(savedStartTime);
+        this.startTimer();
     }
+}
 
 
     checkDayReset() {
@@ -2615,17 +2610,17 @@ checkOngoingSession() {
         this.updateUI();
     }
 
-   resetDailyStats() {
-        this.stopTimer();
-        this.currentSessionMistakes = 0;
-        this.todayStats.sentences = 0;
-        this.todayStats.firstTrySuccesses = 0;
-        this.todayStats.practiceTime = 0;
-        this.sessionStartTime = null;
-        this.timerInterval = null;
-        this.saveTodayStats();
-        this.updateUI();
-    }
+resetDailyStats() {
+    this.stopTimer();
+    this.currentSessionMistakes = 0;
+    this.todayStats.sentences = 0;
+    this.todayStats.firstTrySuccesses = 0;
+    this.todayStats.practiceTime = 0;
+    this.sessionStartTime = null;
+    this.timerInterval = null;
+    this.saveTodayStats();
+    this.updateUI();
+  }
 }
 
 // Initialize statistics manager
