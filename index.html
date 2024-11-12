@@ -2388,58 +2388,56 @@ this.checkOngoingSession();
     }
 
     bindEvents() {
-        document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
-            const dashboard = document.getElementById('statistics-dashboard');
-            const button = document.getElementById('stats-dashboard-btn');
-            
-            if (dashboard.classList.contains('open')) {
-                dashboard.classList.remove('open');
-                button.classList.remove('active');
-            } else {
-                dashboard.classList.add('open');
-                button.classList.add('active');
-                this.updateUI();
-            }
-        });
+    document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
+        const dashboard = document.getElementById('statistics-dashboard');
+        const button = document.getElementById('stats-dashboard-btn');
+        
+        if (dashboard.classList.contains('open')) {
+            dashboard.classList.remove('open');
+            button.classList.remove('active');
+        } else {
+            dashboard.classList.add('open');
+            button.classList.add('active');
+            this.updateUI();
+        }
+    });
 
-        document.getElementById('close-stats-btn').addEventListener('click', () => {
-            document.getElementById('statistics-dashboard').classList.remove('open');
-            document.getElementById('stats-dashboard-btn').classList.remove('active');
-        });
+    document.getElementById('close-stats-btn').addEventListener('click', () => {
+        document.getElementById('statistics-dashboard').classList.remove('open');
+        document.getElementById('stats-dashboard-btn').classList.remove('active');
+    });
 
-        window.addEventListener('focus', () => this.checkDayReset());
-    }
+    window.addEventListener('focus', () => this.checkDayReset());
+
+    // Save session data when the user closes the tab
+    window.addEventListener('beforeunload', () => {
+        this.stopTimer(); // Save elapsed time
+    });
+}
+
 
 startTimer() {
-    if (this.timerInterval) return;
-
-    // If there's no session start time, set it and save it in localStorage
+    // Set start time if not already set
     if (!this.sessionStartTime) {
         this.sessionStartTime = Date.now();
         localStorage.setItem('sessionStartTime', this.sessionStartTime);
     }
 
-    this.timerInterval = setInterval(() => {
-        const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-        this.todayStats.practiceTime = elapsedMinutes;
-        this.saveTodayStats();
-        this.updateUI();
-    }, 30000); // Update every 30 seconds
+    // No interval needed, simply mark the session as ongoing
+    console.log("Practice session started");
 }
 
 
 stopTimer() {
-    if (!this.timerInterval) return;
-
-    clearInterval(this.timerInterval);
-    this.timerInterval = null;
-
     if (this.sessionStartTime) {
-        const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-        this.todayStats.practiceTime = finalMinutes;
+        const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+        this.todayStats.practiceTime += elapsedMinutes; // Accumulate total time
         this.saveTodayStats();
+
+        // Clear session data
         this.sessionStartTime = null;
-        localStorage.removeItem('sessionStartTime'); // Clear from localStorage
+        localStorage.removeItem('sessionStartTime');
+        console.log("Practice session stopped");
     }
 }
 
@@ -2447,9 +2445,13 @@ checkOngoingSession() {
     const savedStartTime = localStorage.getItem('sessionStartTime');
 
     if (savedStartTime) {
-        // Convert to number and resume timing
-        this.sessionStartTime = Number(savedStartTime);
-        this.startTimer();
+        const elapsedMinutes = Math.floor((Date.now() - Number(savedStartTime)) / 60000);
+        this.todayStats.practiceTime += elapsedMinutes; // Accumulate the elapsed time
+        this.saveTodayStats();
+
+        // Continue the session with the new start time
+        this.sessionStartTime = Date.now(); // Reset start time for future tracking
+        localStorage.setItem('sessionStartTime', this.sessionStartTime);
     }
 }
 
