@@ -2528,9 +2528,6 @@ class StatisticsManager {
         this.saveTodayStats();
         this.saveStats();
         this.updateUI();
-// Clear any previous saved session when starting new
-localStorage.removeItem('writingPracticeSession');
-this.sessionStartTime = new Date();
     }
 
     endPracticeSession(completedSentences) {
@@ -2606,86 +2603,6 @@ resetDailyStats() {
     this.updateUI();
   }
 }
-
-
-
-
-
-
-
-
-// Add these methods to your existing StatisticsManager class
-
-function saveSessionState() {
-  if (this.sessionStartTime) {
-    const sessionState = {
-      sessionStartTime: this.sessionStartTime.toISOString(),
-      practiceTime: this.todayStats.practiceTime,
-      currentSessionMistakes: this.currentSessionMistakes,
-      sentences: this.todayStats.sentences,
-      firstTrySuccesses: this.todayStats.firstTrySuccesses,
-      lastSaved: new Date().toISOString()
-    };
-    localStorage.setItem('writingPracticeSession', JSON.stringify(sessionState));
-  }
-}
-
-function loadSessionState() {
-  const savedSession = localStorage.getItem('writingPracticeSession');
-  if (savedSession) {
-    try {
-      const state = JSON.parse(savedSession);
-      const lastSaved = new Date(state.lastSaved);
-      const now = new Date();
-      
-      // Calculate elapsed time while away (in minutes)
-      const elapsedMinutes = Math.floor((now - lastSaved) / 60000);
-      
-      // Restore state
-      this.sessionStartTime = new Date(state.sessionStartTime);
-      this.todayStats.practiceTime = state.practiceTime + elapsedMinutes;
-      this.currentSessionMistakes = state.currentSessionMistakes;
-      this.todayStats.sentences = state.sentences;
-      this.todayStats.firstTrySuccesses = state.firstTrySuccesses;
-
-      // Clear saved session after loading
-      localStorage.removeItem('writingPracticeSession');
-      
-      // Update UI
-      this.updateUI();
-      
-      // Restart timer
-      if (this.timerInterval) {
-        clearInterval(this.timerInterval);
-      }
-      this.startTimer();
-    } catch (error) {
-      console.error('Error loading session state:', error);
-      localStorage.removeItem('writingPracticeSession');
-    }
-  }
-}
-
-// Add these event listeners after your StatisticsManager initialization
-document.addEventListener('visibilitychange', () => {
-  const statisticsManager = window.statisticsManager; // Assuming this is your global instance
-  if (document.hidden) {
-    statisticsManager.saveSessionState();
-    if (statisticsManager.timerInterval) {
-      clearInterval(statisticsManager.timerInterval);
-    }
-  } else {
-    statisticsManager.loadSessionState();
-  }
-});
-
-window.addEventListener('beforeunload', () => {
-  const statisticsManager = window.statisticsManager;
-  statisticsManager.saveSessionState();
-});
-
-// Add this to your initializeApplication function or where you initialize StatisticsManager
-statisticsManager.loadSessionState();
 
 // Initialize statistics manager
 const statisticsManager = new StatisticsManager();
