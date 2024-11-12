@@ -2591,14 +2591,17 @@ class StatisticsManager {
         this.updateUI();
     }
 
-    resetDailyStats() {
-        this.stopTimer();
-        this.currentSessionMistakes = 0;
-        this.todayStats.sentences = 0;
-        this.todayStats.firstTrySuccesses = 0;
-        this.saveTodayStats();
-        this.updateUI();
-    }
+resetDailyStats() {
+    this.stopTimer();
+    this.currentSessionMistakes = 0;
+    this.todayStats.sentences = 0;
+    this.todayStats.firstTrySuccesses = 0;
+    this.todayStats.practiceTime = 0;
+    this.sessionStartTime = null;
+    this.timerInterval = null;
+    this.saveTodayStats();
+    this.updateUI();
+  }
 }
 
 // Initialize statistics manager
