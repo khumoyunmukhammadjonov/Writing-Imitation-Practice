@@ -2341,56 +2341,16 @@ function displayWordList() {
 // Statistics Manager Class
 class StatisticsManager {
     constructor() {
-        this.sessionStartTime = this.loadSessionStartTime();
+        this.sessionStartTime = null;
         this.timerInterval = null;
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
-        this.lastUpdateTime = this.loadLastUpdateTime();
+        this.isActive = false;
         
         this.bindEvents();
         this.checkDayReset();
-        
-        // Resume timer if there was an active session
-        if (this.sessionStartTime) {
-            this.updatePracticeTime();
-            this.startTimer(true);
-        }
-        
         this.updateUI();
-    }
-
-    loadSessionStartTime() {
-        const savedTime = localStorage.getItem('sessionStartTime');
-        return savedTime ? parseInt(savedTime) : null;
-    }
-
-    loadLastUpdateTime() {
-        const savedTime = localStorage.getItem('lastUpdateTime');
-        return savedTime ? parseInt(savedTime) : null;
-    }
-
-    saveSessionStartTime() {
-        if (this.sessionStartTime) {
-            localStorage.setItem('sessionStartTime', this.sessionStartTime.toString());
-            localStorage.setItem('lastUpdateTime', Date.now().toString());
-        } else {
-            localStorage.removeItem('sessionStartTime');
-            localStorage.removeItem('lastUpdateTime');
-        }
-    }
-
-    updatePracticeTime() {
-        if (!this.sessionStartTime) return;
-
-        const now = Date.now();
-        const elapsedMinutes = Math.floor((now - this.sessionStartTime) / 60000);
-        
-        if (elapsedMinutes !== this.todayStats.practiceTime) {
-            this.todayStats.practiceTime = elapsedMinutes;
-            this.saveTodayStats();
-            this.updateUI();
-        }
     }
 
     loadStats() {
@@ -2437,7 +2397,6 @@ class StatisticsManager {
             } else {
                 dashboard.classList.add('open');
                 button.classList.add('active');
-                this.updatePracticeTime();
                 this.updateUI();
             }
         });
@@ -2450,51 +2409,66 @@ class StatisticsManager {
         // Handle page visibility changes
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                this.saveSessionStartTime();
-            } else {
-                this.checkDayReset();
-                if (this.sessionStartTime) {
-                    this.updatePracticeTime();
-                    if (!this.timerInterval) {
-                        this.startTimer(true);
-                    }
-                }
+                this.pauseTimer();
+            } else if (this.isActive) {
+                this.resumeTimer();
             }
         });
 
         // Handle page unload
         window.addEventListener('beforeunload', () => {
-            this.saveSessionStartTime();
+            this.stopTimer();
+        });
+
+        // Handle page close
+        window.addEventListener('unload', () => {
+            this.stopTimer();
         });
     }
 
-    startTimer(resume = false) {
+    startTimer() {
         if (this.timerInterval) return;
 
-        if (!resume) {
-            this.sessionStartTime = Date.now();
-        }
+        this.isActive = true;
+        this.sessionStartTime = Date.now();
         
-        this.saveSessionStartTime();
-        this.updatePracticeTime();
-        
-        // Update every second for smooth UI updates
         this.timerInterval = setInterval(() => {
-            this.updatePracticeTime();
+            if (this.isActive && this.sessionStartTime) {
+                const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+                this.todayStats.practiceTime = elapsedMinutes;
+                this.saveTodayStats();
+                this.updateUI();
+            }
         }, 1000);
     }
 
-    stopTimer() {
-        if (!this.timerInterval) return;
-
+    pauseTimer() {
+        if (this.sessionStartTime) {
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = elapsedMinutes;
+            this.saveTodayStats();
+        }
         clearInterval(this.timerInterval);
         this.timerInterval = null;
+    }
 
-        if (this.sessionStartTime) {
-            this.updatePracticeTime();
-            this.sessionStartTime = null;
-            this.saveSessionStartTime();
+    resumeTimer() {
+        if (this.isActive) {
+            this.sessionStartTime = Date.now() - (this.todayStats.practiceTime * 60000);
+            this.startTimer();
         }
+    }
+
+    stopTimer() {
+        this.isActive = false;
+        if (this.sessionStartTime) {
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = elapsedMinutes;
+            this.saveTodayStats();
+        }
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+        this.sessionStartTime = null;
     }
 
     checkDayReset() {
@@ -2512,11 +2486,7 @@ class StatisticsManager {
             
             this.saveTodayStats();
             localStorage.setItem('lastStatsReset', today);
-            
-            if (this.sessionStartTime) {
-                this.stopTimer();
-            }
-            
+            this.stopTimer();
             this.updateUI();
         }
     }
@@ -2664,7 +2634,7 @@ class StatisticsManager {
         this.todayStats.firstTrySuccesses = 0;
         this.todayStats.practiceTime = 0;
         this.sessionStartTime = null;
-        this.saveSessionStartTime();
+        this.isActive = false;
         this.saveTodayStats();
         this.updateUI();
     }
