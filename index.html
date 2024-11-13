@@ -2435,7 +2435,6 @@ class StatisticsManager {
         });
 
         window.addEventListener('focus', () => this.checkDayReset());
-        document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
     }
 
     startTimer() {
@@ -2450,34 +2449,6 @@ class StatisticsManager {
             this.saveSessionTime();
             this.updateUI();
         }, 30000);
-    }
-
-    handleVisibilityChange() {
-        if (document.hidden) {
-            this.pauseTimer();
-        } else {
-            this.resumeTimer();
-        }
-    }
-
-    pauseTimer() {
-        if (!this.timerInterval) return;
-
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
-
-        if (this.sessionStartTime) {
-            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-            this.lastSavedTime = this.todayStats.practiceTime;
-            this.sessionStartTime = null;
-            this.saveSessionTime();
-        }
-    }
-
-    resumeTimer() {
-        if (this.lastSavedTime > 0) {
-            this.startTimer();
-        }
     }
 
     stopTimer() {
