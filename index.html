@@ -2343,7 +2343,7 @@ class StatisticsManager {
     constructor() {
         this.sessionStartTime = null;
         this.timerInterval = null;
-        this.timeOffset = 0; // Difference between local and server time
+        this.timeOffset = 0;
         this.lastSync = null;
         this.displayTime = 0;
         
@@ -2436,7 +2436,9 @@ class StatisticsManager {
 
         if (!this.sessionStartTime) {
             this.sessionStartTime = this.getCurrentTime();
+            this.displayTime = 0;
             localStorage.setItem('sessionStartTime', this.sessionStartTime.toString());
+            localStorage.setItem('lastDisplayTime', '0');
         }
 
         // Update display every second
@@ -2448,6 +2450,7 @@ class StatisticsManager {
             if (this.displayTime !== elapsedMinutes) {
                 this.displayTime = elapsedMinutes;
                 this.todayStats.practiceTime = elapsedMinutes;
+                localStorage.setItem('lastDisplayTime', elapsedMinutes.toString());
                 
                 // Sync with server time every 5 minutes
                 if (!this.lastSync || (currentTime - this.lastSync) > 5 * 60 * 1000) {
@@ -2456,7 +2459,7 @@ class StatisticsManager {
                 
                 this.updateUI();
             }
-        }, 1000); // Update display every second but only save when minutes change
+        }, 1000);
     }
 
     stopTimer() {
@@ -2468,26 +2471,34 @@ class StatisticsManager {
         if (this.sessionStartTime) {
             const finalMinutes = Math.floor((this.getCurrentTime() - this.sessionStartTime) / 60000);
             this.todayStats.practiceTime = finalMinutes;
+            localStorage.setItem('lastDisplayTime', finalMinutes.toString());
             this.saveTodayStats();
-            this.sessionStartTime = null;
-            localStorage.removeItem('sessionStartTime');
         }
     }
 
     checkOngoingSession() {
         const savedStartTime = localStorage.getItem('sessionStartTime');
+        const lastDisplayTime = localStorage.getItem('lastDisplayTime');
         
-        if (savedStartTime) {
+        if (savedStartTime && lastDisplayTime) {
             const startTime = Number(savedStartTime);
+            const lastTime = Number(lastDisplayTime);
             const currentTime = this.getCurrentTime();
             
             // Check if the saved time is valid
-            if (!isNaN(startTime) && startTime <= currentTime && 
+            if (!isNaN(startTime) && !isNaN(lastTime) && 
+                startTime <= currentTime && 
                 (currentTime - startTime) < 24 * 60 * 60 * 1000) {
+                
+                // Resume from the last known display time
                 this.sessionStartTime = startTime;
+                this.displayTime = lastTime;
+                this.todayStats.practiceTime = lastTime;
                 this.startTimer();
             } else {
+                // Invalid or expired session, clean up
                 localStorage.removeItem('sessionStartTime');
+                localStorage.removeItem('lastDisplayTime');
             }
         }
     }
@@ -2655,7 +2666,9 @@ class StatisticsManager {
         this.todayStats.firstTrySuccesses = 0;
         this.todayStats.practiceTime = 0;
         this.sessionStartTime = null;
+        this.displayTime = 0;
         localStorage.removeItem('sessionStartTime');
+        localStorage.removeItem('lastDisplayTime');
         this.saveTodayStats();
         this.updateUI();
     }
