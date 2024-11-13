@@ -2338,18 +2338,41 @@ function displayWordList() {
 
 
 // Statistics Manager Class
+// Statistics Manager Class
 class StatisticsManager {
     constructor() {
         this.sessionStartTime = null;
-        this.displayInterval = null;
+        this.timerInterval = null;
+        this.timeOffset = 0; // Difference between local and server time
+        this.lastSync = null;
+        this.displayTime = 0;
+        
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
-        this.currentSessionMistakes = 0;
+        this.syncTime().then(() => this.checkOngoingSession());
         
-        this.checkOngoingSession();
+        this.currentSessionMistakes = 0;
         this.bindEvents();
         this.checkDayReset();
         this.updateUI();
+    }
+
+    async syncTime() {
+        try {
+            const response = await fetch('https://worldtimeapi.org/api/ip');
+            const data = await response.json();
+            const serverTime = new Date(data.datetime).getTime();
+            this.timeOffset = serverTime - Date.now();
+            this.lastSync = Date.now();
+            console.log('Time synced with server');
+        } catch (error) {
+            console.error('Failed to sync time:', error);
+            this.timeOffset = 0;
+        }
+    }
+
+    getCurrentTime() {
+        return Date.now() + this.timeOffset;
     }
 
     loadStats() {
@@ -2386,7 +2409,6 @@ class StatisticsManager {
     }
 
     bindEvents() {
-        // Existing dashboard events
         document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
             const dashboard = document.getElementById('statistics-dashboard');
             const button = document.getElementById('stats-dashboard-btn');
@@ -2406,80 +2428,49 @@ class StatisticsManager {
             document.getElementById('stats-dashboard-btn').classList.remove('active');
         });
 
-        // Add page visibility and unload handlers
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pauseTimer();
-            } else {
-                this.resumeTimer();
-            }
-        });
-
-        window.addEventListener('beforeunload', () => {
-            this.pauseTimer();
-        });
-
         window.addEventListener('focus', () => this.checkDayReset());
     }
 
     startTimer() {
-        if (this.displayInterval) return;
+        if (this.timerInterval) return;
 
         if (!this.sessionStartTime) {
-            this.sessionStartTime = Date.now();
+            this.sessionStartTime = this.getCurrentTime();
             localStorage.setItem('sessionStartTime', this.sessionStartTime.toString());
-            localStorage.setItem('lastPauseTime', '0'); // Initialize pause time
         }
 
-        this.displayInterval = setInterval(() => {
-            const currentTime = Date.now();
-            const lastPauseTime = parseInt(localStorage.getItem('lastPauseTime') || '0');
-            const adjustedStartTime = parseInt(this.sessionStartTime) + (lastPauseTime || 0);
-            const elapsedMinutes = Math.floor((currentTime - adjustedStartTime) / 60000);
+        // Update display every second
+        this.timerInterval = setInterval(() => {
+            const currentTime = this.getCurrentTime();
+            const elapsedMinutes = Math.floor((currentTime - this.sessionStartTime) / 60000);
             
-            document.getElementById('practice-time').textContent = this.formatTime(elapsedMinutes);
-            this.todayStats.practiceTime = elapsedMinutes;
-        }, 1000);
-    }
-
-    pauseTimer() {
-        if (!this.displayInterval) return;
-
-        clearInterval(this.displayInterval);
-        this.displayInterval = null;
-
-        const currentPauseTime = parseInt(localStorage.getItem('lastPauseTime') || '0');
-        const newPauseTime = currentPauseTime + (Date.now() - parseInt(localStorage.getItem('lastResumeTime') || Date.now()));
-        localStorage.setItem('lastPauseTime', newPauseTime.toString());
-    }
-
-    resumeTimer() {
-        if (this.sessionStartTime) {
-            localStorage.setItem('lastResumeTime', Date.now().toString());
-            this.startTimer();
-        }
+            // Only update if the minute has changed
+            if (this.displayTime !== elapsedMinutes) {
+                this.displayTime = elapsedMinutes;
+                this.todayStats.practiceTime = elapsedMinutes;
+                
+                // Sync with server time every 5 minutes
+                if (!this.lastSync || (currentTime - this.lastSync) > 5 * 60 * 1000) {
+                    this.syncTime();
+                }
+                
+                this.updateUI();
+            }
+        }, 1000); // Update display every second but only save when minutes change
     }
 
     stopTimer() {
-        if (!this.displayInterval) return;
+        if (!this.timerInterval) return;
 
-        clearInterval(this.displayInterval);
-        this.displayInterval = null;
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
 
         if (this.sessionStartTime) {
-            const currentTime = Date.now();
-            const lastPauseTime = parseInt(localStorage.getItem('lastPauseTime') || '0');
-            const adjustedStartTime = parseInt(this.sessionStartTime) + lastPauseTime;
-            const finalMinutes = Math.floor((currentTime - adjustedStartTime) / 60000);
-            
+            const finalMinutes = Math.floor((this.getCurrentTime() - this.sessionStartTime) / 60000);
             this.todayStats.practiceTime = finalMinutes;
             this.saveTodayStats();
-            
-            // Clear all timer-related storage
             this.sessionStartTime = null;
             localStorage.removeItem('sessionStartTime');
-            localStorage.removeItem('lastPauseTime');
-            localStorage.removeItem('lastResumeTime');
         }
     }
 
@@ -2487,12 +2478,20 @@ class StatisticsManager {
         const savedStartTime = localStorage.getItem('sessionStartTime');
         
         if (savedStartTime) {
-            this.sessionStartTime = savedStartTime;
-            this.startTimer();
+            const startTime = Number(savedStartTime);
+            const currentTime = this.getCurrentTime();
+            
+            // Check if the saved time is valid
+            if (!isNaN(startTime) && startTime <= currentTime && 
+                (currentTime - startTime) < 24 * 60 * 60 * 1000) {
+                this.sessionStartTime = startTime;
+                this.startTimer();
+            } else {
+                localStorage.removeItem('sessionStartTime');
+            }
         }
     }
 
-    // ... [Keep all other existing methods exactly the same, starting from checkDayReset()]
     checkDayReset() {
         const today = new Date().toDateString();
         const lastReset = localStorage.getItem('lastStatsReset');
@@ -2521,7 +2520,7 @@ class StatisticsManager {
 
     updateUI() {
         document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
-        document.getElementById('practice-time').textContent = this.formatTime(this.todayStats.practiceTime);
+        document.getElementById('practice-time').textContent = this.formatTime(this.displayTime);
         document.getElementById('total-practices').textContent = this.stats.totalPractices;
 
         const successRate = this.todayStats.sentences > 0
@@ -2657,8 +2656,6 @@ class StatisticsManager {
         this.todayStats.practiceTime = 0;
         this.sessionStartTime = null;
         localStorage.removeItem('sessionStartTime');
-        localStorage.removeItem('lastPauseTime');
-        localStorage.removeItem('lastResumeTime');
         this.saveTodayStats();
         this.updateUI();
     }
