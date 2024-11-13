@@ -2342,12 +2342,10 @@ function displayWordList() {
 class StatisticsManager {
     constructor() {
         this.sessionStartTime = null;
-        this.displayInterval = null;
-        this.saveInterval = null;
+        this.timerInterval = null;
         this.stats = this.loadStats();
         this.todayStats = this.loadTodayStats();
         this.currentSessionMistakes = 0;
-        this.lastSavedTime = 0;
         
         this.bindEvents();
         this.checkDayReset();
@@ -2380,12 +2378,7 @@ class StatisticsManager {
     }
 
     saveTodayStats() {
-        // Only save if the time difference is significant (5 minutes)
-        const currentTime = this.todayStats.practiceTime;
-        if (Math.abs(currentTime - this.lastSavedTime) >= 5) {
-            localStorage.setItem('todayStats', JSON.stringify(this.todayStats));
-            this.lastSavedTime = currentTime;
-        }
+        localStorage.setItem('todayStats', JSON.stringify(this.todayStats));
     }
 
     saveStats() {
@@ -2412,86 +2405,34 @@ class StatisticsManager {
             document.getElementById('stats-dashboard-btn').classList.remove('active');
         });
 
-        // Use visibility API for more accurate session tracking
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pauseTimer();
-            } else {
-                this.resumeTimer();
-                this.checkDayReset();
-            }
-        });
-
-        // Handle window focus/blur
-        window.addEventListener('blur', () => this.pauseTimer());
-        window.addEventListener('focus', () => {
-            this.resumeTimer();
-            this.checkDayReset();
-        });
+        window.addEventListener('focus', () => this.checkDayReset());
     }
 
     startTimer() {
-        if (this.displayInterval) return;
+        if (this.timerInterval) return;
 
-        this.sessionStartTime = Date.now() - (this.todayStats.practiceTime * 60000);
+        this.sessionStartTime = Date.now();
         
-        // Update display every second
-        this.displayInterval = requestAnimationFrame(this.updateTimer.bind(this));
-        
-        // Save to localStorage every 5 minutes
-        this.saveInterval = setInterval(() => {
+        this.timerInterval = setInterval(() => {
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = elapsedMinutes;
             this.saveTodayStats();
-        }, 300000); // 5 minutes
-    }
-
-    updateTimer() {
-        if (!this.sessionStartTime) return;
-        
-        const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-        this.todayStats.practiceTime = elapsedMinutes;
-        
-        // Update UI with current time
-        document.getElementById('practice-time').textContent = this.formatTime(elapsedMinutes);
-        
-        // Request next frame
-        this.displayInterval = requestAnimationFrame(this.updateTimer.bind(this));
-    }
-
-    pauseTimer() {
-        if (this.displayInterval) {
-            cancelAnimationFrame(this.displayInterval);
-            this.displayInterval = null;
-        }
-        if (this.saveInterval) {
-            clearInterval(this.saveInterval);
-            this.saveInterval = null;
-        }
-        // Save current progress
-        this.saveTodayStats();
-    }
-
-    resumeTimer() {
-        if (this.sessionStartTime) {
-            this.startTimer();
-        }
+            this.updateUI();
+        }, 30000);
     }
 
     stopTimer() {
-        if (!this.sessionStartTime) return;
+        if (!this.timerInterval) return;
 
-        if (this.displayInterval) {
-            cancelAnimationFrame(this.displayInterval);
-            this.displayInterval = null;
-        }
-        if (this.saveInterval) {
-            clearInterval(this.saveInterval);
-            this.saveInterval = null;
-        }
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
 
-        const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-        this.todayStats.practiceTime = finalMinutes;
-        this.saveTodayStats();
-        this.sessionStartTime = null;
+        if (this.sessionStartTime) {
+            const finalMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = finalMinutes;
+            this.saveTodayStats();
+            this.sessionStartTime = null;
+        }
     }
 
     checkDayReset() {
@@ -2650,19 +2591,17 @@ class StatisticsManager {
         this.updateUI();
     }
 
-    resetDailyStats() {
-        this.stopTimer();
-        this.currentSessionMistakes = 0;
-        this.todayStats.sentences = 0;
-        this.todayStats.firstTrySuccesses = 0;
-        this.todayStats.practiceTime = 0;
-        this.sessionStartTime = null;
-        this.displayInterval = null;
-        this.saveInterval = null;
-        this.lastSavedTime = 0;
-        this.saveTodayStats();
-        this.updateUI();
-    }
+resetDailyStats() {
+    this.stopTimer();
+    this.currentSessionMistakes = 0;
+    this.todayStats.sentences = 0;
+    this.todayStats.firstTrySuccesses = 0;
+    this.todayStats.practiceTime = 0;
+    this.sessionStartTime = null;
+    this.timerInterval = null;
+    this.saveTodayStats();
+    this.updateUI();
+  }
 }
 
 // Initialize statistics manager
