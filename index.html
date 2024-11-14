@@ -1910,7 +1910,10 @@ function checkText() {
         ResultManager.showErrorMessage(incorrectWord, correctWord);
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
-        statisticsManager.recordMistake(incorrectWord, correctWord);
+        if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
+    statisticsManager.recordMistake(incorrectWord, correctWord);
+}
+
         document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
         ResultManager.showProgress();
@@ -2507,20 +2510,26 @@ class StatisticsManager {
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
         const mistakesList = document.getElementById('recent-mistakes');
-        if (this.todayStats.mistakes.length > 0) {
-            mistakesList.innerHTML = this.todayStats.mistakes
-                .map(mistake => `
-                    <div class="mistake-item">
-                        <div style="color: #EF4444;">Incorrect: ${mistake.incorrect}</div>
-                        <div style="color: #10B981;">Correct: ${mistake.correct}</div>
-                        <div style="color: #6B7280; font-size: 0.8rem;">
-                            ${new Date(mistake.timestamp).toLocaleTimeString()}
-                        </div>
+if (this.todayStats.mistakes.length > 0) {
+    mistakesList.innerHTML = this.todayStats.mistakes
+        .map(mistake => {
+            // Remove punctuation from both incorrect and correct words for display
+            const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, ''); 
+            const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, ''); 
+            return `
+                <div class="mistake-item">
+                    <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
+                    <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
+                    <div style="color: #6B7280; font-size: 0.8rem;">
+                        ${new Date(mistake.timestamp).toLocaleTimeString()}
                     </div>
-                `).join('');
-        } else {
-            mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
-        }
+                </div>
+            `;
+        }).join('');
+} else {
+    mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
+}
+
 
         const historyList = document.getElementById('practice-history');
         if (this.stats.practiceHistory.length > 0) {
