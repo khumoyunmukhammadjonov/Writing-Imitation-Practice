@@ -1301,6 +1301,116 @@ button#view-word-list-btn.word-list-btn:hover {
     }
 }
 
+
+
+/* Add these styles to your existing CSS */
+/* Spelling Mistakes UI */
+.mistake-item {
+    background-color: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.mistake-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rewrite-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.rewrite-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+.rewrite-section {
+    margin-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 12px;
+}
+
+.rewrite-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.rewrite-input {
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    background-color: white;
+    color: #1f2937;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.rewrite-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.rewrite-input::placeholder {
+    color: #9ca3af;
+}
+
+.check-rewrites-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.check-rewrites-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+/* Dark mode styles */
+.low-light-mode .mistake-item {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+.low-light-mode .rewrite-section {
+    border-color: #404040;
+}
+
+.low-light-mode .rewrite-input {
+    background-color: #1e1e1e;
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+.low-light-mode .rewrite-input::placeholder {
+    color: #6b7280;
+}
+
+.low-light-mode .rewrite-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
+}
  </style>
 </head>
 <body>
@@ -2342,6 +2452,7 @@ function displayWordList() {
 
 // Statistics Manager Class
 // Statistics Manager Class
+// Statistics Dashboard Implementation
 class StatisticsManager {
     constructor() {
         this.sessionStartTime = null;
@@ -2362,6 +2473,7 @@ class StatisticsManager {
         }
     }
 
+    // Data Loading Methods
     loadStats() {
         return JSON.parse(localStorage.getItem('practiceStats')) || {
             streak: 0,
@@ -2402,6 +2514,7 @@ class StatisticsManager {
         return saved;
     }
 
+    // Data Saving Methods
     saveTodayStats() {
         localStorage.setItem('todayStats', JSON.stringify(this.todayStats));
     }
@@ -2417,6 +2530,7 @@ class StatisticsManager {
         }));
     }
 
+    // Event Binding
     bindEvents() {
         document.getElementById('stats-dashboard-btn').addEventListener('click', () => {
             const dashboard = document.getElementById('statistics-dashboard');
@@ -2440,6 +2554,7 @@ class StatisticsManager {
         window.addEventListener('focus', () => this.checkDayReset());
     }
 
+    // Timer Management
     startTimer() {
         if (this.timerInterval) return;
 
@@ -2471,6 +2586,7 @@ class StatisticsManager {
         localStorage.removeItem('activeSession');
     }
 
+    // Day Reset Check
     checkDayReset() {
         const today = new Date().toDateString();
         const lastReset = localStorage.getItem('lastStatsReset');
@@ -2493,35 +2609,53 @@ class StatisticsManager {
         }
     }
 
+    // Utility Methods
     formatTime(minutes) {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         return `${hours}h ${mins}m`;
     }
 
+    // UI Update Methods
     updateUI() {
+        // Update basic stats
         document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
         document.getElementById('practice-time').textContent = this.formatTime(this.todayStats.practiceTime);
         document.getElementById('total-practices').textContent = this.stats.totalPractices;
 
+        // Update success rate
         const successRate = this.todayStats.sentences > 0
             ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
             : 0;
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
-        const mistakesList = document.getElementById('recent-mistakes');
+        // Update mistakes list
+       const mistakesList = document.getElementById('recent-mistakes');
 if (this.todayStats.mistakes.length > 0) {
     mistakesList.innerHTML = this.todayStats.mistakes
-        .map(mistake => {
-            // Remove punctuation from both incorrect and correct words for display
-            const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, ''); 
-            const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, ''); 
+        .map((mistake, index) => {
+            const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, '');
+            const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, '');
             return `
                 <div class="mistake-item">
-                    <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
-                    <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
-                    <div style="color: #6B7280; font-size: 0.8rem;">
-                        ${new Date(mistake.timestamp).toLocaleTimeString()}
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <div>
+                            <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
+                            <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
+                        </div>
+                        <button onclick="statisticsManager.startRewrite(${index})" class="rewrite-btn">
+                            <i class="fi fi-rr-refresh"></i> Rewrite
+                        </button>
+                    </div>
+                    <div class="rewrite-section" id="rewrite-section-${index}" style="display: none;">
+                        <div class="rewrite-inputs">
+                            <input type="text" class="rewrite-input" id="rewrite-1-${index}" placeholder="First attempt">
+                            <input type="text" class="rewrite-input" id="rewrite-2-${index}" placeholder="Second attempt">
+                            <input type="text" class="rewrite-input" id="rewrite-3-${index}" placeholder="Third attempt">
+                        </div>
+                        <button onclick="statisticsManager.checkRewrites(${index})" class="check-rewrites-btn">
+                            Check
+                        </button>
                     </div>
                 </div>
             `;
@@ -2530,7 +2664,7 @@ if (this.todayStats.mistakes.length > 0) {
     mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
 }
 
-
+        // Update practice history
         const historyList = document.getElementById('practice-history');
         if (this.stats.practiceHistory.length > 0) {
             historyList.innerHTML = this.stats.practiceHistory
@@ -2563,6 +2697,7 @@ if (this.todayStats.mistakes.length > 0) {
         }
     }
 
+    // Session Management Methods
     startPracticeSession() {
         this.startTimer();
         this.updateStreak();
@@ -2596,6 +2731,7 @@ if (this.todayStats.mistakes.length > 0) {
         this.updateUI();
     }
 
+    // Streak Management
     updateStreak() {
         const today = new Date().toDateString();
         const lastPractice = this.stats.lastPracticeDate ? 
@@ -2614,6 +2750,7 @@ if (this.todayStats.mistakes.length > 0) {
         this.saveStats();
     }
 
+    // Mistake Management Methods
     recordMistake(incorrect, correct) {
         const mistake = {
             incorrect,
@@ -2628,6 +2765,51 @@ if (this.todayStats.mistakes.length > 0) {
         this.updateUI();
     }
 
+   startRewrite(index) {
+    const mistake = this.todayStats.mistakes[index];
+    if (!mistake) return;
+
+    const rewriteSection = document.getElementById(`rewrite-section-${index}`);
+    if (rewriteSection) {
+        rewriteSection.style.display = rewriteSection.style.display === 'none' ? 'block' : 'none';
+        
+        if (rewriteSection.style.display === 'block') {
+            for (let i = 1; i <= 3; i++) {
+                const input = document.getElementById(`rewrite-${i}-${index}`);
+                if (input) input.value = '';
+            }
+        }
+    }
+}
+
+checkRewrites(index) {
+    const mistake = this.todayStats.mistakes[index];
+    if (!mistake) return;
+
+    const correctWord = mistake.correct.replace(/[.,!?]/g, '');
+    let allCorrect = true;
+
+    for (let i = 1; i <= 3; i++) {
+        const input = document.getElementById(`rewrite-${i}-${index}`);
+        if (!input || !input.value) {
+            alert('Please complete all three attempts');
+            return;
+        }
+
+        const attempt = input.value.trim().replace(/[.,!?]/g, '');
+        if (attempt.toLowerCase() !== correctWord.toLowerCase()) {
+            allCorrect = false;
+        }
+    }
+
+    if (allCorrect) {
+        this.todayStats.mistakes.splice(index, 1);
+        this.saveTodayStats();
+        this.updateUI();
+    } else {
+        alert('Please try again. All three attempts must be correct.');
+    }
+}
     recordFirstTrySuccess() {
         this.todayStats.sentences++;
         this.todayStats.firstTrySuccesses++;
