@@ -1411,6 +1411,9 @@ button#view-word-list-btn.word-list-btn:hover {
     border-color: #4CAF50;
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
 }
+
+
+
  </style>
 </head>
 <body>
@@ -2630,7 +2633,7 @@ class StatisticsManager {
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
         // Update mistakes list
-       const mistakesList = document.getElementById('recent-mistakes');
+      const mistakesList = document.getElementById('recent-mistakes');
 if (this.todayStats.mistakes.length > 0) {
     mistakesList.innerHTML = this.todayStats.mistakes
         .map((mistake, index) => {
@@ -2649,9 +2652,33 @@ if (this.todayStats.mistakes.length > 0) {
                     </div>
                     <div class="rewrite-section" id="rewrite-section-${index}" style="display: none;">
                         <div class="rewrite-inputs">
-                            <input type="text" class="rewrite-input" id="rewrite-1-${index}" placeholder="First attempt">
-                            <input type="text" class="rewrite-input" id="rewrite-2-${index}" placeholder="Second attempt">
-                            <input type="text" class="rewrite-input" id="rewrite-3-${index}" placeholder="Third attempt">
+                            <input type="text" 
+                                class="rewrite-input" 
+                                id="rewrite-1-${index}" 
+                                placeholder="First attempt"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                data-form-type="other">
+                            <input type="text" 
+                                class="rewrite-input" 
+                                id="rewrite-2-${index}" 
+                                placeholder="Second attempt"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                data-form-type="other">
+                            <input type="text" 
+                                class="rewrite-input" 
+                                id="rewrite-3-${index}" 
+                                placeholder="Third attempt"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                data-form-type="other">
                         </div>
                         <button onclick="statisticsManager.checkRewrites(${index})" class="check-rewrites-btn">
                             Check
