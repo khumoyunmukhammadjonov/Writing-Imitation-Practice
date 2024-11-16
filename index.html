@@ -2595,10 +2595,12 @@ class StatisticsManager {
         const lastReset = localStorage.getItem('lastStatsReset');
 
         if (lastReset !== today) {
+            const previousMistakes = this.todayStats.mistakes || [];
+            
             this.todayStats = {
                 date: today,
                 practiceTime: 0,
-                mistakes: [],
+                mistakes: previousMistakes,
                 sentences: 0,
                 firstTrySuccesses: 0
             };
@@ -2611,7 +2613,6 @@ class StatisticsManager {
             this.updateUI();
         }
     }
-
     // Utility Methods
     formatTime(minutes) {
         const hours = Math.floor(minutes / 60);
