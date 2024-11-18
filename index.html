@@ -1414,6 +1414,37 @@ button#view-word-list-btn.word-list-btn:hover {
 
 
 
+.delete-history-btn {
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.delete-history-btn:hover {
+    background-color: #DC2626;
+    transform: translateY(-1px);
+}
+
+.delete-history-btn i {
+    font-size: 16px;
+}
+
+/* Dark mode styles */
+.low-light-mode .delete-history-btn {
+    background-color: #DC2626;
+}
+
+.low-light-mode .delete-history-btn:hover {
+    background-color: #B91C1C;
+}
  </style>
 </head>
 <body>
@@ -2590,30 +2621,30 @@ class StatisticsManager {
     }
 
     // Day Reset Check
-   checkDayReset() {
-    const today = new Date().toDateString();
-    const lastReset = localStorage.getItem('lastStatsReset');
+    checkDayReset() {
+        const today = new Date().toDateString();
+        const lastReset = localStorage.getItem('lastStatsReset');
 
-    if (lastReset !== today) {
-        // Keep the existing mistakes array
-        const currentMistakes = this.todayStats.mistakes || [];
-        
-        this.todayStats = {
-            date: today,
-            practiceTime: 0,
-            mistakes: currentMistakes, // Preserve the mistakes
-            sentences: 0,
-            firstTrySuccesses: 0
-        };
-        
-        this.saveTodayStats();
-        localStorage.setItem('lastStatsReset', today);
-        this.stopTimer();
-        this.lastSavedTime = 0;
-        localStorage.removeItem('activeSession');
-        this.updateUI();
+        if (lastReset !== today) {
+            const previousMistakes = this.todayStats.mistakes || [];
+            
+            this.todayStats = {
+                date: today,
+                practiceTime: 0,
+                mistakes: previousMistakes,
+                sentences: 0,
+                firstTrySuccesses: 0
+            };
+            
+            this.saveTodayStats();
+            localStorage.setItem('lastStatsReset', today);
+            this.stopTimer();
+            this.lastSavedTime = 0;
+            localStorage.removeItem('activeSession');
+            this.updateUI();
+        }
     }
-}
+
     // Utility Methods
     formatTime(minutes) {
         const hours = Math.floor(minutes / 60);
@@ -2635,94 +2666,108 @@ class StatisticsManager {
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
         // Update mistakes list
-      const mistakesList = document.getElementById('recent-mistakes');
-if (this.todayStats.mistakes.length > 0) {
-    mistakesList.innerHTML = this.todayStats.mistakes
-        .map((mistake, index) => {
-            const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, '');
-            const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, '');
-            return `
-                <div class="mistake-item">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <div>
-                            <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
-                            <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
+        const mistakesList = document.getElementById('recent-mistakes');
+        if (this.todayStats.mistakes.length > 0) {
+            mistakesList.innerHTML = this.todayStats.mistakes
+                .map((mistake, index) => {
+                    const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, '');
+                    const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, '');
+                    return `
+                        <div class="mistake-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <div>
+                                    <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
+                                    <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
+                                </div>
+                                <button onclick="statisticsManager.startRewrite(${index})" class="rewrite-btn">
+                                    <i class="fi fi-rr-refresh"></i> Rewrite
+                                </button>
+                            </div>
+                            <div class="rewrite-section" id="rewrite-section-${index}" style="display: none;">
+                                <div class="rewrite-inputs">
+                                    <input type="text" 
+                                        class="rewrite-input" 
+                                        id="rewrite-1-${index}" 
+                                        placeholder="First attempt"
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        autocapitalize="off"
+                                        spellcheck="false"
+                                        data-form-type="other">
+                                    <input type="text" 
+                                        class="rewrite-input" 
+                                        id="rewrite-2-${index}" 
+                                        placeholder="Second attempt"
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        autocapitalize="off"
+                                        spellcheck="false"
+                                        data-form-type="other">
+                                    <input type="text" 
+                                        class="rewrite-input" 
+                                        id="rewrite-3-${index}" 
+                                        placeholder="Third attempt"
+                                        autocomplete="off"
+                                        autocorrect="off"
+                                        autocapitalize="off"
+                                        spellcheck="false"
+                                        data-form-type="other">
+                                </div>
+                                <button onclick="statisticsManager.checkRewrites(${index})" class="check-rewrites-btn">
+                                    Check
+                                </button>
+                            </div>
                         </div>
-                        <button onclick="statisticsManager.startRewrite(${index})" class="rewrite-btn">
-                            <i class="fi fi-rr-refresh"></i> Rewrite
-                        </button>
-                    </div>
-                    <div class="rewrite-section" id="rewrite-section-${index}" style="display: none;">
-                        <div class="rewrite-inputs">
-                            <input type="text" 
-                                class="rewrite-input" 
-                                id="rewrite-1-${index}" 
-                                placeholder="First attempt"
-                                autocomplete="off"
-                                autocorrect="off"
-                                autocapitalize="off"
-                                spellcheck="false"
-                                data-form-type="other">
-                            <input type="text" 
-                                class="rewrite-input" 
-                                id="rewrite-2-${index}" 
-                                placeholder="Second attempt"
-                                autocomplete="off"
-                                autocorrect="off"
-                                autocapitalize="off"
-                                spellcheck="false"
-                                data-form-type="other">
-                            <input type="text" 
-                                class="rewrite-input" 
-                                id="rewrite-3-${index}" 
-                                placeholder="Third attempt"
-                                autocomplete="off"
-                                autocorrect="off"
-                                autocapitalize="off"
-                                spellcheck="false"
-                                data-form-type="other">
-                        </div>
-                        <button onclick="statisticsManager.checkRewrites(${index})" class="check-rewrites-btn">
-                            Check
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-} else {
-    mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
-}
+                    `;
+                }).join('');
+        } else {
+            mistakesList.innerHTML = '<p class="empty-state">No mistakes recorded today</p>';
+        }
 
-        // Update practice history
+        // Update practice history with delete button
         const historyList = document.getElementById('practice-history');
         if (this.stats.practiceHistory.length > 0) {
-            historyList.innerHTML = this.stats.practiceHistory
-                .map(session => `
-                    <div class="history-item">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span>${new Date(session.date).toLocaleDateString()}</span>
-                            <span>${session.sentences} sentences</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                            <div style="color: #6B7280; font-size: 0.875rem;">
-                                Time: ${this.formatTime(session.duration)}
+            historyList.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <button onclick="statisticsManager.clearPracticeHistory()" class="delete-history-btn">
+                        <i class="fi fi-rr-trash"></i> Clear History
+                    </button>
+                </div>
+                ${this.stats.practiceHistory
+                    .map(session => `
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>${new Date(session.date).toLocaleDateString()}</span>
+                                <span>${session.sentences} sentences</span>
                             </div>
-                            <div style="color: ${session.mistakes === 0 ? '#10B981' : '#EF4444'}; font-size: 0.875rem;">
-                                Mistakes: ${session.mistakes}
+                            <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                                <div style="color: #6B7280; font-size: 0.875rem;">
+                                    Time: ${this.formatTime(session.duration)}
+                                </div>
+                                <div style="color: ${session.mistakes === 0 ? '#10B981' : '#EF4444'}; font-size: 0.875rem;">
+                                    Mistakes: ${session.mistakes}
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                                <div style="font-size: 0.875rem;">
+                                    Success Rate: <span style="color: ${
+                                        session.successRate >= 80 ? '#10B981' : 
+                                        session.successRate >= 50 ? '#FCD34D' : '#EF4444'
+                                    }">${session.successRate}%</span>
+                                </div>
                             </div>
                         </div>
-                        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
-                            <div style="font-size: 0.875rem;">
-                                Success Rate: <span style="color: ${
-                                    session.successRate >= 80 ? '#10B981' : 
-                                    session.successRate >= 50 ? '#FCD34D' : '#EF4444'
-                                }">${session.successRate}%</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('')}`;
         } else {
             historyList.innerHTML = '<p class="empty-state">No practice history available</p>';
+        }
+    }
+
+    clearPracticeHistory() {
+        if (confirm('Are you sure you want to clear your practice history? This action cannot be undone.')) {
+            this.stats.practiceHistory = [];
+            this.saveStats();
+            this.updateUI();
         }
     }
 
@@ -2794,51 +2839,52 @@ if (this.todayStats.mistakes.length > 0) {
         this.updateUI();
     }
 
-   startRewrite(index) {
-    const mistake = this.todayStats.mistakes[index];
-    if (!mistake) return;
+    startRewrite(index) {
+        const mistake = this.todayStats.mistakes[index];
+        if (!mistake) return;
 
-    const rewriteSection = document.getElementById(`rewrite-section-${index}`);
-    if (rewriteSection) {
-        rewriteSection.style.display = rewriteSection.style.display === 'none' ? 'block' : 'none';
-        
-        if (rewriteSection.style.display === 'block') {
-            for (let i = 1; i <= 3; i++) {
-                const input = document.getElementById(`rewrite-${i}-${index}`);
-                if (input) input.value = '';
+        const rewriteSection = document.getElementById(`rewrite-section-${index}`);
+        if (rewriteSection) {
+            rewriteSection.style.display = rewriteSection.style.display === 'none' ? 'block' : 'none';
+            
+            if (rewriteSection.style.display === 'block') {
+                for (let i = 1; i <= 3; i++) {
+                    const input = document.getElementById(`rewrite-${i}-${index}`);
+                    if (input) input.value = '';
+                }
             }
         }
     }
-}
 
-checkRewrites(index) {
-    const mistake = this.todayStats.mistakes[index];
-    if (!mistake) return;
+    checkRewrites(index) {
+        const mistake = this.todayStats.mistakes[index];
+        if (!mistake) return;
 
-    const correctWord = mistake.correct.replace(/[.,!?]/g, '');
-    let allCorrect = true;
+        const correctWord = mistake.correct.replace(/[.,!?]/g, '');
+        let allCorrect = true;
 
-    for (let i = 1; i <= 3; i++) {
-        const input = document.getElementById(`rewrite-${i}-${index}`);
-        if (!input || !input.value) {
-            alert('Please complete all three attempts');
-            return;
+        for (let i = 1; i <= 3; i++) {
+            const input = document.getElementById(`rewrite-${i}-${index}`);
+            if (!input || !input.value) {
+                alert('Please complete all three attempts');
+                return;
+            }
+
+            const attempt = input.value.trim().replace(/[.,!?]/g, '');
+            if (attempt.toLowerCase() !== correctWord.toLowerCase()) {
+                allCorrect = false;
+            }
         }
 
-        const attempt = input.value.trim().replace(/[.,!?]/g, '');
-        if (attempt.toLowerCase() !== correctWord.toLowerCase()) {
-            allCorrect = false;
+        if (allCorrect) {
+            this.todayStats.mistakes.splice(index, 1);
+            this.saveTodayStats();
+            this.updateUI();
+        } else {
+            alert('Please try again. All three attempts must be correct.');
         }
     }
 
-    if (allCorrect) {
-        this.todayStats.mistakes.splice(index, 1);
-        this.saveTodayStats();
-        this.updateUI();
-    } else {
-        alert('Please try again. All three attempts must be correct.');
-    }
-}
     recordFirstTrySuccess() {
         this.todayStats.sentences++;
         this.todayStats.firstTrySuccesses++;
