@@ -2590,29 +2590,30 @@ class StatisticsManager {
     }
 
     // Day Reset Check
-    checkDayReset() {
-        const today = new Date().toDateString();
-        const lastReset = localStorage.getItem('lastStatsReset');
+   checkDayReset() {
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem('lastStatsReset');
 
-        if (lastReset !== today) {
-            const previousMistakes = this.todayStats.mistakes || [];
-            
-            this.todayStats = {
-                date: today,
-                practiceTime: 0,
-                mistakes: previousMistakes,
-                sentences: 0,
-                firstTrySuccesses: 0
-            };
-            
-            this.saveTodayStats();
-            localStorage.setItem('lastStatsReset', today);
-            this.stopTimer();
-            this.lastSavedTime = 0;
-            localStorage.removeItem('activeSession');
-            this.updateUI();
-        }
+    if (lastReset !== today) {
+        // Keep the existing mistakes array
+        const currentMistakes = this.todayStats.mistakes || [];
+        
+        this.todayStats = {
+            date: today,
+            practiceTime: 0,
+            mistakes: currentMistakes, // Preserve the mistakes
+            sentences: 0,
+            firstTrySuccesses: 0
+        };
+        
+        this.saveTodayStats();
+        localStorage.setItem('lastStatsReset', today);
+        this.stopTimer();
+        this.lastSavedTime = 0;
+        localStorage.removeItem('activeSession');
+        this.updateUI();
     }
+}
     // Utility Methods
     formatTime(minutes) {
         const hours = Math.floor(minutes / 60);
