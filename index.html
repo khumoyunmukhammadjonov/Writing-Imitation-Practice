@@ -1426,6 +1426,7 @@ button#view-word-list-btn.word-list-btn:hover {
     gap: 6px;
     font-size: 14px;
     transition: all 0.2s ease;
+    margin: 20px auto 0;  /* Center the button with margin */
 }
 
 .delete-history-btn:hover {
@@ -2655,18 +2656,18 @@ class StatisticsManager {
     // UI Update Methods
     updateUI() {
         // Update basic stats
-        document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
+            document.getElementById('streak-count').textContent = `${this.stats.streak} days`;
         document.getElementById('practice-time').textContent = this.formatTime(this.todayStats.practiceTime);
         document.getElementById('total-practices').textContent = this.stats.totalPractices;
 
         // Update success rate
-        const successRate = this.todayStats.sentences > 0
+               const successRate = this.todayStats.sentences > 0
             ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
             : 0;
         document.getElementById('success-rate').textContent = `${successRate}%`;
 
         // Update mistakes list
-        const mistakesList = document.getElementById('recent-mistakes');
+         const mistakesList = document.getElementById('recent-mistakes');
         if (this.todayStats.mistakes.length > 0) {
             mistakesList.innerHTML = this.todayStats.mistakes
                 .map((mistake, index) => {
@@ -2728,11 +2729,6 @@ class StatisticsManager {
         const historyList = document.getElementById('practice-history');
         if (this.stats.practiceHistory.length > 0) {
             historyList.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <button onclick="statisticsManager.clearPracticeHistory()" class="delete-history-btn">
-                        <i class="fi fi-rr-trash"></i> Clear History
-                    </button>
-                </div>
                 ${this.stats.practiceHistory
                     .map(session => `
                         <div class="history-item">
@@ -2757,11 +2753,17 @@ class StatisticsManager {
                                 </div>
                             </div>
                         </div>
-                    `).join('')}`;
+                    `).join('')}
+                <button onclick="statisticsManager.clearPracticeHistory()" class="delete-history-btn">
+                    <i class="fi fi-rr-trash"></i> Clear History
+                </button>`;
         } else {
             historyList.innerHTML = '<p class="empty-state">No practice history available</p>';
         }
     }
+
+
+}
 
     clearPracticeHistory() {
         if (confirm('Are you sure you want to clear your practice history? This action cannot be undone.')) {
