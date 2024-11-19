@@ -2535,21 +2535,21 @@ class StatisticsManager {
     }
 
     loadTodayStats() {
-        const today = new Date().toDateString();
-        const saved = localStorage.getItem('todayStats');
-        const savedStats = saved ? JSON.parse(saved) : {};
-        
-        if (savedStats.date !== today) {
-            return {
-                date: today,
-                practiceTime: 0,
-                mistakes: [],
-                sentences: 0,
-                firstTrySuccesses: 0
-            };
-        }
-        return savedStats;
+    const today = new Date().toDateString();
+    const saved = localStorage.getItem('todayStats');
+    const savedStats = saved ? JSON.parse(saved) : {};
+    
+    if (savedStats.date !== today) {
+        return {
+            date: today,
+            practiceTime: 0,
+            mistakes: savedStats.mistakes || [], // Preserve existing mistakes
+            sentences: 0,
+            firstTrySuccesses: 0
+        };
     }
+    return savedStats;
+}
 
     // Event Binding
     bindEvents() {
@@ -2626,27 +2626,30 @@ class StatisticsManager {
     }
 
     // Day Reset Check
-    checkDayReset() {
-        const today = new Date().toDateString();
-        const lastReset = localStorage.getItem('lastStatsReset');
+   checkDayReset() {
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem('lastStatsReset');
 
-        if (lastReset !== today) {
-            this.todayStats = {
-                date: today,
-                practiceTime: 0,
-                mistakes: [],
-                sentences: 0,
-                firstTrySuccesses: 0
-            };
-            
-            this.saveTodayStats();
-            localStorage.setItem('lastStatsReset', today);
-            this.stopTimer();
-            this.lastSavedTime = 0;
-            localStorage.removeItem('activeSession');
-            this.updateUI();
-        }
+    if (lastReset !== today) {
+        // Keep the existing mistakes array
+        const existingMistakes = this.todayStats.mistakes || [];
+        
+        this.todayStats = {
+            date: today,
+            practiceTime: 0,
+            mistakes: existingMistakes, // Preserve the mistakes array
+            sentences: 0,
+            firstTrySuccesses: 0
+        };
+        
+        this.saveTodayStats();
+        localStorage.setItem('lastStatsReset', today);
+        this.stopTimer();
+        this.lastSavedTime = 0;
+        localStorage.removeItem('activeSession');
+        this.updateUI();
     }
+}
 
     // UI Update Methods
     updateUI() {
