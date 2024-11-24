@@ -3159,27 +3159,24 @@ checkStep(index, step) {
     }
 
     endPracticeSession(completedSentences) {
-        this.stopTimer();
-        this.stats.totalPractices++;
+    this.stopTimer();
+    this.stats.totalPractices++;
 
-        const successRate = this.todayStats.sentences > 0
-            ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
-            : 0;
+    const successRate = this.todayStats.sentences > 0
+        ? Math.round((this.todayStats.firstTrySuccesses / this.todayStats.sentences) * 100)
+        : 0;
 
-        this.stats.practiceHistory.unshift({
-            date: new Date().toISOString(),
-            sentences: completedSentences,
-            duration: this.todayStats.practiceTime,
-            mistakes: this.currentSessionMistakes,
-            successRate: successRate
-        });
-
-        // Keep only last 30 sessions
-        this.stats.practiceHistory = this.stats.practiceHistory.slice(0, 30);
-        
-        this.saveStats();
-        this.updateUI();
-    }
+    this.stats.practiceHistory.unshift({
+        date: new Date().toISOString(),
+        sentences: completedSentences,
+        duration: this.todayStats.practiceTime,
+        mistakes: this.currentSessionMistakes,
+        successRate: successRate
+    });
+    
+    this.saveStats();
+    this.updateUI();
+}
 
     // Streak Management
    // Update the updateStreak method in the StatisticsManager class
