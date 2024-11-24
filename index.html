@@ -180,7 +180,7 @@ button:hover {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 900;  /* Reduced from 1000 to be below statistics dashboard */
     border: 1px solid rgba(0, 0, 0, 0.05);
     padding: 4px;
     gap: 4px;
@@ -1122,10 +1122,12 @@ button#view-word-list-btn.word-list-btn:hover {
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
-    z-index: 1000;
+    z-index: 1000;  /* Keep this higher than toggle-and-list-container */
     overflow-y: auto;
     border-left: 1px solid #e5e7eb;
 }
+
+
 
 .statistics-dashboard.open {
     transform: translateX(0);
@@ -1319,8 +1321,7 @@ button#view-word-list-btn.word-list-btn:hover {
 }
 
 .rewrite-btn {
-    background-color: #4CAF50;
-    color: white;
+    color: #4CAF50;
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
@@ -1330,11 +1331,13 @@ button#view-word-list-btn.word-list-btn:hover {
     gap: 6px;
     font-size: 14px;
     transition: all 0.2s ease;
+    background: transparent;
 }
 
 .rewrite-btn:hover {
-    background-color: #45a049;
     transform: translateY(-1px);
+    color: #45a049;
+    background: rgba(76, 175, 80, 0.1);
 }
 
 .rewrite-section {
@@ -1412,7 +1415,25 @@ button#view-word-list-btn.word-list-btn:hover {
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
 }
 
+/* Override any existing dark mode styles */
+.low-light-mode .rewrite-btn {
+    background: transparent;
+}
 
+.low-light-mode .rewrite-btn:hover {
+    background: rgba(76, 175, 80, 0.1);
+    color: #45a049;
+}
+
+.low-light-mode .dashboard-section h3 .fi-rr-exclamation,
+.low-light-mode .dashboard-section h3 .fi-rr-time-past {
+    color: #E0E0E0;
+}
+
+.low-light-mode .dashboard-section h3:has(.fi-rr-exclamation),
+.low-light-mode .dashboard-section h3:has(.fi-rr-time-past) {
+    color: #E0E0E0;
+}
 
 .delete-history-btn {
     background-color: #EF4444;
@@ -1446,6 +1467,171 @@ button#view-word-list-btn.word-list-btn:hover {
 .low-light-mode .delete-history-btn:hover {
     background-color: #B91C1C;
 }
+
+
+
+
+
+
+
+
+
+
+
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem;
+}
+
+
+.step {
+    font-size: 0.875rem;
+    color: #6B7280;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.step.active {
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.step.completed {
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+
+/* Rewrite Steps */
+.rewrite-step {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    /* Remove the gap property as we'll control spacing explicitly */
+}
+
+.word-display {
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    border: 1px solid #E5E7EB;
+    min-height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Add consistent margin bottom */
+    margin-bottom: 16px !important; /* Using !important to ensure consistency */
+}
+
+.hidden-word {
+    letter-spacing: 0.25rem;
+    font-family: monospace;
+}
+
+
+
+.show-word-btn:hover {
+    background: #45a049;
+}
+
+.rewrite-input {
+    padding: 0.75rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    /* Remove any margin */
+    margin: 0;
+}
+
+.rewrite-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+/* Success/Error States */
+.rewrite-input.correct {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.rewrite-input.incorrect {
+    border-color: #EF4444;
+    background-color: rgba(239, 68, 68, 0.1);
+    animation: shake 0.5s ease;
+}
+
+.check-step-btn {
+    padding: 0.75rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.check-step-btn:hover {
+    background: #45a049;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+/* Dark Mode Styles */
+.low-light-mode .step-indicator {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.low-light-mode .step {
+    color: #9CA3AF;
+}
+
+.low-light-mode .rewrite-step {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.low-light-mode .word-display {
+    background: #2D2D2D;
+    border-color: #404040;
+    color: #E5E7EB;
+}
+
+.low-light-mode .rewrite-input {
+    background: #2D2D2D;
+    border-color: #404040;
+    color: #E5E7EB;
+}
+
+.low-light-mode .rewrite-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
+}
+
+.low-light-mode .rewrite-input.correct {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.low-light-mode .rewrite-input.incorrect {
+    background-color: rgba(239, 68, 68, 0.2);
+}
  </style>
 </head>
 <body>
@@ -1453,9 +1639,6 @@ button#view-word-list-btn.word-list-btn:hover {
     <div class="dashboard-content">
         <div class="dashboard-header">
             <h2><i class="fi fi-rr-stats"></i> Practice Statistics</h2>
-            <button id="close-stats-btn" class="close-btn">
-                <i class="fi fi-rr-cross"></i>
-            </button>
         </div>
 
         <!-- Stats Grid -->
@@ -2593,20 +2776,36 @@ class StatisticsManager {
     }
 
     // Timer Management
-    startTimer() {
-        if (this.timerInterval) return;
+startTimer() {
+    if (this.timerInterval) return;
 
-        this.sessionStartTime = Date.now();
-        this.timerInterval = setInterval(() => {
-            if (this.sessionStartTime) {
-                const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
-                this.todayStats.practiceTime = this.lastSavedTime + elapsedMinutes;
-                this.saveTodayStats();
-                this.saveSessionTime();
-                this.updateUI();
-            }
-        }, 30000); // Update every 30 seconds
+    this.sessionStartTime = Date.now();
+    this.timerInterval = setInterval(() => {
+        if (this.sessionStartTime) {
+            const elapsedMinutes = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            this.todayStats.practiceTime = this.lastSavedTime + elapsedMinutes;
+            this.saveTodayStats();
+            this.saveSessionTime();
+            
+            // Only update time-related stats, not the entire UI
+            this.updateBasicStats();
+        }
+    }, 30000);
+}
+
+// And create a new method for updating just the time-related stats
+updateBasicStats() {
+    const elements = {
+        streakCount: document.getElementById('streak-count'),
+        practiceTime: document.getElementById('practice-time'),
+        totalPractices: document.getElementById('total-practices'),
+        successRate: document.getElementById('success-rate')
+    };
+
+    if (elements.practiceTime) {
+        elements.practiceTime.textContent = this.formatTime(this.todayStats.practiceTime);
     }
+}
 
     stopTimer() {
         if (!this.timerInterval) return;
@@ -2714,48 +2913,204 @@ class StatisticsManager {
     }
 
     // HTML Generation Methods
-    createMistakeItemHTML(mistake, index) {
-        const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, '');
-        const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, '');
-        
-        return `
-            <div class="mistake-item">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div>
-                        <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
-                        <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
-                    </div>
-                    <button onclick="statisticsManager.startRewrite(${index})" class="rewrite-btn">
-                        <i class="fi fi-rr-refresh"></i> Rewrite
-                    </button>
+ createMistakeItemHTML(mistake, index) {
+    const baseIncorrectWord = mistake.incorrect.replace(/[.,!?]/g, '');
+    const baseCorrectWord = mistake.correct.replace(/[.,!?]/g, '');
+    
+    return `
+        <div class="mistake-item">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div>
+                    <div style="color: #EF4444;">Incorrect: ${baseIncorrectWord}</div>
+                    <div style="color: #10B981;">Correct: ${baseCorrectWord}</div>
                 </div>
-                <div class="rewrite-section" id="rewrite-section-${index}" style="display: none;">
-                    ${this.createRewriteInputsHTML(index)}
-                </div>
+                <button onclick="statisticsManager.startRewrite(${index})" class="rewrite-btn">
+                    <i class="fi fi-rr-refresh"></i>
+                </button>
             </div>
-        `;
-    }
-
-    createRewriteInputsHTML(index) {
-        return `
-            <div class="rewrite-inputs">
-                ${[1, 2, 3].map(num => `
+            <div class="rewrite-section" id="rewrite-section-${index}" style="display: none;">
+                <div class="step-indicator">
+                    <span class="step active">Step 1: Copy</span>
+                    <span class="step">Step 2: Peek</span>
+                    <span class="step">Step 3: Memory</span>
+                </div>
+                
+                <!-- Step 1 -->
+                <div class="rewrite-step" id="step-1-${index}">
+                    <div class="word-display">${baseCorrectWord}</div>
                     <input type="text" 
                         class="rewrite-input" 
-                        id="rewrite-${num}-${index}" 
-                        placeholder="Attempt ${num}"
+                        id="rewrite-1-${index}" 
+                        placeholder="Copy the word"
+                        onkeydown="if(event.key === 'Enter') statisticsManager.checkStep(${index}, 1)"
                         autocomplete="off"
                         autocorrect="off"
                         autocapitalize="off"
-                        spellcheck="false"
-                        data-form-type="other">
-                `).join('')}
+                        spellcheck="false">
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="rewrite-step" id="step-2-${index}" style="display: none;">
+                    <div class="word-display" 
+                         id="word-2-${index}"
+                         onmouseover="this.textContent='${baseCorrectWord}'"
+                         onmouseout="this.textContent='${'*'.repeat(baseCorrectWord.length)}'">
+                        ${'*'.repeat(baseCorrectWord.length)}
+                    </div>
+                    <input type="text" 
+                        class="rewrite-input" 
+                        id="rewrite-2-${index}" 
+                        placeholder="Write the word"
+                        onkeydown="if(event.key === 'Enter') statisticsManager.checkStep(${index}, 2)"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false">
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="rewrite-step" id="step-3-${index}" style="display: none;">
+                    <div class="word-display" id="word-3-${index}">
+                        ${'*'.repeat(baseCorrectWord.length)}
+                    </div>
+                    <input type="text" 
+                        class="rewrite-input" 
+                        id="rewrite-3-${index}" 
+                        placeholder="Write from memory"
+                        onkeydown="if(event.key === 'Enter') statisticsManager.checkStep(${index}, 3)"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false">
+                </div>
             </div>
-            <button onclick="statisticsManager.checkRewrites(${index})" class="check-rewrites-btn">
-                Check
-            </button>
-        `;
+        </div>
+    `;
+}
+// Add these methods to StatisticsManager class
+startRewrite(index) {
+    const mistake = this.todayStats.mistakes[index];
+    if (!mistake) return;
+
+    const rewriteSection = document.getElementById(`rewrite-section-${index}`);
+    if (rewriteSection) {
+        const isHidden = rewriteSection.style.display === 'none';
+        
+        // If opening the rewrite section
+        if (isHidden) {
+            rewriteSection.style.display = 'block';
+            
+            // Reset all inputs and show only step 1
+            for (let i = 1; i <= 3; i++) {
+                const input = document.getElementById(`rewrite-${i}-${index}`);
+                if (input) {
+                    input.value = '';
+                    input.classList.remove('correct', 'incorrect');
+                }
+                
+                const step = document.getElementById(`step-${i}-${index}`);
+                if (step) {
+                    step.style.display = i === 1 ? 'block' : 'none';
+                }
+            }
+            
+            // Reset step indicators
+            const indicators = rewriteSection.querySelectorAll('.step');
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === 0);
+                indicator.classList.remove('completed');
+            });
+            
+            // Focus the first input
+            const firstInput = document.getElementById(`rewrite-1-${index}`);
+            if (firstInput) {
+                firstInput.focus();
+            }
+        } else {
+            // Only close if explicitly clicking the rewrite button again
+            rewriteSection.style.display = 'none';
+        }
     }
+}
+
+showWord(index, step) {
+    const wordDisplay = document.getElementById(`word-${step}-${index}`);
+    if (wordDisplay) {
+        const word = this.todayStats.mistakes[index].correct.replace(/[.,!?]/g, '');
+        wordDisplay.innerHTML = word + '<button class="show-word-btn">Show Word</button>';
+    }
+}
+
+hideWord(index, step) {
+    const wordDisplay = document.getElementById(`word-${step}-${index}`);
+    if (wordDisplay) {
+        const word = this.todayStats.mistakes[index].correct.replace(/[.,!?]/g, '');
+        wordDisplay.innerHTML = '*'.repeat(word.length) + 
+            '<button class="show-word-btn">Show Word</button>';
+    }
+}
+
+addEnterKeyListener(input, index, step) {
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            this.checkStep(index, step);
+        }
+    });
+}
+
+checkStep(index, step) {
+    const mistake = this.todayStats.mistakes[index];
+    if (!mistake) return;
+
+    const correctWord = mistake.correct.replace(/[.,!?]/g, '').toLowerCase();
+    const input = document.getElementById(`rewrite-${step}-${index}`);
+    const userInput = input.value.trim().toLowerCase();
+
+    if (userInput === correctWord) {
+        // Show success feedback
+        input.classList.add('correct');
+        input.classList.remove('incorrect');
+        
+        // Update step indicators
+        const indicators = document.querySelectorAll(`#rewrite-section-${index} .step`);
+        indicators[step - 1].classList.add('completed');
+        if (step < 3) indicators[step].classList.add('active');
+
+        // Move to next step after delay
+        setTimeout(() => {
+            if (step < 3) {
+                // Show next step
+                document.getElementById(`step-${step}-${index}`).style.display = 'none';
+                const nextStep = document.getElementById(`step-${step + 1}-${index}`);
+                nextStep.style.display = 'block';
+                
+                // Focus next input
+                const nextInput = document.getElementById(`rewrite-${step + 1}-${index}`);
+                if (nextInput) {
+                    nextInput.focus();
+                    nextInput.classList.remove('correct', 'incorrect');
+                }
+            } else {
+                // Completed all steps successfully
+                this.todayStats.mistakes.splice(index, 1);
+                this.saveTodayStats();
+                this.updateUI();
+            }
+        }, 1000);
+    } else {
+        // Show error feedback
+        input.classList.add('incorrect');
+        input.classList.remove('correct');
+        
+        // Clear and refocus input after a short delay
+        setTimeout(() => {
+            input.classList.remove('incorrect');
+            input.value = '';
+            input.focus();
+        }, 500);
+    }
+}
 
     createHistoryItemHTML(session) {
         return `
@@ -2827,23 +3182,50 @@ class StatisticsManager {
     }
 
     // Streak Management
-    updateStreak() {
-        const today = new Date().toDateString();
-        const lastPractice = this.stats.lastPracticeDate ? 
-            new Date(this.stats.lastPracticeDate).toDateString() : null;
+   // Update the updateStreak method in the StatisticsManager class
+updateStreak() {
+    const today = new Date().toDateString();
+    const lastPractice = this.stats.lastPracticeDate ? 
+        new Date(this.stats.lastPracticeDate).toDateString() : null;
 
-        if (!lastPractice) {
+    if (!lastPractice) {
+        this.stats.streak = 1;
+    } else if (lastPractice === today) {
+        return;
+    } else {
+        const daysDiff = (new Date(today) - new Date(lastPractice)) / (1000 * 60 * 60 * 24);
+        
+        if (this.stats.streak === 30) {
+            // Reset just the streak and total practices
             this.stats.streak = 1;
-        } else if (lastPractice === today) {
-            return;
+            this.stats.totalPractices = 0;
+            
+            // Show a small notification
+            const achievementMessage = document.createElement('div');
+            achievementMessage.style.position = 'fixed';
+            achievementMessage.style.top = '20px';
+            achievementMessage.style.right = '20px';
+            achievementMessage.style.padding = '10px 20px';
+            achievementMessage.style.backgroundColor = '#4CAF50';
+            achievementMessage.style.color = 'white';
+            achievementMessage.style.borderRadius = '4px';
+            achievementMessage.style.zIndex = '1001';
+            achievementMessage.innerText = '30-day cycle completed! Starting new cycle.';
+            
+            document.body.appendChild(achievementMessage);
+            
+            setTimeout(() => {
+                achievementMessage.remove();
+            }, 3000);
         } else {
-            const daysDiff = (new Date(today) - new Date(lastPractice)) / (1000 * 60 * 60 * 24);
             this.stats.streak = daysDiff === 1 ? this.stats.streak + 1 : 1;
         }
-
-        this.stats.lastPracticeDate = new Date().toISOString();
-        this.saveStats();
     }
+
+    this.stats.lastPracticeDate = new Date().toISOString();
+    this.saveStats();
+    this.updateUI();
+}
 
     // Mistake Management
     recordMistake(incorrect, correct) {
