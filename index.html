@@ -3183,50 +3183,61 @@ checkStep(index, step) {
 
     // Streak Management
    // Update the updateStreak method in the StatisticsManager class
+// Update the updateStreak method in the StatisticsManager class
 updateStreak() {
-    const today = new Date().toDateString();
-    const lastPractice = this.stats.lastPracticeDate ? 
-        new Date(this.stats.lastPracticeDate).toDateString() : null;
-
-    if (!lastPractice) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
+    
+    if (!this.stats.lastPracticeDate) {
+        // First time practicing
         this.stats.streak = 1;
-    } else if (lastPractice === today) {
-        return;
     } else {
-        const daysDiff = (new Date(today) - new Date(lastPractice)) / (1000 * 60 * 60 * 24);
+        const lastPractice = new Date(this.stats.lastPracticeDate);
+        lastPractice.setHours(0, 0, 0, 0); // Normalize to start of day
         
-        if (this.stats.streak === 30) {
-            // Reset just the streak and total practices
-            this.stats.streak = 1;
-            this.stats.totalPractices = 0;
+        const daysDiff = Math.floor((today - lastPractice) / (1000 * 60 * 60 * 24));
+        
+        if (daysDiff === 0) {
+            // Same day practice, don't update streak
+            return;
+        } else if (daysDiff === 1) {
+            // Consecutive day practice
+            this.stats.streak += 1;
             
-            // Show a small notification
-            const achievementMessage = document.createElement('div');
-            achievementMessage.style.position = 'fixed';
-            achievementMessage.style.top = '20px';
-            achievementMessage.style.right = '20px';
-            achievementMessage.style.padding = '10px 20px';
-            achievementMessage.style.backgroundColor = '#4CAF50';
-            achievementMessage.style.color = 'white';
-            achievementMessage.style.borderRadius = '4px';
-            achievementMessage.style.zIndex = '1001';
-            achievementMessage.innerText = '30-day cycle completed! Starting new cycle.';
-            
-            document.body.appendChild(achievementMessage);
-            
-            setTimeout(() => {
-                achievementMessage.remove();
-            }, 3000);
+            // Check if reached 30-day cycle
+            if (this.stats.streak > 30) {
+                this.stats.streak = 1;
+                this.stats.totalPractices = 0;
+                
+                // Show achievement notification
+                const achievementMessage = document.createElement('div');
+                achievementMessage.style.position = 'fixed';
+                achievementMessage.style.top = '20px';
+                achievementMessage.style.right = '20px';
+                achievementMessage.style.padding = '10px 20px';
+                achievementMessage.style.backgroundColor = '#4CAF50';
+                achievementMessage.style.color = 'white';
+                achievementMessage.style.borderRadius = '4px';
+                achievementMessage.style.zIndex = '1001';
+                achievementMessage.innerText = '30-day cycle completed! Starting new cycle.';
+                
+                document.body.appendChild(achievementMessage);
+                
+                setTimeout(() => {
+                    achievementMessage.remove();
+                }, 3000);
+            }
         } else {
-            this.stats.streak = daysDiff === 1 ? this.stats.streak + 1 : 1;
+            // Streak broken
+            this.stats.streak = 1;
         }
     }
-
-    this.stats.lastPracticeDate = new Date().toISOString();
+    
+    // Update last practice date to current time
+    this.stats.lastPracticeDate = today.toISOString();
     this.saveStats();
     this.updateUI();
 }
-
     // Mistake Management
     recordMistake(incorrect, correct) {
         const mistake = {
