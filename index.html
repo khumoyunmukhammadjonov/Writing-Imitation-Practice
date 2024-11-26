@@ -3197,15 +3197,12 @@ updateStreak() {
         if (daysDiff === 0) {
             // Same day practice, don't update streak
             return;
-        } else if (daysDiff === 1) {
-            // Consecutive day practice
+        } else {
+            // Increment streak for each new practice day, regardless of gaps
             this.stats.streak += 1;
             
-            // Check if reached 30-day cycle
-            if (this.stats.streak > 30) {
-                this.stats.streak = 1;
-                this.stats.totalPractices = 0;
-                
+            // Check if reached 30-day goal
+            if (this.stats.streak >= 30) {
                 // Show achievement notification
                 const achievementMessage = document.createElement('div');
                 achievementMessage.style.position = 'fixed';
@@ -3216,21 +3213,22 @@ updateStreak() {
                 achievementMessage.style.color = 'white';
                 achievementMessage.style.borderRadius = '4px';
                 achievementMessage.style.zIndex = '1001';
-                achievementMessage.innerText = '30-day cycle completed! Starting new cycle.';
+                achievementMessage.innerText = 'Congratulations! You\'ve completed 30 practice days! Starting new cycle.';
                 
                 document.body.appendChild(achievementMessage);
                 
                 setTimeout(() => {
                     achievementMessage.remove();
                 }, 3000);
+
+                // Reset streak and total practices for new cycle
+                this.stats.streak = 1;
+                this.stats.totalPractices = 0;
             }
-        } else {
-            // Streak broken
-            this.stats.streak = 1;
         }
     }
     
-    // Update last practice date to current time
+    // Update last practice date
     this.stats.lastPracticeDate = today.toISOString();
     this.saveStats();
     this.updateUI();
