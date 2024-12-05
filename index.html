@@ -3213,18 +3213,31 @@ updateStreak() {
     this.updateUI();
 }
     // Mistake Management
-    recordMistake(incorrect, correct) {
-        const mistake = {
-            incorrect,
-            correct,
-            timestamp: new Date().toISOString()
-        };
+   recordMistake(incorrect, correct) {
+        // Clean the words from punctuation for comparison
+        const cleanIncorrect = incorrect.replace(/[.,!?]/g, '').toLowerCase();
+        const cleanCorrect = correct.replace(/[.,!?]/g, '').toLowerCase();
         
-        this.todayStats.mistakes.unshift(mistake);
-        this.todayStats.sentences++;
-        this.currentSessionMistakes++;
-        this.saveTodayStats();
-        this.updateUI();
+        // Check if this word already exists in mistakes
+        const existingMistake = this.todayStats.mistakes.find(mistake => {
+            const existingCorrect = mistake.correct.replace(/[.,!?]/g, '').toLowerCase();
+            return existingCorrect === cleanCorrect;
+        });
+        
+        // Only add if it's not already in the mistakes list
+        if (!existingMistake) {
+            const mistake = {
+                incorrect,
+                correct,
+                timestamp: new Date().toISOString()
+            };
+            
+            this.todayStats.mistakes.unshift(mistake);
+            this.todayStats.sentences++;
+            this.currentSessionMistakes++;
+            this.saveTodayStats();
+            this.updateUI();
+        }
     }
 
     startRewrite(index) {
