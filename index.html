@@ -3387,6 +3387,150 @@ window.addEventListener('beforeunload', () => {
         console.error('Error saving statistics state:', error);
     }
 });
+
+
+
+
+
+
+
+
+// Add this function to check for pending mistakes before allowing new practice
+function checkPendingMistakes() {
+    const todayStats = JSON.parse(localStorage.getItem('todayStats') || '{}');
+    const mistakes = todayStats.mistakes || [];
+    
+    if (mistakes.length > 0) {
+        // Disable the article input and start button
+        document.getElementById('article-input').disabled = true;
+        document.getElementById('start-button').disabled = true;
+        
+        // Show warning message
+        const warningDiv = document.createElement('div');
+        warningDiv.id = 'pending-mistakes-warning';
+        warningDiv.innerHTML = `
+            <div style="
+                background-color: #FEF2F2;
+                border: 1px solid #FCA5A5;
+                color: #DC2626;
+                padding: 1rem;
+                margin: 1rem 0;
+                border-radius: 0.5rem;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            ">
+                <div style="font-weight: bold;">
+                    <i class="fi fi-rr-exclamation"></i>
+                    You have ${mistakes.length} pending spelling mistake${mistakes.length > 1 ? 's' : ''} to practice
+                </div>
+                <div style="font-size: 0.9rem;">
+                    Please complete your previous spelling mistakes before starting a new practice session.
+                </div>
+                <button onclick="openMistakesPanel()" style="
+                    background-color: #DC2626;
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.25rem;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    margin-top: 0.5rem;
+                ">
+                    Practice Mistakes Now
+                </button>
+            </div>
+        `;
+        
+        // Insert warning before the article input
+        const articleInput = document.getElementById('article-input');
+        articleInput.parentNode.insertBefore(warningDiv, articleInput);
+        
+        // Open statistics dashboard automatically
+        openMistakesPanel();
+        
+        return false;
+    }
+    
+    return true;
+}
+
+// Function to open the statistics panel focused on mistakes
+function openMistakesPanel() {
+    const dashboard = document.getElementById('statistics-dashboard');
+    dashboard.classList.add('open');
+    
+    // Scroll to the mistakes section
+    const mistakesSection = document.getElementById('recent-mistakes');
+    if (mistakesSection) {
+        mistakesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Modify the processArticle function to check for pending mistakes
+const originalProcessArticle = window.processArticle;
+window.processArticle = function() {
+    if (!checkPendingMistakes()) {
+        return;
+    }
+    originalProcessArticle();
+};
+
+// Add event listener to check mistakes when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    checkPendingMistakes();
+    
+    // Watch for changes in mistakes
+    const observer = new MutationObserver(function(mutations) {
+        const todayStats = JSON.parse(localStorage.getItem('todayStats') || '{}');
+        const mistakes = todayStats.mistakes || [];
+        
+        // If all mistakes are cleared, remove warning and enable inputs
+        if (mistakes.length === 0) {
+            const warningDiv = document.getElementById('pending-mistakes-warning');
+            if (warningDiv) {
+                warningDiv.remove();
+            }
+            document.getElementById('article-input').disabled = false;
+            document.getElementById('start-button').disabled = false;
+        }
+    });
+    
+    // Observe the mistakes list for changes
+    const mistakesList = document.getElementById('recent-mistakes');
+    if (mistakesList) {
+        observer.observe(mistakesList, { childList: true, subtree: true });
+    }
+});
+
+// Add dark mode support for the warning message
+function updateWarningTheme() {
+    const warningDiv = document.getElementById('pending-mistakes-warning');
+    if (!warningDiv) return;
+    
+    const isLowLight = document.body.classList.contains('low-light-mode');
+    const warningContent = warningDiv.firstElementChild;
+    
+    if (isLowLight) {
+        warningContent.style.backgroundColor = '#1F1F1F';
+        warningContent.style.borderColor = '#DC2626';
+        warningContent.style.color = '#FCA5A5';
+    } else {
+        warningContent.style.backgroundColor = '#FEF2F2';
+        warningContent.style.borderColor = '#FCA5A5';
+        warningContent.style.color = '#DC2626';
+    }
+}
+
+// Update theme when toggling dark mode
+const originalThemeToggle = document.getElementById('theme-toggle-btn').onclick;
+document.getElementById('theme-toggle-btn').onclick = function() {
+    if (originalThemeToggle) {
+        originalThemeToggle.call(this);
+    }
+    updateWarningTheme();
+};
 </script>
 </body>
 </html>
