@@ -1854,20 +1854,33 @@ const ColorManager = {
 const ResultManager = {
     clearResult() {
         const result = document.getElementById("result");
-        result.innerText = "";
-        result.innerHTML = "";
+        // Only clear if it's not a mistake count message
+        if (!result.innerHTML.includes("You made")) {
+            result.innerText = "";
+            result.innerHTML = "";
+        }
     },
     
     showErrorMessage(incorrectWord, correctWord) {
         const result = document.getElementById("result");
         const textColor = ColorManager.getTextColor(document.body.classList.contains('low-light-mode'));
-        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>`;
+        
+        // Preserve existing mistake count if it exists
+        const existingMistakeCount = result.innerHTML.match(/You made \d+ mistakes/);
+        const mistakeMessage = existingMistakeCount ? `<br/>${existingMistakeCount[0]}` : '';
+        
+        result.innerHTML = `<span style="color: red;">Incorrect:</span> <span style="color: ${textColor};">${incorrectWord}</span> | <span style="color: green;">Correct:</span> <span style="color: ${textColor};">${correctWord}</span>${mistakeMessage}`;
     },
     
     showMistakeCount(count) {
         const result = document.getElementById("result");
         const errorColor = document.body.classList.contains('low-light-mode') ? '#FF6B6B' : 'red';
-        result.innerHTML += `<br/><span style="color: ${errorColor};">You made ${count} mistakes. Please rewrite it again.</span>`;
+        
+        // Preserve any existing error message
+        const existingMessage = result.innerHTML.includes("Incorrect:") ? result.innerHTML : '';
+        const mistakeMessage = `<br/><span style="color: ${errorColor};">You made ${count} mistakes. Please rewrite it again.</span>`;
+        
+        result.innerHTML = existingMessage + mistakeMessage;
     },
 
     showSuccess() {
@@ -1890,10 +1903,12 @@ const ResultManager = {
 };
 
 document.getElementById("user-input").addEventListener("input", function() {
-    // Clear "Keep going" message when user starts typing
     const result = document.getElementById("result");
-    if (result.innerText === "Keep going, you're getting closer!") {
-        ResultManager.clearResult();
+    const resultText = result.innerHTML;
+    
+    // Only clear the mistake count message when user starts typing
+    if (resultText.includes("You made") && !resultText.includes("Incorrect:")) {
+        result.innerHTML = "";
     }
     
     // Handle multiple spaces
@@ -1901,20 +1916,6 @@ document.getElementById("user-input").addEventListener("input", function() {
         this.value = this.value.replace(/\s+/g, ' ');
     }
     
-    hideOriginalSentence();
-    saveProgress();
-});
-
-// Clear "Check your spacing" message when user starts typing
-document.getElementById("user-input").addEventListener("input", function() {
-    const result = document.getElementById("result");
-    if (result.innerText === "Check your spacing after punctuation.") {
-        ResultManager.clearResult();
-    }
-    // Handle multiple spaces
-    if (this.value.includes('  ')) {
-        this.value = this.value.replace(/\s+/g, ' ');
-    }
     hideOriginalSentence();
     saveProgress();
 });
