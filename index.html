@@ -3397,11 +3397,11 @@ window.addEventListener('beforeunload', () => {
 
 // Function to check if it's a new day compared to last visit
 function isNewDay() {
-    const lastVisit = localStorage.getItem('lastVisitDate');
+    const lastMistakesCheck = localStorage.getItem('lastMistakesCheck');
     const today = new Date().toDateString();
     
-    if (lastVisit !== today) {
-        localStorage.setItem('lastVisitDate', today);
+    // Only consider it a new day if we haven't checked mistakes today
+    if (lastMistakesCheck !== today) {
         return true;
     }
     return false;
@@ -3409,15 +3409,17 @@ function isNewDay() {
 
 // Function to check for pending mistakes from previous day
 function checkPreviousDayMistakes() {
-    // Only check if it's a new day
-    if (!isNewDay()) {
+    const today = new Date().toDateString();
+    const todayStats = JSON.parse(localStorage.getItem('todayStats') || '{}');
+    const mistakes = todayStats.mistakes || [];
+    const mistakesStatus = localStorage.getItem('mistakesStatus');
+    
+    // If mistakes were already handled today, don't show warning
+    if (mistakesStatus === today) {
         return true;
     }
 
-    const todayStats = JSON.parse(localStorage.getItem('todayStats') || '{}');
-    const mistakes = todayStats.mistakes || [];
-    
-    if (mistakes.length > 0) {
+    if (mistakes.length > 0 && isNewDay()) {
         // Disable the article input and start button
         document.getElementById('article-input').disabled = true;
         document.getElementById('start-button').disabled = true;
@@ -3464,9 +3466,15 @@ function checkPreviousDayMistakes() {
         const articleInput = document.getElementById('article-input');
         articleInput.parentNode.insertBefore(warningDiv, articleInput);
         
+        // Update last mistakes check date
+        localStorage.setItem('lastMistakesCheck', today);
+        
         return false;
     }
     
+    // If we reach here, either there are no mistakes or they've been handled
+    localStorage.setItem('mistakesStatus', today);
+    localStorage.setItem('lastMistakesCheck', today);
     return true;
 }
 
@@ -3508,6 +3516,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             document.getElementById('article-input').disabled = false;
             document.getElementById('start-button').disabled = false;
+            
+            // Update mistakes status when all mistakes are cleared
+            localStorage.setItem('mistakesStatus', new Date().toDateString());
         }
     });
     
