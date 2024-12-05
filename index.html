@@ -3395,8 +3395,25 @@ window.addEventListener('beforeunload', () => {
 
 
 
-// Add this function to check for pending mistakes before allowing new practice
-function checkPendingMistakes() {
+// Function to check if it's a new day compared to last visit
+function isNewDay() {
+    const lastVisit = localStorage.getItem('lastVisitDate');
+    const today = new Date().toDateString();
+    
+    if (lastVisit !== today) {
+        localStorage.setItem('lastVisitDate', today);
+        return true;
+    }
+    return false;
+}
+
+// Function to check for pending mistakes from previous day
+function checkPreviousDayMistakes() {
+    // Only check if it's a new day
+    if (!isNewDay()) {
+        return true;
+    }
+
     const todayStats = JSON.parse(localStorage.getItem('todayStats') || '{}');
     const mistakes = todayStats.mistakes || [];
     
@@ -3423,10 +3440,10 @@ function checkPendingMistakes() {
             ">
                 <div style="font-weight: bold;">
                     <i class="fi fi-rr-exclamation"></i>
-                    You have ${mistakes.length} pending spelling mistake${mistakes.length > 1 ? 's' : ''} to practice
+                    You have ${mistakes.length} unpracticed spelling mistake${mistakes.length > 1 ? 's' : ''} from yesterday
                 </div>
                 <div style="font-size: 0.9rem;">
-                    Please complete your previous spelling mistakes before starting a new practice session.
+                    Please practice your previous day's spelling mistakes before starting a new session.
                 </div>
                 <button onclick="openMistakesPanel()" style="
                     background-color: #DC2626;
@@ -3438,7 +3455,7 @@ function checkPendingMistakes() {
                     font-size: 0.9rem;
                     margin-top: 0.5rem;
                 ">
-                    Practice Mistakes Now
+                    Practice Previous Mistakes
                 </button>
             </div>
         `;
@@ -3471,7 +3488,7 @@ function openMistakesPanel() {
 // Modify the processArticle function to check for pending mistakes
 const originalProcessArticle = window.processArticle;
 window.processArticle = function() {
-    if (!checkPendingMistakes()) {
+    if (!checkPreviousDayMistakes()) {
         return;
     }
     originalProcessArticle();
@@ -3479,7 +3496,7 @@ window.processArticle = function() {
 
 // Add event listener to check mistakes when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    checkPendingMistakes();
+    checkPreviousDayMistakes();
     
     // Watch for changes in mistakes
     const observer = new MutationObserver(function(mutations) {
