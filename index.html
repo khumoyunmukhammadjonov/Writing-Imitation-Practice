@@ -3399,12 +3399,7 @@ window.addEventListener('beforeunload', () => {
 function isNewDay() {
     const lastMistakesCheck = localStorage.getItem('lastMistakesCheck');
     const today = new Date().toDateString();
-    
-    // Only consider it a new day if we haven't checked mistakes today
-    if (lastMistakesCheck !== today) {
-        return true;
-    }
-    return false;
+    return lastMistakesCheck !== today;
 }
 
 // Function to check for pending mistakes from previous day
@@ -3419,7 +3414,14 @@ function checkPreviousDayMistakes() {
         return true;
     }
 
-    if (mistakes.length > 0 && isNewDay()) {
+    // Store the current day's mistakes count in a separate key
+    if (isNewDay()) {
+        localStorage.setItem('previousDayMistakes', mistakes.length.toString());
+    }
+
+    const previousMistakes = parseInt(localStorage.getItem('previousDayMistakes') || '0');
+
+    if (previousMistakes > 0) {
         // Disable the article input and start button
         document.getElementById('article-input').disabled = true;
         document.getElementById('start-button').disabled = true;
@@ -3442,7 +3444,7 @@ function checkPreviousDayMistakes() {
             ">
                 <div style="font-weight: bold;">
                     <i class="fi fi-rr-exclamation"></i>
-                    You have ${mistakes.length} unpracticed spelling mistake${mistakes.length > 1 ? 's' : ''} from yesterday
+                    You have ${previousMistakes} unpracticed spelling mistake${previousMistakes > 1 ? 's' : ''} from yesterday
                 </div>
                 <div style="font-size: 0.9rem;">
                     Please practice your previous day's spelling mistakes before starting a new session.
@@ -3475,19 +3477,31 @@ function checkPreviousDayMistakes() {
     // If we reach here, either there are no mistakes or they've been handled
     localStorage.setItem('mistakesStatus', today);
     localStorage.setItem('lastMistakesCheck', today);
+    localStorage.removeItem('previousDayMistakes'); // Clear previous day's count
     return true;
 }
 
 // Function to open the statistics panel focused on mistakes
 function openMistakesPanel() {
     const dashboard = document.getElementById('statistics-dashboard');
-    dashboard.classList.add('open');
+    const statsBtn = document.getElementById('stats-dashboard-btn');
     
-    // Scroll to the mistakes section
-    const mistakesSection = document.getElementById('recent-mistakes');
-    if (mistakesSection) {
-        mistakesSection.scrollIntoView({ behavior: 'smooth' });
+    // Add open class to dashboard
+    dashboard.classList.add('open');
+    statsBtn.classList.add('active');
+    
+    // Ensure statistics are updated
+    if (window.statisticsManager) {
+        window.statisticsManager.updateUI();
     }
+    
+    // Scroll to the mistakes section after a short delay
+    setTimeout(() => {
+        const mistakesSection = document.getElementById('recent-mistakes');
+        if (mistakesSection) {
+            mistakesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 100);
 }
 
 // Modify the processArticle function to check for pending mistakes
@@ -3517,8 +3531,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('article-input').disabled = false;
             document.getElementById('start-button').disabled = false;
             
-            // Update mistakes status when all mistakes are cleared
+            // Update mistakes status and clear previous day's count
             localStorage.setItem('mistakesStatus', new Date().toDateString());
+            localStorage.removeItem('previousDayMistakes');
         }
     });
     
@@ -3556,6 +3571,7 @@ document.getElementById('theme-toggle-btn').onclick = function() {
     }
     updateWarningTheme();
 };
+
 </script>
 </body>
 </html>
