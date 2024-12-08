@@ -3572,6 +3572,114 @@ document.getElementById('theme-toggle-btn').onclick = function() {
     updateWarningTheme();
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Function to request file permissions and save progress
+async function autoSaveToFile() {
+    // Request persistent file permission if not already granted
+    let fileHandle;
+    try {
+        // Reuse existing handle if available
+        fileHandle = await navigator.storage.getDirectoryHandle();
+        const file = await fileHandle.createWritable();
+        await 2;
+    }
+}
+
+// 
+let fileHandle = null;
+
+// Function to request file permissions and save progress
+async function requestFileAccess() {
+    try {
+        // Ask the user for a file location only once
+        if (!fileHandle) {
+            fileHandle = await window.showSaveFilePicker({
+                suggestedName: 'writingProgress.json',
+                types: [
+                    {
+                        description: 'JSON File',
+                        accept: { 'application/json': ['.json'] },
+                    },
+                ],
+            });
+        }
+    } catch (error) {
+        console.error('File access denied or canceled by the user:', error);
+    }
+}
+
+// Function to save progress automatically
+async function saveProgressAutomatically() {
+    if (!fileHandle) {
+        await requestFileAccess(); // Request file access if not already granted
+    }
+
+    if (fileHandle) {
+        try {
+            const writable = await fileHandle.createWritable();
+            const progressData = localStorage.getItem('writingProgress');
+            if (progressData) {
+                await writable.write(progressData);
+                await writable.close();
+                console.log('Progress automatically saved to file.');
+            }
+        } catch (error) {
+            console.error('Failed to write to file:', error);
+        }
+    }
+}
+
+// Set up an interval to auto-save every 5 minutes
+setInterval(saveProgressAutomatically, 5 * 60 * 1000);
+
+// Trigger manual save if user performs certain actions
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        saveProgressAutomatically();
+    }
+});
+
+
+// Function to load progress from file automatically
+async function loadProgressFromFile() {
+    try {
+        if (!fileHandle) return; // Ensure we have access to the file
+
+        const file = await fileHandle.getFile();
+        const fileContents = await file.text();
+
+        // Validate and restore progress
+        const data = JSON.parse(fileContents);
+        localStorage.setItem('writingProgress', JSON.stringify(data));
+        console.log('Progress automatically loaded from file.');
+        loadSavedProgress(); // Reload progress into the app
+    } catch (error) {
+        console.error('Failed to load progress from file:', error);
+    }
+}
+
+// Trigger loading on page load
+window.addEventListener('load', loadProgressFromFile);
+
+
+
+
 </script>
 </body>
 </html>
