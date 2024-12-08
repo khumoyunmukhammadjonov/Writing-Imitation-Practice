@@ -3573,6 +3573,136 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 };
 
 
+
+
+// IndexedDB setup
+const LocalStorageProxy = {
+    dbName: "LocalStorageProxyDB",
+    storeName: "storage",
+    db: null,
+
+    async init() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, 1);
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(this.storeName)) {
+                    db.createObjectStore(this.storeName, { keyPath: "key" });
+                }
+            };
+
+            request.onsuccess = (event) => {
+                this.db = event.target.result;
+                resolve();
+            };
+
+            request.onerror = (event) => {
+                console.error("IndexedDB initialization error:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    },
+
+    async setItem(key, value) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(this.storeName, "readwrite");
+            const store = transaction.objectStore(this.storeName);
+            const request = store.put({ key, data: value });
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => {
+                console.error("Failed to save data to IndexedDB:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    },
+
+    async getItem(key) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(this.storeName, "readonly");
+            const store = transaction.objectStore(this.storeName);
+            const request = store.get(key);
+
+            request.onsuccess = (event) => resolve(event.target.result ? event.target.result.data : null);
+            request.onerror = (event) => {
+                console.error("Failed to retrieve data from IndexedDB:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    },
+
+    async removeItem(key) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(this.storeName, "readwrite");
+            const store = transaction.objectStore(this.storeName);
+            const request = store.delete(key);
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => {
+                console.error("Failed to remove data from IndexedDB:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    },
+
+    async clear() {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(this.storeName, "readwrite");
+            const store = transaction.objectStore(this.storeName);
+            const request = store.clear();
+
+            request.onsuccess = () => resolve();
+            request.onerror = (event) => {
+                console.error("Failed to clear data from IndexedDB:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    }
+};
+
+// Replace native localStorage with the proxy
+(async () => {
+    await LocalStorageProxy.init();
+
+    // Get original localStorage methods
+    const originalSetItem = localStorage.setItem;
+    const originalGetItem = localStorage.getItem;
+    const originalRemoveItem = localStorage.removeItem;
+    const originalClear = localStorage.clear;
+
+    // Override methods
+    localStorage.setItem = async (key, value) => {
+        await LocalStorageProxy.setItem(key, value);
+        originalSetItem.call(localStorage, key, value); // Optional: Keep browser localStorage in sync
+    };
+
+    localStorage.getItem = async (key) => {
+        const value = await LocalStorageProxy.getItem(key);
+        if (value !== null) return value; // Return value from IndexedDB if available
+        return originalGetItem.call(localStorage, key); // Fallback to browser localStorage
+    };
+
+    localStorage.removeItem = async (key) => {
+        await LocalStorageProxy.removeItem(key);
+        originalRemoveItem.call(localStorage, key); // Optional: Keep browser localStorage in sync
+    };
+
+    localStorage.clear = async () => {
+        await LocalStorageProxy.clear();
+        originalClear.call(localStorage); // Optional: Keep browser localStorage in sync
+    };
+
+    // Migrate existing localStorage data to IndexedDB
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        await LocalStorageProxy.setItem(key, value);
+    }
+
+    console.log("All localStorage data migrated to IndexedDB.");
+})();
+
 </script>
 </body>
 </html>
