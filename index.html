@@ -1798,47 +1798,57 @@ button#view-word-list-btn.word-list-btn:hover {
 </div>
 
     <script>
-// Name of the IndexedDB database and object store
-const DB_NAME = 'LocalStorageBackupDB';
-const STORE_NAME = 'LocalStorageData';
+// Constants for the database
+const DB_NAME = 'PersistentBackupDB';
+const STORE_NAME = 'BackupData';
 let db = null;
 
-// Open the IndexedDB database
-async function openIndexedDB() {
+// Open or Create IndexedDB
+function openIndexedDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, 1);
 
-        request.onupgradeneeded = (event) => {
+        request.onupgradeneeded = function (event) {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(STORE_NAME)) {
                 db.createObjectStore(STORE_NAME, { keyPath: 'key' });
             }
         };
 
-        request.onsuccess = (event) => {
+        request.onsuccess = function (event) {
             db = event.target.result;
             resolve(db);
         };
 
-        request.onerror = (event) => {
-            console.error('IndexedDB error:', event.target.error);
+        request.onerror = function (event) {
+            console.error('IndexedDB Error:', event.target.error);
             reject(event.target.error);
         };
     });
 }
 
-// Get all key-value pairs from IndexedDB
-async function getAllFromIndexedDB() {
-    if (!db) return {};
+// Save a key-value pair in IndexedDB
+function saveToIndexedDB(key, value) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.put({ key: key, value: value });
 
+        request.onsuccess = () => resolve(true);
+        request.onerror = (event) => reject(event.target.error);
+    });
+}
+
+// Retrieve all data from IndexedDB
+function retrieveAllFromIndexedDB() {
     return new Promise((resolve, reject) => {
         const transaction = db.transaction([STORE_NAME], 'readonly');
         const store = transaction.objectStore(STORE_NAME);
         const request = store.getAll();
 
-        request.onsuccess = () => {
+        request.onsuccess = function () {
             const result = {};
-            request.result.forEach(item => {
+            request.result.forEach((item) => {
                 result[item.key] = item.value;
             });
             resolve(result);
@@ -1848,43 +1858,22 @@ async function getAllFromIndexedDB() {
     });
 }
 
-// Set an item in IndexedDB
-async function setInIndexedDB(key, value) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.put({ key, value });
-
-        request.onsuccess = () => resolve(true);
-        request.onerror = (event) => reject(event.target.error);
-    });
+// Sync IndexedDB with localStorage
+async function syncIndexedDBToLocalStorage() {
+    try {
+        const data = await retrieveAllFromIndexedDB();
+        for (const [key, value] of Object.entries(data)) {
+            if (!localStorage.getItem(key)) {
+                localStorage.setItem(key, value);
+            }
+        }
+        console.log('localStorage synced with IndexedDB!');
+    } catch (error) {
+        console.error('Error syncing IndexedDB to localStorage:', error);
+    }
 }
 
-// Remove an item from IndexedDB
-async function removeFromIndexedDB(key) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.delete(key);
-
-        request.onsuccess = () => resolve(true);
-        request.onerror = (event) => reject(event.target.error);
-    });
-}
-
-// Clear all data from IndexedDB
-async function clearIndexedDB() {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.clear();
-
-        request.onsuccess = () => resolve(true);
-        request.onerror = (event) => reject(event.target.error);
-    });
-}
-
-// Wrap localStorage methods to also sync with IndexedDB
+// Wrap localStorage methods to sync automatically with IndexedDB
 function wrapLocalStorage() {
     const originalSetItem = localStorage.setItem;
     const originalRemoveItem = localStorage.removeItem;
@@ -1892,44 +1881,82 @@ function wrapLocalStorage() {
 
     localStorage.setItem = function (key, value) {
         originalSetItem.call(localStorage, key, value);
-        setInIndexedDB(key, value).catch(err => console.error('Error syncing to IndexedDB:', err));
+        saveToIndexedDB(key, value).catch((err) =>
+            console.error('Error saving to IndexedDB:', err)
+        );
     };
 
     localStorage.removeItem = function (key) {
         originalRemoveItem.call(localStorage, key);
-        removeFromIndexedDB(key).catch(err => console.error('Error removing from IndexedDB:', err));
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        store.delete(key);
     };
 
     localStorage.clear = function () {
         originalClear.call(localStorage);
-        clearIndexedDB().catch(err => console.error('Error clearing IndexedDB:', err));
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        store.clear();
     };
 }
 
-// Restore localStorage from IndexedDB if empty
-async function restoreLocalStorage() {
-    if (localStorage.length === 0) {
-        const allData = await getAllFromIndexedDB();
-        for (const [key, value] of Object.entries(allData)) {
-            localStorage.setItem(key, value);
-        }
-        console.log('localStorage restored from IndexedDB.');
-    }
+// Install Service Worker (Optional but recommended for extra persistence)
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+            console.log('Service Worker registered:', registration);
+        })
+        .catch((error) => console.error('Service Worker registration failed:', error));
 }
 
-// Initialize the system
-async function initialize() {
+// Initialize IndexedDB and Sync on Page Load
+document.addEventListener('DOMContentLoaded', async function () {
     try {
         await openIndexedDB();
-        await restoreLocalStorage();
+        await syncIndexedDBToLocalStorage();
         wrapLocalStorage();
-        console.log('localStorage backup via IndexedDB initialized successfully.');
+        console.log('Application ready with IndexedDB persistence!');
     } catch (error) {
-        console.error('Error initializing IndexedDB localStorage backup:', error);
+        console.error('Initialization failed:', error);
     }
-}
+});
 
-document.addEventListener('DOMContentLoaded', initialize);
+
+const CACHE_NAME = 'persistent-cache-v1';
+const ASSETS_TO_CACHE = ['index.html', '/js/app.js', '/css/styles.css'];
+
+// Install event - caching assets
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(ASSETS_TO_CACHE);
+        })
+    );
+    self.skipWaiting();
+});
+
+// Fetch event - serve cached assets
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
+});
+
+// Activate event - clear old caches
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+            );
+        })
+    );
+    self.clients.claim();
+});
 
 
 // 1. Core Management Systems
