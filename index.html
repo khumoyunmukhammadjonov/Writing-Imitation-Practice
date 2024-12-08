@@ -3572,6 +3572,31 @@ document.getElementById('theme-toggle-btn').onclick = function() {
     updateWarningTheme();
 };
 
+
+
+
+
+
+
+// StorageManager: persist() function for requesting persistent storage
+  (function() {
+    // Check if the StorageManager API is supported
+    if (navigator.storage && navigator.storage.persist) {
+      // Attempt to persist data
+      navigator.storage.persist().then(function(persisted) {
+        if (persisted) {
+          console.log("Storage will not be cleared except by explicit user action.");
+        } else {
+          console.log("Storage is not persisted. The browser may still clear data.");
+          // Optional: You could show a prompt or instructions to the user on how to manually enable persistence
+        }
+      }).catch(function(err) {
+        console.error("Error while requesting storage persistence:", err);
+      });
+    } else {
+      console.log("Persistent storage is not supported in this browser.");
+    }
+  })();
 </script>
 </body>
 </html>
