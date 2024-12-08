@@ -3584,31 +3584,13 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 
 
 
+let fileHandle = null; // Global file handle
 
-
-
-
-let fileHandle = null; // Global variable for the file handle
-
-// Load previously granted file handle from storage
-async function loadFileHandle() {
-    const serializedHandle = localStorage.getItem('fileHandle');
-    if (serializedHandle) {
-        try {
-            fileHandle = await window.showFileSystemAccessPicker(serializedHandle);
-            console.log('Reusing previously granted file handle.');
-        } catch (error) {
-            console.warn('Failed to restore file handle:', error);
-            fileHandle = null; // Reset handle if it can't be restored
-        }
-    }
-}
-
-// Request file access from the user (only once)
-async function requestFileAccess() {
+// Function to request file access and store it persistently
+async function requestAndPersistFileHandle() {
     try {
-        // Ask the user for a file location if no existing handle is found
         if (!fileHandle) {
+            // Ask the user to choose a location for saving the file
             fileHandle = await window.showSaveFilePicker({
                 suggestedName: 'writingProgress.json',
                 types: [
@@ -3618,59 +3600,69 @@ async function requestFileAccess() {
                     },
                 ],
             });
-            console.log('File access granted.');
 
-            // Persist the file handle using localStorage
+            // Save the file handle to IndexedDB or localStorage
             const serializedHandle = JSON.stringify(await fileHandle.serialize());
-            localStorage.setItem('fileHandle', serializedHandle);
+            localStorage.setItem('persistentFileHandle', serializedHandle);
+            console.log('File handle stored successfully.');
         }
     } catch (error) {
         console.error('File access denied or canceled:', error);
-        fileHandle = null; // Reset handle on error
     }
 }
 
-// Save progress automatically to the file
+// Load the file handle from storage
+async function loadPersistedFileHandle() {
+    try {
+        const serializedHandle = localStorage.getItem('persistentFileHandle');
+        if (serializedHandle) {
+            fileHandle = await window.showFileSystemAccessPicker(serializedHandle);
+            console.log('Reusing previously granted file handle.');
+        }
+    } catch (error) {
+        console.warn('Failed to load persisted file handle:', error);
+        fileHandle = null;
+    }
+}
+
+// Function to save progress automatically
 async function saveProgressAutomatically() {
     if (!fileHandle) {
-        await requestFileAccess(); // Request file access if not already granted
+        await requestAndPersistFileHandle(); // Request file access if not already granted
     }
 
     if (fileHandle) {
         try {
-            const writable = await fileHandle.createWritable(); // Create writable stream
-            const progressData = localStorage.getItem('writingProgress'); // Retrieve progress data
-            if (progressData) {
-                await writable.write(progressData); // Write progress data to the file
-                await writable.close(); // Close the writable stream
-                console.log('Progress automatically saved to file.');
-            }
+            const writable = await fileHandle.createWritable();
+            const progressData = localStorage.getItem('writingProgress') || '{}';
+            await writable.write(progressData);
+            await writable.close();
+            console.log('Progress automatically saved to file.');
         } catch (error) {
             console.error('Failed to write to file:', error);
         }
     }
 }
 
-// Load progress from the file when the website opens
+// Function to load progress from the file
 async function loadProgressFromFile() {
     if (!fileHandle) {
-        console.log('File handle is not available. Cannot load progress.');
+        console.log('File handle not available. Cannot load progress.');
         return;
     }
 
     try {
-        const file = await fileHandle.getFile(); // Get file reference
-        const fileContents = await file.text(); // Read file contents
-        const data = JSON.parse(fileContents); // Parse JSON
-        localStorage.setItem('writingProgress', JSON.stringify(data)); // Save progress back to localStorage
-        console.log('Progress successfully loaded from file.');
+        const file = await fileHandle.getFile();
+        const fileContents = await file.text();
+        localStorage.setItem('writingProgress', fileContents);
+        console.log('Progress loaded successfully.');
         loadSavedProgress(); // Restore progress in the app
     } catch (error) {
         console.error('Failed to load progress from file:', error);
     }
 }
 
-// Event: Save progress when the page is hidden
+// Save progress when the page is hidden
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
         saveProgressAutomatically();
@@ -3678,16 +3670,13 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // Set up periodic auto-save (every 5 minutes)
-setInterval(() => {
-    saveProgressAutomatically();
-}, 5 * 60 * 1000);
+setInterval(saveProgressAutomatically, 5 * 60 * 1000);
 
-// Trigger loading progress on page load
+// Load progress and file handle on page load
 window.addEventListener('load', async () => {
-    await loadFileHandle(); // Load existing file handle
+    await loadPersistedFileHandle(); // Load saved file handle
     await loadProgressFromFile(); // Load progress from file
 });
-
 
 
 
