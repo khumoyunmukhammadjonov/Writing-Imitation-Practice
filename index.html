@@ -3574,5 +3574,159 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 
 
 </script>
+
+<!-- Place this script AFTER your existing code -->
+<script>
+class FileAccessManager {
+    constructor() {
+        this.fileHandle = null;
+        this.initialized = false;
+    }
+
+    async init() {
+        if (this.initialized) return;
+        this.initialized = true;
+
+        // If you previously stored a file handle, in practice you'd need IndexedDB or similar.
+        // For simplicity, we will just rely on user picking file each session if not available.
+        // We'll just check if we have a boolean flag hasFile in localStorage.
+        
+        // Attempt to load from file if we have a handle
+        // Note: Directly restoring file handle from a string isn't supported yet.
+        // So we skip direct handle restore. The user will have to pick file again unless
+        // you store the handle properly in IndexedDB (not shown here).
+    }
+
+    async requestFile() {
+        const opts = {
+            suggestedName: 'my_practice_data.json',
+            types: [{
+                description: 'JSON Files',
+                accept: { 'application/json': ['.json'] }
+            }]
+        };
+        this.fileHandle = await window.showSaveFilePicker(opts);
+        // Initialize with empty data
+        await this.writeDataToFile({});
+        localStorage.setItem('hasFile', 'true');
+    }
+
+    async writeDataToFile(data) {
+        if (!this.fileHandle) return;
+        const writable = await this.fileHandle.createWritable();
+        await writable.write(JSON.stringify(data, null, 2));
+        await writable.close();
+    }
+
+    async readDataFromFile() {
+        if (!this.fileHandle) return null;
+        const file = await this.fileHandle.getFile();
+        const contents = await file.text();
+        try {
+            return JSON.parse(contents);
+        } catch (e) {
+            console.warn('File content is not valid JSON.');
+            return null;
+        }
+    }
+}
+
+const fileAccessManager = new FileAccessManager();
+
+async function syncDataToFile() {
+    if (!fileAccessManager.fileHandle) return;
+
+    const data = {
+        writingProgress: JSON.parse(localStorage.getItem('writingProgress') || '{}'),
+        textControls: JSON.parse(localStorage.getItem('textControls') || '{}'),
+        practiceStats: JSON.parse(localStorage.getItem('practiceStats') || '{}'),
+        todayStats: JSON.parse(localStorage.getItem('todayStats') || '{}'),
+        wordList: JSON.parse(localStorage.getItem('wordList') || '[]')
+    };
+    await fileAccessManager.writeDataToFile(data);
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await fileAccessManager.init();
+        
+        // Create a "Choose Save File" button in the UI (if you want it visible)
+        const chooseFileBtn = document.createElement('button');
+        chooseFileBtn.textContent = 'Choose Save File';
+        chooseFileBtn.style.position = 'fixed';
+        chooseFileBtn.style.top = '10px';
+        chooseFileBtn.style.left = '10px';
+        chooseFileBtn.style.zIndex = 9999;
+        chooseFileBtn.style.background = '#4CAF50';
+        chooseFileBtn.style.color = 'white';
+        chooseFileBtn.style.border = 'none';
+        chooseFileBtn.style.padding = '8px 12px';
+        chooseFileBtn.style.borderRadius = '4px';
+        chooseFileBtn.style.cursor = 'pointer';
+        chooseFileBtn.title = "Pick a file to save and load your practice data";
+        
+        chooseFileBtn.addEventListener('click', async () => {
+            await fileAccessManager.requestFile();
+            await syncDataToFile();
+            alert("File chosen and synced!");
+        });
+        document.body.appendChild(chooseFileBtn);
+
+        // Monkey-patch functions that save data to also sync with file
+        // We look for global functions/objects we know from your main code:
+        
+        // Patch saveProgress()
+        if (window.saveProgress) {
+            const originalSaveProgress = window.saveProgress;
+            window.saveProgress = function(...args) {
+                const result = originalSaveProgress.apply(this, args);
+                syncDataToFile().catch(console.error);
+                return result;
+            };
+        }
+
+        // Patch statisticsManager methods: saveStats, saveTodayStats
+        if (window.statisticsManager) {
+            if (typeof window.statisticsManager.saveStats === 'function') {
+                const originalSaveStats = window.statisticsManager.saveStats.bind(window.statisticsManager);
+                window.statisticsManager.saveStats = function(...args) {
+                    const result = originalSaveStats(...args);
+                    syncDataToFile().catch(console.error);
+                    return result;
+                };
+            }
+
+            if (typeof window.statisticsManager.saveTodayStats === 'function') {
+                const originalSaveTodayStats = window.statisticsManager.saveTodayStats.bind(window.statisticsManager);
+                window.statisticsManager.saveTodayStats = function(...args) {
+                    const result = originalSaveTodayStats(...args);
+                    syncDataToFile().catch(console.error);
+                    return result;
+                };
+            }
+        }
+
+        // Patch TextControlSystem.saveSettings if it exists
+        if (window.TextControlSystem && typeof window.TextControlSystem.saveSettings === 'function') {
+            const originalSaveSettings = window.TextControlSystem.saveSettings.bind(window.TextControlSystem);
+            window.TextControlSystem.saveSettings = function(...args) {
+                const result = originalSaveSettings(...args);
+                syncDataToFile().catch(console.error);
+                return result;
+            };
+        }
+
+        // On load, if localStorage is empty or user wants to restore from file:
+        // We do not have a direct handle restore, but if in a real scenario, you'd have to prompt user again.
+        // If the user picks the file again and it has data, we load it:
+        // (In practice, you'd store the file handle properly and restore it. This is just a demonstration.)
+        // For now, user must click "Choose Save File" to pick their file again.
+        
+    } catch (error) {
+        console.error('Error initializing File Access integration:', error);
+    }
+});
+</script>
+
 </body>
 </html>
