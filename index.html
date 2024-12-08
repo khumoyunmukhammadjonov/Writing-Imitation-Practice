@@ -1797,7 +1797,8 @@ button#view-word-list-btn.word-list-btn:hover {
     </div>
 </div>
 
-    <script>
+
+<script>
 (function() {
     const DB_NAME = 'LocalStorageShimDB';
     const STORE_NAME = 'KeyValueStore';
@@ -1847,7 +1848,6 @@ button#view-word-list-btn.word-list-btn:hover {
     }
 
     function saveItemToDB(key, value) {
-        // Async save, no return needed
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const store = tx.objectStore(STORE_NAME);
         store.put({ key, value });
@@ -1898,8 +1898,6 @@ button#view-word-list-btn.word-list-btn:hover {
         };
     }
 
-    // Override window.localStorage with a shim once initialized.
-    // We'll wait until DB is opened and data is loaded.
     openDB()
         .then(() => loadAllItems())
         .then(() => {
@@ -1914,7 +1912,8 @@ button#view-word-list-btn.word-list-btn:hover {
             console.error('Failed to initialize IndexedDB-backed localStorage:', error);
         });
 })();
-
+</script>
+    <script>
 // 1. Core Management Systems
 const ColorManager = {
     getTextColor(isLowLight) {
