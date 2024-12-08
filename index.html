@@ -3588,26 +3588,11 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 
 
 
+let fileHandle = null; // Global file handle
 
-// Function to request file permissions and save progress
-async function autoSaveToFile() {
-    // Request persistent file permission if not already granted
-    let fileHandle;
-    try {
-        // Reuse existing handle if available
-        fileHandle = await navigator.storage.getDirectoryHandle();
-        const file = await fileHandle.createWritable();
-        await 2;
-    }
-}
-
-// 
-let fileHandle = null;
-
-// Function to request file permissions and save progress
+// Request file access from the user
 async function requestFileAccess() {
     try {
-        // Ask the user for a file location only once
         if (!fileHandle) {
             fileHandle = await window.showSaveFilePicker({
                 suggestedName: 'writingProgress.json',
@@ -3618,13 +3603,15 @@ async function requestFileAccess() {
                     },
                 ],
             });
+            console.log('File access granted.');
         }
     } catch (error) {
-        console.error('File access denied or canceled by the user:', error);
+        console.error('File access denied or canceled:', error);
+        fileHandle = null; // Reset file handle on error
     }
 }
 
-// Function to save progress automatically
+// Save progress automatically to the file
 async function saveProgressAutomatically() {
     if (!fileHandle) {
         await requestFileAccess(); // Request file access if not already granted
@@ -3632,11 +3619,11 @@ async function saveProgressAutomatically() {
 
     if (fileHandle) {
         try {
-            const writable = await fileHandle.createWritable();
-            const progressData = localStorage.getItem('writingProgress');
+            const writable = await fileHandle.createWritable(); // Create writable stream
+            const progressData = localStorage.getItem('writingProgress'); // Retrieve progress data
             if (progressData) {
-                await writable.write(progressData);
-                await writable.close();
+                await writable.write(progressData); // Write progress data to the file
+                await writable.close(); // Close the writable stream
                 console.log('Progress automatically saved to file.');
             }
         } catch (error) {
@@ -3645,37 +3632,41 @@ async function saveProgressAutomatically() {
     }
 }
 
-// Set up an interval to auto-save every 5 minutes
-setInterval(saveProgressAutomatically, 5 * 60 * 1000);
+// Load progress from file
+async function loadProgressFromFile() {
+    try {
+        if (!fileHandle) {
+            console.log('File handle is not available. Cannot load progress.');
+            return;
+        }
 
-// Trigger manual save if user performs certain actions
+        const file = await fileHandle.getFile(); // Get file reference
+        const fileContents = await file.text(); // Read file contents
+        const data = JSON.parse(fileContents); // Parse JSON
+        localStorage.setItem('writingProgress', JSON.stringify(data)); // Save progress back to localStorage
+        console.log('Progress successfully loaded from file.');
+        loadSavedProgress(); // Restore progress in the app
+    } catch (error) {
+        console.error('Failed to load progress from file:', error);
+    }
+}
+
+// Manually trigger save when the page is hidden
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
         saveProgressAutomatically();
     }
 });
 
+// Set up periodic auto-save (every 5 minutes)
+setInterval(() => {
+    saveProgressAutomatically();
+}, 5 * 60 * 1000);
 
-// Function to load progress from file automatically
-async function loadProgressFromFile() {
-    try {
-        if (!fileHandle) return; // Ensure we have access to the file
-
-        const file = await fileHandle.getFile();
-        const fileContents = await file.text();
-
-        // Validate and restore progress
-        const data = JSON.parse(fileContents);
-        localStorage.setItem('writingProgress', JSON.stringify(data));
-        console.log('Progress automatically loaded from file.');
-        loadSavedProgress(); // Reload progress into the app
-    } catch (error) {
-        console.error('Failed to load progress from file:', error);
-    }
-}
-
-// Trigger loading on page load
-window.addEventListener('load', loadProgressFromFile);
+// Trigger loading progress on page load
+window.addEventListener('load', () => {
+    loadProgressFromFile();
+});
 
 
 
