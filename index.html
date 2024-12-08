@@ -3605,25 +3605,25 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 
 
 
-
 // File System Access Manager
 const FileSystemManager = {
     fileHandle: null, // To store the chosen file handle
     fileName: "practice_data.json", // Default file name
 
+    // Initialize the manager, restore the saved file handle if possible
     async initialize() {
         try {
             const savedHandle = localStorage.getItem("fileHandle");
             if (savedHandle) {
-                // Restore the file handle using the saved ID
-                this.fileHandle = await window.showDirectoryPicker();
-                console.log("File system connected.");
+                this.fileHandle = await this.verifyPermission(JSON.parse(savedHandle));
+                console.log("File handle restored and verified.");
             }
         } catch (error) {
             console.error("Error initializing file system:", error);
         }
     },
 
+    // Request the user to choose a file for saving data
     async chooseFile() {
         try {
             const fileHandle = await window.showSaveFilePicker({
@@ -3641,10 +3641,15 @@ const FileSystemManager = {
             // Save initial data if it exists
             await this.saveData(this.getData());
         } catch (error) {
-            console.error("Error choosing file:", error);
+            if (error.name === 'AbortError') {
+                console.warn("File selection was canceled by the user.");
+            } else {
+                console.error("Error choosing file:", error);
+            }
         }
     },
 
+    // Save data to the selected file
     async saveData(data) {
         if (!this.fileHandle) {
             console.warn("No file selected. Data not saved to file.");
@@ -3661,6 +3666,7 @@ const FileSystemManager = {
         }
     },
 
+    // Load data from the selected file
     async loadData() {
         if (!this.fileHandle) {
             console.warn("No file selected. Using LocalStorage fallback.");
@@ -3678,8 +3684,8 @@ const FileSystemManager = {
         }
     },
 
+    // Gather all data you want to save
     getData() {
-        // Gather all data you want to save
         return {
             stats: JSON.parse(localStorage.getItem("practiceStats") || "{}"),
             todayStats: JSON.parse(localStorage.getItem("todayStats") || "{}"),
@@ -3688,11 +3694,13 @@ const FileSystemManager = {
         };
     },
 
+    // Save all data to the file
     async saveAllToFile() {
         const data = this.getData();
         await this.saveData(data);
     },
 
+    // Load all data from the file and restore it to localStorage
     async loadAllFromFile() {
         const data = await this.loadData();
         if (data) {
@@ -3702,6 +3710,18 @@ const FileSystemManager = {
             localStorage.setItem("writingProgress", JSON.stringify(data.progress));
             alert("Data successfully restored from file!");
         }
+    },
+
+    // Verify if the handle has permissions; if not, request permissions
+    async verifyPermission(handle) {
+        const options = { mode: 'readwrite' };
+        if (await handle.queryPermission(options) === 'granted') {
+            return handle;
+        }
+        if (await handle.requestPermission(options) === 'granted') {
+            return handle;
+        }
+        return null;
     }
 };
 
@@ -3718,14 +3738,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // Add Save Button for Manual Save
-document.querySelector("#save-button").addEventListener("click", async () => {
+document.getElementById("save-button").addEventListener("click", async () => {
     await FileSystemManager.saveAllToFile();
 });
 
 // Add Load Button for Manual Load
-document.querySelector("#load-button").addEventListener("click", async () => {
+document.getElementById("load-button").addEventListener("click", async () => {
     await FileSystemManager.loadAllFromFile();
 });
+
 
 </script>
 </body>
