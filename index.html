@@ -1898,19 +1898,24 @@ button#view-word-list-btn.word-list-btn:hover {
         };
     }
 
-    openDB()
-        .then(() => loadAllItems())
-        .then(() => {
-            const shim = createLocalStorageShim();
-            Object.defineProperty(window, 'localStorage', {
-                value: shim,
-                writable: false,
-                configurable: false
-            });
-        })
-        .catch((error) => {
-            console.error('Failed to initialize IndexedDB-backed localStorage:', error);
+openDB()
+    .then(() => {
+        console.log("IndexedDB opened successfully");
+        return loadAllItems();
+    })
+    .then(() => {
+        console.log("All items loaded:", inMemoryStorage);
+        const shim = createLocalStorageShim();
+        Object.defineProperty(window, 'localStorage', {
+            value: shim,
+            writable: false,
+            configurable: false
         });
+        console.log("localStorage shim ready");
+    })
+    .catch((error) => {
+        console.error('Failed to initialize IndexedDB-backed localStorage:', error);
+    });
 })();
 </script>
     <script>
