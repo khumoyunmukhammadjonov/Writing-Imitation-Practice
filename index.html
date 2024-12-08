@@ -1798,6 +1798,144 @@ button#view-word-list-btn.word-list-btn:hover {
 </div>
 
     <script>
+// Name of the IndexedDB database and object store
+const DB_NAME = 'LocalStorageBackupDB';
+const STORE_NAME = 'LocalStorageData';
+let db = null;
+
+// Open the IndexedDB database
+function openIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        
+        request.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: 'key' });
+            }
+        };
+        
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            resolve(db);
+        };
+        
+        request.onerror = function(event) {
+            console.error('IndexedDB error:', event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
+
+// Get all key-value pairs from IndexedDB
+function getAllFromIndexedDB() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            return resolve({});
+        }
+        
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
+        
+        request.onsuccess = function() {
+            const result = {};
+            request.result.forEach(item => {
+                result[item.key] = item.value;
+            });
+            resolve(result);
+        };
+        
+        request.onerror = function(event) {
+            reject(event.target.error);
+        };
+    });
+}
+
+// Set an item in IndexedDB
+function setInIndexedDB(key, value) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.put({ key: key, value: value });
+        
+        request.onsuccess = () => resolve(true);
+        request.onerror = event => reject(event.target.error);
+    });
+}
+
+// Remove an item from IndexedDB
+function removeFromIndexedDB(key) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.delete(key);
+        
+        request.onsuccess = () => resolve(true);
+        request.onerror = event => reject(event.target.error);
+    });
+}
+
+// Clear all data from IndexedDB
+function clearIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.clear();
+        
+        request.onsuccess = () => resolve(true);
+        request.onerror = event => reject(event.target.error);
+    });
+}
+
+// Wrap localStorage methods to also sync with IndexedDB
+function wrapLocalStorage() {
+    const originalSetItem = localStorage.setItem;
+    const originalRemoveItem = localStorage.removeItem;
+    const originalClear = localStorage.clear;
+    
+    localStorage.setItem = function(key, value) {
+        originalSetItem.call(localStorage, key, value);
+        // Sync to IndexedDB
+        setInIndexedDB(key, value).catch(err => console.error('Error setting item in IndexedDB:', err));
+    };
+    
+    localStorage.removeItem = function(key) {
+        originalRemoveItem.call(localStorage, key);
+        // Remove from IndexedDB
+        removeFromIndexedDB(key).catch(err => console.error('Error removing item in IndexedDB:', err));
+    };
+    
+    localStorage.clear = function() {
+        originalClear.call(localStorage);
+        // Clear IndexedDB
+        clearIndexedDB().catch(err => console.error('Error clearing IndexedDB:', err));
+    };
+}
+
+// Initialize the system
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        await openIndexedDB();
+        
+        // If localStorage is empty but IndexedDB has data, restore it
+        if (localStorage.length === 0) {
+            const allData = await getAllFromIndexedDB();
+            for (const [key, value] of Object.entries(allData)) {
+                localStorage.setItem(key, value);
+            }
+        }
+        
+        // Wrap localStorage methods now that DB is ready
+        wrapLocalStorage();
+        
+        console.log('LocalStorage is now backed up by IndexedDB!');
+        
+    } catch (error) {
+        console.error('Error initializing IndexedDB localStorage backup:', error);
+    }
+});
+
 // 1. Core Management Systems
 const ColorManager = {
     getTextColor(isLowLight) {
