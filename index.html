@@ -3571,9 +3571,12 @@ const BackupSystem = {
     DB_NAME: 'writingPracticeBackupDB',
     DB_VERSION: 1,
     STORES: ['settings', 'statistics', 'wordList', 'practiceData'],
-    
+    BACKUP_INTERVAL: 1000, // Backup every second
+
     async init() {
         try {
+            console.log('Backup System - Initializing...');
+            
             // Initialize IndexedDB
             const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
             
@@ -3598,9 +3601,10 @@ const BackupSystem = {
 
             // Start automatic backup
             this.startAutoBackup();
-            
+
             // Attempt to recover data if localStorage is empty
             await this.recoverDataIfNeeded();
+
         } catch (error) {
             console.error('Backup System - Initialization error:', error);
         }
@@ -3610,6 +3614,8 @@ const BackupSystem = {
         try {
             if (!this.db) return;
 
+            console.log('Backup System - Creating backup...');
+            
             // Collect all localStorage data
             const backup = {};
             for (let i = 0; i < localStorage.length; i++) {
@@ -3618,9 +3624,13 @@ const BackupSystem = {
             }
 
             // Save to IndexedDB
-            const transaction = this.db.transaction(this.STORES, 'readwrite');
+            const transaction = this.db.transaction(['practiceData'], 'readwrite');
             const store = transaction.objectStore('practiceData');
-            await store.put(backup, 'fullBackup');
+            await new Promise((resolve, reject) => {
+                const request = store.put(backup, 'fullBackup');
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject(event.target.error);
+            });
 
             console.log('Backup System - Backup created successfully');
         } catch (error) {
@@ -3632,9 +3642,14 @@ const BackupSystem = {
         try {
             // Only recover if localStorage is empty
             if (localStorage.length === 0 && this.db) {
-                const transaction = this.db.transaction('practiceData', 'readonly');
+                console.log('Backup System - Attempting recovery...');
+                const transaction = this.db.transaction(['practiceData'], 'readonly');
                 const store = transaction.objectStore('practiceData');
-                const backup = await store.get('fullBackup');
+                const backup = await new Promise((resolve, reject) => {
+                    const request = store.get('fullBackup');
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
 
                 if (backup) {
                     // Restore data to localStorage
@@ -3653,23 +3668,26 @@ const BackupSystem = {
     },
 
     startAutoBackup() {
-        // Backup every 5 minutes
-        setInterval(() => this.backupData(), 5 * 60 * 1000);
+        // Backup at a defined interval
+        setInterval(() => this.backupData(), this.BACKUP_INTERVAL);
 
         // Backup on page unload
         window.addEventListener('beforeunload', () => this.backupData());
 
         // Backup when localStorage changes
         const originalSetItem = localStorage.setItem;
-        localStorage.setItem = function(key, value) {
+        localStorage.setItem = function (key, value) {
             originalSetItem.apply(this, arguments);
             BackupSystem.backupData();
         };
+
+        console.log('Backup System - Auto backup started');
     }
 };
 
 // Initialize the backup system when the page loads
 document.addEventListener('DOMContentLoaded', () => BackupSystem.init());
+
 </script>
 </body>
 </html>
