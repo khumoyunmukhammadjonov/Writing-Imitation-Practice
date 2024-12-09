@@ -2136,46 +2136,18 @@ function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
     
-    // Dynamic Spacing Check: Handle both punctuation and abbreviations
-    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])(?=[a-zA-Z])/g; // Punctuation followed by a letter
-    const abbreviationPattern = /\b(?:[A-Za-z]\.){2,}|\b[A-Za-z]\./g; // Abbreviations like "U.S." or "Dr."
-
-    // Replace abbreviations temporarily to avoid false positives
-    const userInputWithoutAbbreviations = userInput.replace(abbreviationPattern, match => match.replace(/\./g, 'PLACEHOLDER'));
-
-    // Check for spacing issues (punctuation followed by a letter without space)
-    if (punctuationWithoutSpacePattern.test(userInputWithoutAbbreviations)) {
-        ResultManager.showSpacingError();
+    // Early check for excessive spaces (optional: you can remove this as well)
+    if (userInput.includes('  ')) {
+        document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
         return;
     }
-
+    
     const originalWords = originalSentence.split(' ');
     const userWords = userInput.split(' ');
     let correctWords = "";
     let incorrectWordFound = false;
-    let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
-
-    // Separate patterns for different checks
-    const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
-
-    // First, identify hyphenated words
-    const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
-    const hyphenPositions = [];
-    
-    // Record positions of valid hyphens in hyphenated words
-    hyphenatedWords.forEach(word => {
-        let pos = userInput.indexOf(word);
-        while (pos !== -1) {
-            const hyphens = word.match(/-/g) || [];
-            hyphens.forEach((_, index) => {
-                const hyphenPos = pos + word.indexOf('-', index);
-                hyphenPositions.push(hyphenPos);
-            });
-            pos = userInput.indexOf(word, pos + 1);
-        }
-    });
 
     // Rest of the comparison logic
     for (let i = 0; i < userWords.length; i++) {
@@ -2225,6 +2197,7 @@ function checkText() {
     updateProgressBar();
     saveProgress();
 }
+
 
 // 15. Progress Management
 function saveProgress() {
