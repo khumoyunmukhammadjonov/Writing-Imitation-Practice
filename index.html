@@ -3541,6 +3541,200 @@ document.getElementById('theme-toggle-btn').onclick = function() {
     updateWarningTheme();
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Data Persistence System
+const AutoPersist = {
+    storageKey: 'writing-practice-data',
+    fileHandle: null,
+
+    async init() {
+        try {
+            // Request permission to use the file system
+            const dirHandle = await window.showDirectoryPicker({
+                mode: 'readwrite',
+                startIn: 'documents'
+            });
+            
+            // Try to get existing file or create new one
+            try {
+                this.fileHandle = await dirHandle.getFileHandle('writing-practice-data.json', {
+                    create: true
+                });
+                
+                // Load initial data
+                await this.loadFromFile();
+            } catch (error) {
+                console.error('Error accessing file:', error);
+                // Fallback to localStorage only
+                this.loadFromLocalStorage();
+            }
+
+            // Set up auto-save for both localStorage and file
+            this.setupAutoSave();
+        } catch (error) {
+            console.error('Error initializing file system:', error);
+            // Fallback to localStorage only
+            this.loadFromLocalStorage();
+        }
+    },
+
+    getAllData() {
+        return {
+            writingProgress: localStorage.getItem('writingProgress'),
+            practiceStats: localStorage.getItem('practiceStats'),
+            todayStats: localStorage.getItem('todayStats'),
+            wordList: localStorage.getItem('wordList'),
+            textControls: localStorage.getItem('textControls'),
+            theme: localStorage.getItem('theme'),
+            activeSession: localStorage.getItem('activeSession'),
+            lastStatsReset: localStorage.getItem('lastStatsReset'),
+            lastMistakesCheck: localStorage.getItem('lastMistakesCheck'),
+            mistakesStatus: localStorage.getItem('mistakesStatus'),
+            previousDayMistakes: localStorage.getItem('previousDayMistakes')
+        };
+    },
+
+    async saveToFile() {
+        if (!this.fileHandle) return;
+
+        try {
+            const writable = await this.fileHandle.createWritable();
+            await writable.write(JSON.stringify(this.getAllData(), null, 2));
+            await writable.close();
+        } catch (error) {
+            console.error('Error saving to file:', error);
+        }
+    },
+
+    async loadFromFile() {
+        if (!this.fileHandle) return;
+
+        try {
+            const file = await this.fileHandle.getFile();
+            const text = await file.text();
+            const data = JSON.parse(text);
+            this.restoreData(data);
+        } catch (error) {
+            console.error('Error loading from file:', error);
+        }
+    },
+
+    loadFromLocalStorage() {
+        const savedData = localStorage.getItem(this.storageKey);
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                this.restoreData(data);
+            } catch (error) {
+                console.error('Error parsing localStorage data:', error);
+            }
+        }
+    },
+
+    restoreData(data) {
+        Object.entries(data).forEach(([key, value]) => {
+            if (value !== null) {
+                localStorage.setItem(key, value);
+            }
+        });
+    },
+
+    setupAutoSave() {
+        // Save to both localStorage and file every time localStorage changes
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = (...args) => {
+            originalSetItem.apply(localStorage, args);
+            
+            // Save complete data snapshot to our storage key
+            const data = this.getAllData();
+            originalSetItem.call(localStorage, this.storageKey, JSON.stringify(data));
+            
+            // Save to file if available
+            this.saveToFile();
+        };
+
+        // Also save periodically as backup
+        setInterval(() => {
+            const data = this.getAllData();
+            originalSetItem.call(localStorage, this.storageKey, JSON.stringify(data));
+            this.saveToFile();
+        }, 5 * 60 * 1000); // Every 5 minutes
+    }
+};
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Add initialization button to the UI
+    const initButton = document.createElement('button');
+    initButton.innerHTML = `
+        <i class="fi fi-rr-folder"></i>
+        Select Save Location
+    `;
+    initButton.className = 'control-btn';
+    initButton.title = 'Select folder to save your progress';
+    initButton.onclick = () => AutoPersist.init();
+
+    // Add to the controls container
+    const container = document.querySelector('.toggle-and-list-container');
+    if (container) {
+        container.appendChild(initButton);
+    }
+
+    // Style for the initialization button
+    const style = document.createElement('style');
+    style.textContent = `
+        .control-btn[title="Select Save Location"] {
+            background: #4CAF50;
+            color: white;
+        }
+        .control-btn[title="Select Save Location"]:hover {
+            background: #45a049;
+        }
+        .control-btn[title="Select Save Location"] i {
+            color: white;
+        }
+        .low-light-mode .control-btn[title="Select Save Location"] {
+            background: #2D2D2D;
+            border: 1px solid #4CAF50;
+        }
+        .low-light-mode .control-btn[title="Select Save Location"]:hover {
+            background: #1E1E1E;
+        }
+    `;
+    document.head.appendChild(style);
+});
 </script>
 </body>
 </html>
