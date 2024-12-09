@@ -2136,17 +2136,15 @@ function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
     
-    // Regex to dynamically detect abbreviations and prevent spacing errors
-    const dynamicAbbreviationRegex = /\b(?:[A-Za-z]\.){2,}|\b[A-Za-z]\./g; // Detect abbreviations like "U.S.", "Dr."
-    const spacingErrorRegex = /([.!?])(?=[a-zA-Z])/g; // Detect punctuation directly followed by a letter
+    // Dynamic Spacing Check: Handle both punctuation and abbreviations
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])(?=[a-zA-Z])/g; // Punctuation followed by a letter
+    const abbreviationPattern = /\b(?:[A-Za-z]\.){2,}|\b[A-Za-z]\./g; // Abbreviations like "U.S." or "Dr."
 
-    // Temporarily replace abbreviations with placeholders to avoid false positives
-    const userInputWithoutAbbreviations = userInput.replace(dynamicAbbreviationRegex, match => {
-        return match.replace(/\./g, "PLACEHOLDER");
-    });
+    // Replace abbreviations temporarily to avoid false positives
+    const userInputWithoutAbbreviations = userInput.replace(abbreviationPattern, match => match.replace(/\./g, 'PLACEHOLDER'));
 
-    // Check for spacing errors
-    if (spacingErrorRegex.test(userInputWithoutAbbreviations)) {
+    // Check for spacing issues (punctuation followed by a letter without space)
+    if (punctuationWithoutSpacePattern.test(userInputWithoutAbbreviations)) {
         ResultManager.showSpacingError();
         return;
     }
@@ -2155,9 +2153,31 @@ function checkText() {
     const userWords = userInput.split(' ');
     let correctWords = "";
     let incorrectWordFound = false;
+    let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
 
+    // Separate patterns for different checks
+    const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+
+    // First, identify hyphenated words
+    const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
+    const hyphenPositions = [];
+    
+    // Record positions of valid hyphens in hyphenated words
+    hyphenatedWords.forEach(word => {
+        let pos = userInput.indexOf(word);
+        while (pos !== -1) {
+            const hyphens = word.match(/-/g) || [];
+            hyphens.forEach((_, index) => {
+                const hyphenPos = pos + word.indexOf('-', index);
+                hyphenPositions.push(hyphenPos);
+            });
+            pos = userInput.indexOf(word, pos + 1);
+        }
+    });
+
+    // Rest of the comparison logic
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
@@ -2171,16 +2191,33 @@ function checkText() {
 
     if (userInput === originalSentence) {
         ResultManager.showSuccess();
+        
+        if (mistakeCount === 0) {
+            statisticsManager.recordFirstTrySuccess();
+        }
         currentSentenceIndex++;
         saveProgress();
         setTimeout(() => {
             ResultManager.clearResult();
             showSentence();
         }, 1000);
+
+        if (mistakeCount >= 2) {
+            ResultManager.showMistakeCount(mistakeCount);
+            mistakeCount = 0;
+            currentSentenceIndex--;
+        } else {
+            mistakeCount = 0;
+        }
     } else if (incorrectWordFound) {
         ResultManager.showErrorMessage(incorrectWord, correctWord);
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
+        if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
+            statisticsManager.recordMistake(incorrectWord, correctWord);
+        }
+
+        document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
         ResultManager.showProgress();
     }
