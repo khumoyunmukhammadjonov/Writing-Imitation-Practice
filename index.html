@@ -3581,12 +3581,6 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 
 
 
-
-
-
-
-
-
 <script>
 // Dynamically create the "Set Up Data File" button
 function createSetupFileButton() {
@@ -3704,6 +3698,7 @@ window.addEventListener('load', async () => {
             await loadLocalStorageFromFile();
         } else {
             console.log('No file handle found. Prompting user to set up.');
+            alert('Please set up the data file to ensure your progress is saved.');
         }
     } catch (err) {
         console.error('Error loading file handle or data:', err);
