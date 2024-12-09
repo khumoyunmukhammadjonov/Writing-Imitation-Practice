@@ -3614,6 +3614,34 @@ function createSetupFileButton() {
     return setupButton;
 }
 
+// IndexedDB utility functions
+async function openDatabase() {
+    return await idb.openDB('FileHandleDB', 1, {
+        upgrade(db) {
+            db.createObjectStore('fileHandles');
+        },
+    });
+}
+
+async function saveFileHandleToDB(fileHandle) {
+    const db = await openDatabase();
+    const tx = db.transaction('fileHandles', 'readwrite');
+    tx.objectStore('fileHandles').put(fileHandle, 'savedFileHandle');
+    await tx.done;
+    console.log('File handle saved to IndexedDB.');
+}
+
+async function loadFileHandleFromDB() {
+    const db = await openDatabase();
+    const tx = db.transaction('fileHandles', 'readonly');
+    const savedHandle = await tx.objectStore('fileHandles').get('savedFileHandle');
+    if (savedHandle) {
+        console.log('File handle loaded from IndexedDB.');
+        return savedHandle;
+    }
+    return null;
+}
+
 // File handle for the selected file
 let dataFileHandle = null;
 
@@ -3660,6 +3688,7 @@ async function setupDataFile() {
             }]
         });
         alert('File setup complete. Your data will now be saved and loaded automatically.');
+        await saveFileHandleToDB(dataFileHandle); // Save the file handle to IndexedDB
         await saveLocalStorageToFile(); // Save current data to the file
     } catch (err) {
         console.error('File setup canceled or failed:', err);
@@ -3668,15 +3697,27 @@ async function setupDataFile() {
 
 // Automatically load data from the file when the site loads
 window.addEventListener('load', async () => {
-    if (dataFileHandle) {
-        await loadLocalStorageFromFile();
+    try {
+        dataFileHandle = await loadFileHandleFromDB(); // Load file handle from IndexedDB
+        if (dataFileHandle) {
+            console.log('File handle found. Loading data...');
+            await loadLocalStorageFromFile();
+        } else {
+            console.log('No file handle found. Prompting user to set up.');
+        }
+    } catch (err) {
+        console.error('Error loading file handle or data:', err);
     }
 });
 
 // Automatically save data to the file when the user leaves the site
 window.addEventListener('beforeunload', async () => {
-    if (dataFileHandle) {
-        await saveLocalStorageToFile();
+    try {
+        if (dataFileHandle) {
+            await saveLocalStorageToFile();
+        }
+    } catch (err) {
+        console.error('Error saving data before unload:', err);
     }
 });
 
@@ -3686,6 +3727,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFileButton.addEventListener('click', setupDataFile);
 });
 </script>
+
 
 </body>
 </html>
