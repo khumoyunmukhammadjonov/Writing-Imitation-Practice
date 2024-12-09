@@ -1982,30 +1982,31 @@ let mistakeCount = 0;
 
 // 5. Core Practice Functions
 function processArticle() {
-    let articleInput = document.getElementById("article-input").value;
+    let articleInput = document.getElementById("article-input").value.trim();
     
-    clearProgress();
-    restartPractice();
-
-    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
+    // Dynamic regex to detect abbreviations and prevent splitting
+    const abbreviationRegex = /\b[A-Z](?:\.[A-Z])+\.?/g;
+    const abbreviations = articleInput.match(abbreviationRegex) || [];
+    const safeSplitRegex = new RegExp(
+        `(?<!\\b(?:${abbreviations.join('|').replace(/\./g, '\\.')}))` + // Protect abbreviations
+        `(?<=[.!?])\\s+`, // Split only on valid sentence-ending punctuation
+        'g'
+    );
+    
+    // Split the article into sentences
+    sentences = articleInput.split(safeSplitRegex);
+    
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
-        mistakeCount = 0;
-        updateProgressBar();
         showSentence();
-        
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
-        
-         // Add this line to start tracking the practice session
-        statisticsManager.startPracticeSession();
-        
-        saveProgress();
     } else {
         alert("Please paste a valid article.");
     }
 }
+
 
 // 6. Text Processing Functions
 function normalizeText(text) {
