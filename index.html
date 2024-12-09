@@ -1983,19 +1983,21 @@ let mistakeCount = 0;
 // 5. Core Practice Functions
 function processArticle() {
     let articleInput = document.getElementById("article-input").value.trim();
-    
-    // Dynamic regex to detect abbreviations and prevent splitting
-    const abbreviationRegex = /\b[A-Z](?:\.[A-Z])+\.?/g;
+
+    // Step 1: Detect common abbreviations dynamically
+    const abbreviationRegex = /\b[A-Z](?:\.[A-Z])*\.?/g;
     const abbreviations = articleInput.match(abbreviationRegex) || [];
+    
+    // Step 2: Construct a regex to prevent splitting at abbreviations
     const safeSplitRegex = new RegExp(
-        `(?<!\\b(?:${abbreviations.join('|').replace(/\./g, '\\.')}))` + // Protect abbreviations
-        `(?<=[.!?])\\s+`, // Split only on valid sentence-ending punctuation
+        `(?<!\\b(?:${abbreviations.map(abbr => abbr.replace(/\./g, '\\.')).join('|')}))` + // Protect abbreviations
+        `(?<=[.!?])\\s+(?=[A-Z])`, // Match sentence-ending punctuation only when followed by a capital letter
         'g'
     );
-    
-    // Split the article into sentences
+
+    // Step 3: Split the article into sentences
     sentences = articleInput.split(safeSplitRegex);
-    
+
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         showSentence();
@@ -2006,7 +2008,6 @@ function processArticle() {
         alert("Please paste a valid article.");
     }
 }
-
 
 // 6. Text Processing Functions
 function normalizeText(text) {
