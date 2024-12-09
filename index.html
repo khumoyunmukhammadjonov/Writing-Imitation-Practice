@@ -3542,5 +3542,136 @@ document.getElementById('theme-toggle-btn').onclick = function() {
 };
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+let fileHandle = null;
+
+// Request File Access
+async function requestFileAccess() {
+    try {
+        if (!fileHandle) {
+            fileHandle = await window.showSaveFilePicker({
+                suggestedName: 'WritingPracticeData.json',
+                types: [{
+                    description: 'JSON Files',
+                    accept: { 'application/json': ['.json'] }
+                }]
+            });
+        }
+        return fileHandle;
+    } catch (err) {
+        console.error('File access denied or cancelled.', err);
+        return null;
+    }
+}
+
+// Save Data to File
+async function saveDataToFile(data) {
+    try {
+        const handle = await requestFileAccess();
+        if (handle) {
+            const writable = await handle.createWritable();
+            await writable.write(JSON.stringify(data, null, 2));
+            await writable.close();
+            console.log('Progress saved to file.');
+        }
+    } catch (err) {
+        console.error('Error saving data to file:', err);
+    }
+}
+
+// Load Data from File
+async function loadDataFromFile() {
+    try {
+        const handle = await requestFileAccess();
+        if (handle) {
+            const file = await handle.getFile();
+            const contents = await file.text();
+            return JSON.parse(contents);
+        }
+    } catch (err) {
+        console.error('Error loading data from file:', err);
+        return null;
+    }
+}
+
+// Auto-Save Progress
+function autoSaveProgress() {
+    const progressData = {
+        currentSentenceIndex,
+        mistakeCount,
+        sentences,
+        articleInput: document.getElementById("article-input").value,
+        userInput: document.getElementById("user-input").value,
+        practiceVisible: document.getElementById("practice-section").style.display,
+        startButtonHidden: document.getElementById("start-button").classList.contains("hidden"),
+        articleInputHidden: document.getElementById("article-input").classList.contains("hidden"),
+    };
+    saveDataToFile(progressData);
+}
+
+// Auto-Load Progress
+async function autoLoadProgress() {
+    const data = await loadDataFromFile();
+    if (data) {
+        // Restore state from file
+        currentSentenceIndex = data.currentSentenceIndex || 0;
+        mistakeCount = data.mistakeCount || 0;
+        sentences = data.sentences || [];
+        document.getElementById("article-input").value = data.articleInput || "";
+        document.getElementById("user-input").value = data.userInput || "";
+        document.getElementById("practice-section").style.display = data.practiceVisible || "none";
+        if (data.startButtonHidden) {
+            document.getElementById("start-button").classList.add("hidden");
+        }
+        if (data.articleInputHidden) {
+            document.getElementById("article-input").classList.add("hidden");
+        }
+        console.log('Progress loaded from file.');
+    }
+}
+
+// Event Listeners for Auto-Save and Auto-Load
+window.addEventListener('beforeunload', autoSaveProgress);
+document.addEventListener('DOMContentLoaded', autoLoadProgress);
+
 </body>
 </html>
