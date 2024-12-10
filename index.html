@@ -2134,13 +2134,13 @@ function showCompletionMessage() {
 function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
-    
+
     // Early check for excessive spaces
     if (userInput.includes('  ')) {
         document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
         return;
     }
-    
+
     const originalWords = originalSentence.split(' ');
     const userWords = userInput.split(' ');
     let correctWords = "";
@@ -2148,19 +2148,13 @@ function checkText() {
     let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
-
-    // Use compromise to identify abbreviations in the user input
-    const doc = nlp(userInput);
-    const abbreviations = doc.abbreviations().out('array');
-    
     // Separate patterns for different checks
     const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
     const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
-    
     // First, identify hyphenated words
     const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
     const hyphenPositions = [];
-    
+
     // Record positions of valid hyphens in hyphenated words
     hyphenatedWords.forEach(word => {
         let pos = userInput.indexOf(word);
@@ -2173,23 +2167,17 @@ function checkText() {
             pos = userInput.indexOf(word, pos + 1);
         }
     });
-
     // Check for punctuation spacing issues
     let match;
     while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
         const punctuationPos = match.index;
-        const currentText = userInput.substring(Math.max(0, punctuationPos - 10), punctuationPos + 10);
-        
-        // Skip if this punctuation is part of an abbreviation or hyphenated word
-        const isAbbreviation = abbreviations.some(abbr => currentText.includes(abbr));
-        
-        if (!hyphenPositions.includes(punctuationPos) && !isAbbreviation) {
+        // Only count as an error if this punctuation is not part of a hyphenated word
+        if (!hyphenPositions.includes(punctuationPos)) {
             missingSpaceFound = true;
             break;
         }
     }
-
-    // Rest of the comparison logic remains the same
+    // Rest of the comparison logic
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
@@ -2200,11 +2188,9 @@ function checkText() {
             break;
         }
     }
-
-    // The rest of your existing code remains the same
     if (userInput === originalSentence) {
         ResultManager.showSuccess();
-        
+
         if (mistakeCount === 0) {
             statisticsManager.recordFirstTrySuccess();
         }
@@ -2228,8 +2214,8 @@ function checkText() {
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
         if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
-            statisticsManager.recordMistake(incorrectWord, correctWord);
-        }
+    statisticsManager.recordMistake(incorrectWord, correctWord);
+}
         document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
         ResultManager.showProgress();
