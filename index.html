@@ -2131,119 +2131,97 @@ function showCompletionMessage() {
 
 
 // 13. Text Checking System
-
-// Function to extract abbreviations from a sentence using Compromise
-function extractAbbreviations(sentence) {
-    const doc = nlp(sentence);
-    const abbreviations = doc.abbreviations().out('array');
-    return abbreviations;
-}
-
 function checkText() {
-    try {
-        const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
-        const userInput = normalizeText(document.getElementById("user-input").value.trim());
+    const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
+    const userInput = normalizeText(document.getElementById("user-input").value.trim());
 
-        // Early check for excessive spaces
-        if (userInput.includes('  ')) {
-            document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
-            return;
-        }
-
-        const originalWords = originalSentence.split(' ');
-        const userWords = userInput.split(' ');
-        let correctWords = "";
-        let incorrectWordFound = false;
-        let missingSpaceFound = false;
-        let incorrectWord = "";
-        let correctWord = "";
-
-        // Extract abbreviations from the original sentence
-        const abbreviations = extractAbbreviations(originalSentence);
-
-        // Create a set of punctuation positions that are part of abbreviations
-        const abbreviationPunctuations = new Set();
-
-        abbreviations.forEach(abbr => {
-            // Find all occurrences of the abbreviation in the user input
-            let startIndex = userInput.indexOf(abbr);
-            while (startIndex !== -1) {
-                // Record positions of punctuation within the abbreviation
-                for (let i = 0; i < abbr.length; i++) {
-                    if (/[.,!?;:"()\[\]{}\/…]/.test(abbr[i])) {
-                        abbreviationPunctuations.add(startIndex + i);
-                    }
-                }
-                startIndex = userInput.indexOf(abbr, startIndex + abbr.length);
-            }
-        });
-
-        // Regular expression to find punctuation marks not part of abbreviations
-        const punctuationWithoutSpacePattern = /([.,!?;:"()\[\]{}\/…])/g;
-
-        // Identify punctuation spacing issues excluding abbreviations
-        let match;
-        while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
-            const punctuationPos = match.index;
-            // If the punctuation is not part of an abbreviation, check for spacing
-            if (!abbreviationPunctuations.has(punctuationPos)) {
-                const nextChar = userInput[punctuationPos + 1];
-                if (nextChar && nextChar !== ' ') {
-                    missingSpaceFound = true;
-                    break;
-                }
-            }
-        }
-
-        // Comparison logic
-        for (let i = 0; i < userWords.length; i++) {
-            if (userWords[i] === originalWords[i]) {
-                correctWords += userWords[i] + ' ';
-            } else {
-                incorrectWordFound = true;
-                incorrectWord = userWords[i];
-                correctWord = originalWords[i];
-                break;
-            }
-        }
-
-        if (userInput === originalSentence) {
-            ResultManager.showSuccess();
-
-            if (mistakeCount === 0) {
-                statisticsManager.recordFirstTrySuccess();
-            }
-            currentSentenceIndex++;
-            saveProgress();
-            setTimeout(() => {
-                ResultManager.clearResult();
-                showSentence();
-            }, 1000);
-            if (mistakeCount >= 2) {
-                ResultManager.showMistakeCount(mistakeCount);
-                mistakeCount = 0;
-                currentSentenceIndex--;
-            } else {
-                mistakeCount = 0;
-            }
-        } else if (missingSpaceFound) {
-            ResultManager.showSpacingError();
-        } else if (incorrectWordFound) {
-            ResultManager.showErrorMessage(incorrectWord, correctWord);
-            document.getElementById("user-input").value = correctWords;
-            mistakeCount++;
-            if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
-                statisticsManager.recordMistake(incorrectWord, correctWord);
-            }
-            document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
-        } else {
-            ResultManager.showProgress();
-        }
-        updateProgressBar();
-        saveProgress();
-    } catch (error) {
-        console.error('Error in checkText:', error);
+    // Early check for excessive spaces
+    if (userInput.includes('  ')) {
+        document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
+        return;
     }
+
+    const originalWords = originalSentence.split(' ');
+    const userWords = userInput.split(' ');
+    let correctWords = "";
+    let incorrectWordFound = false;
+    let missingSpaceFound = false;
+    let incorrectWord = "";
+    let correctWord = "";
+    // Separate patterns for different checks
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
+    const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+    // First, identify hyphenated words
+    const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
+    const hyphenPositions = [];
+
+    // Record positions of valid hyphens in hyphenated words
+    hyphenatedWords.forEach(word => {
+        let pos = userInput.indexOf(word);
+        while (pos !== -1) {
+            const hyphens = word.match(/-/g) || [];
+            hyphens.forEach((_, index) => {
+                const hyphenPos = pos + word.indexOf('-', index);
+                hyphenPositions.push(hyphenPos);
+            });
+            pos = userInput.indexOf(word, pos + 1);
+        }
+    });
+    // Check for punctuation spacing issues
+    let match;
+    while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
+        const punctuationPos = match.index;
+        // Only count as an error if this punctuation is not part of a hyphenated word
+        if (!hyphenPositions.includes(punctuationPos)) {
+            missingSpaceFound = true;
+            break;
+        }
+    }
+    // Rest of the comparison logic
+    for (let i = 0; i < userWords.length; i++) {
+        if (userWords[i] === originalWords[i]) {
+            correctWords += userWords[i] + ' ';
+        } else {
+            incorrectWordFound = true;
+            incorrectWord = userWords[i];
+            correctWord = originalWords[i];
+            break;
+        }
+    }
+    if (userInput === originalSentence) {
+        ResultManager.showSuccess();
+
+        if (mistakeCount === 0) {
+            statisticsManager.recordFirstTrySuccess();
+        }
+        currentSentenceIndex++;
+        saveProgress();
+        setTimeout(() => {
+            ResultManager.clearResult();
+            showSentence();
+        }, 1000);
+        if (mistakeCount >= 2) {
+            ResultManager.showMistakeCount(mistakeCount);
+            mistakeCount = 0;
+            currentSentenceIndex--;
+        } else {
+            mistakeCount = 0;
+        }
+    } else if (missingSpaceFound) {
+        ResultManager.showSpacingError();
+    } else if (incorrectWordFound) {
+        ResultManager.showErrorMessage(incorrectWord, correctWord);
+        document.getElementById("user-input").value = correctWords;
+        mistakeCount++;
+        if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
+    statisticsManager.recordMistake(incorrectWord, correctWord);
+}
+        document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
+    } else {
+        ResultManager.showProgress();
+    }
+    updateProgressBar();
+    saveProgress();
 }
 // 15. Progress Management
 function saveProgress() {
