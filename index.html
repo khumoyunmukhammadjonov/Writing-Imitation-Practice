@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-<script src="https://unpkg.com/compromise"></script>
     <title>Writing Imitation Practice</title>
     <style>
       /* Base body styles - Sets up the main page layout and typography */
@@ -1800,7 +1799,6 @@ button#view-word-list-btn.word-list-btn:hover {
 
     <script>
 
-
 // 1. Core Management Systems
 const ColorManager = {
     getTextColor(isLowLight) {
@@ -1984,35 +1982,30 @@ let mistakeCount = 0;
 
 // 5. Core Practice Functions
 function processArticle() {
-    const articleInput = document.getElementById("article-input").value;
+    let articleInput = document.getElementById("article-input").value;
+    
+    clearProgress();
+    restartPractice();
 
-    if (!articleInput.trim()) {
-        alert("Please paste a valid article.");
-        return;
-    }
-
-    // Use compromise to split sentences while handling edge cases
-    const doc = nlp(articleInput);
-    const sentences = doc.sentences().out('array'); // Get sentences as an array
-
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         mistakeCount = 0;
-        clearProgress();
-        restartPractice();
         updateProgressBar();
-
-        sentences.forEach((sentence) => console.log(sentence)); // Debugging: View split sentences
-
         showSentence();
+        
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
+        
+         // Add this line to start tracking the practice session
+        statisticsManager.startPracticeSession();
+        
+        saveProgress();
     } else {
-        alert("Could not process the article. Please try again.");
+        alert("Please paste a valid article.");
     }
 }
-
 
 // 6. Text Processing Functions
 function normalizeText(text) {
@@ -3578,6 +3571,7 @@ document.getElementById('theme-toggle-btn').onclick = function() {
     }
     updateWarningTheme();
 };
+
 </script>
 </body>
 </html>
