@@ -1982,28 +1982,26 @@ let mistakeCount = 0;
 
 // 5. Core Practice Functions
 function processArticle() {
-    let articleInput = document.getElementById("article-input").value.trim();
-
-    // Step 1: Detect common abbreviations dynamically
-    const abbreviationRegex = /\b[A-Z](?:\.[A-Z])*\.?/g;
-    const abbreviations = articleInput.match(abbreviationRegex) || [];
+    let articleInput = document.getElementById("article-input").value;
     
-    // Step 2: Construct a regex to prevent splitting at abbreviations
-    const safeSplitRegex = new RegExp(
-        `(?<!\\b(?:${abbreviations.map(abbr => abbr.replace(/\./g, '\\.')).join('|')}))` + // Protect abbreviations
-        `(?<=[.!?])\\s+(?=[A-Z])`, // Match sentence-ending punctuation only when followed by a capital letter
-        'g'
-    );
+    clearProgress();
+    restartPractice();
 
-    // Step 3: Split the article into sentences
-    sentences = articleInput.split(safeSplitRegex);
-
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
+        mistakeCount = 0;
+        updateProgressBar();
         showSentence();
+        
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
+        
+         // Add this line to start tracking the practice session
+        statisticsManager.startPracticeSession();
+        
+        saveProgress();
     } else {
         alert("Please paste a valid article.");
     }
@@ -2136,7 +2134,7 @@ function checkText() {
     const originalSentence = normalizeText(sentences[currentSentenceIndex].trim());
     const userInput = normalizeText(document.getElementById("user-input").value.trim());
     
-    // Early check for excessive spaces (optional: you can remove this as well)
+    // Early check for excessive spaces
     if (userInput.includes('  ')) {
         document.getElementById("user-input").value = userInput.replace(/\s+/g, ' ');
         return;
@@ -2146,8 +2144,41 @@ function checkText() {
     const userWords = userInput.split(' ');
     let correctWords = "";
     let incorrectWordFound = false;
+    let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
+
+    // Separate patterns for different checks
+    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
+    const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
+
+    // First, identify hyphenated words
+    const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
+    const hyphenPositions = [];
+    
+    // Record positions of valid hyphens in hyphenated words
+    hyphenatedWords.forEach(word => {
+        let pos = userInput.indexOf(word);
+        while (pos !== -1) {
+            const hyphens = word.match(/-/g) || [];
+            hyphens.forEach((_, index) => {
+                const hyphenPos = pos + word.indexOf('-', index);
+                hyphenPositions.push(hyphenPos);
+            });
+            pos = userInput.indexOf(word, pos + 1);
+        }
+    });
+
+    // Check for punctuation spacing issues
+    let match;
+    while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
+        const punctuationPos = match.index;
+        // Only count as an error if this punctuation is not part of a hyphenated word
+        if (!hyphenPositions.includes(punctuationPos)) {
+            missingSpaceFound = true;
+            break;
+        }
+    }
 
     // Rest of the comparison logic
     for (let i = 0; i < userWords.length; i++) {
@@ -2181,13 +2212,15 @@ function checkText() {
         } else {
             mistakeCount = 0;
         }
+    } else if (missingSpaceFound) {
+        ResultManager.showSpacingError();
     } else if (incorrectWordFound) {
         ResultManager.showErrorMessage(incorrectWord, correctWord);
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
         if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
-            statisticsManager.recordMistake(incorrectWord, correctWord);
-        }
+    statisticsManager.recordMistake(incorrectWord, correctWord);
+}
 
         document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
@@ -2197,8 +2230,6 @@ function checkText() {
     updateProgressBar();
     saveProgress();
 }
-
-
 // 15. Progress Management
 function saveProgress() {
     const progressData = {
