@@ -2149,10 +2149,14 @@ function checkText() {
     let incorrectWord = "";
     let correctWord = "";
 
+    // Use compromise to identify abbreviations in the user input
+    const doc = nlp(userInput);
+    const abbreviations = doc.abbreviations().out('array');
+    
     // Separate patterns for different checks
     const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
     const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
-
+    
     // First, identify hyphenated words
     const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
     const hyphenPositions = [];
@@ -2174,14 +2178,18 @@ function checkText() {
     let match;
     while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
         const punctuationPos = match.index;
-        // Only count as an error if this punctuation is not part of a hyphenated word
-        if (!hyphenPositions.includes(punctuationPos)) {
+        const currentText = userInput.substring(Math.max(0, punctuationPos - 10), punctuationPos + 10);
+        
+        // Skip if this punctuation is part of an abbreviation or hyphenated word
+        const isAbbreviation = abbreviations.some(abbr => currentText.includes(abbr));
+        
+        if (!hyphenPositions.includes(punctuationPos) && !isAbbreviation) {
             missingSpaceFound = true;
             break;
         }
     }
 
-    // Rest of the comparison logic
+    // Rest of the comparison logic remains the same
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
@@ -2193,6 +2201,7 @@ function checkText() {
         }
     }
 
+    // The rest of your existing code remains the same
     if (userInput === originalSentence) {
         ResultManager.showSuccess();
         
@@ -2205,7 +2214,6 @@ function checkText() {
             ResultManager.clearResult();
             showSentence();
         }, 1000);
-
         if (mistakeCount >= 2) {
             ResultManager.showMistakeCount(mistakeCount);
             mistakeCount = 0;
@@ -2220,14 +2228,12 @@ function checkText() {
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
         if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
-    statisticsManager.recordMistake(incorrectWord, correctWord);
-}
-
+            statisticsManager.recordMistake(incorrectWord, correctWord);
+        }
         document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
         ResultManager.showProgress();
     }
-
     updateProgressBar();
     saveProgress();
 }
