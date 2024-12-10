@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-    <script src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
     <title>Writing Imitation Practice</title>
     <style>
       /* Base body styles - Sets up the main page layout and typography */
@@ -1988,10 +1987,7 @@ function processArticle() {
     clearProgress();
     restartPractice();
 
-    // Use Compromise to split sentences accurately
-    const doc = nlp(articleInput);
-    sentences = doc.sentences().out('array').map(sentence => sentence.trim()).filter(sentence => sentence.length > 0);
-    
+    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         mistakeCount = 0;
@@ -2002,7 +1998,7 @@ function processArticle() {
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
         
-         // Start tracking the practice session
+         // Add this line to start tracking the practice session
         statisticsManager.startPracticeSession();
         
         saveProgress();
@@ -2010,7 +2006,6 @@ function processArticle() {
         alert("Please paste a valid article.");
     }
 }
-
 
 // 6. Text Processing Functions
 function normalizeText(text) {
