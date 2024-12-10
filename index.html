@@ -2145,17 +2145,17 @@ function checkText() {
     const userWords = userInput.split(' ');
     let correctWords = "";
     let incorrectWordFound = false;
-    let missingSpaceFound = false;
     let incorrectWord = "";
     let correctWord = "";
-    // Separate patterns for different checks
-    const punctuationWithoutSpacePattern = /([.,!?;:"\(\)\[\]\{\}\/…])([a-zA-Z0-9])/g;
+
+    // Pattern to identify hyphenated words
     const hyphenatedWordPattern = /\b\w+(-\w+)+\b/g;
-    // First, identify hyphenated words
+
+    // Identify hyphenated words in user input
     const hyphenatedWords = userInput.match(hyphenatedWordPattern) || [];
     const hyphenPositions = [];
 
-    // Record positions of valid hyphens in hyphenated words
+    // Record positions of hyphens in hyphenated words to exclude them from error checks
     hyphenatedWords.forEach(word => {
         let pos = userInput.indexOf(word);
         while (pos !== -1) {
@@ -2167,17 +2167,8 @@ function checkText() {
             pos = userInput.indexOf(word, pos + 1);
         }
     });
-    // Check for punctuation spacing issues
-    let match;
-    while ((match = punctuationWithoutSpacePattern.exec(userInput)) !== null) {
-        const punctuationPos = match.index;
-        // Only count as an error if this punctuation is not part of a hyphenated word
-        if (!hyphenPositions.includes(punctuationPos)) {
-            missingSpaceFound = true;
-            break;
-        }
-    }
-    // Rest of the comparison logic
+
+    // Compare each word in user input with the original sentence
     for (let i = 0; i < userWords.length; i++) {
         if (userWords[i] === originalWords[i]) {
             correctWords += userWords[i] + ' ';
@@ -2188,7 +2179,9 @@ function checkText() {
             break;
         }
     }
+
     if (userInput === originalSentence) {
+        // User input matches the original sentence exactly
         ResultManager.showSuccess();
 
         if (mistakeCount === 0) {
@@ -2200,6 +2193,7 @@ function checkText() {
             ResultManager.clearResult();
             showSentence();
         }, 1000);
+
         if (mistakeCount >= 2) {
             ResultManager.showMistakeCount(mistakeCount);
             mistakeCount = 0;
@@ -2207,22 +2201,29 @@ function checkText() {
         } else {
             mistakeCount = 0;
         }
-    } else if (missingSpaceFound) {
-        ResultManager.showSpacingError();
     } else if (incorrectWordFound) {
+        // User input has an incorrect word
         ResultManager.showErrorMessage(incorrectWord, correctWord);
         document.getElementById("user-input").value = correctWords;
         mistakeCount++;
+
+        // Record the mistake if it's not just punctuation differences
         if (incorrectWord.replace(/[.,!?]/g, '') !== correctWord.replace(/[.,!?]/g, '')) {
-    statisticsManager.recordMistake(incorrectWord, correctWord);
-}
+            statisticsManager.recordMistake(incorrectWord, correctWord);
+        }
+
+        // Clear the result message when the user starts typing again
         document.getElementById("user-input").addEventListener("input", ResultManager.clearResult, { once: true });
     } else {
+        // Handle other cases (e.g., extra words, formatting issues)
         ResultManager.showProgress();
     }
+
+    // Update the progress bar and save the current state
     updateProgressBar();
     saveProgress();
 }
+
 // 15. Progress Management
 function saveProgress() {
     const progressData = {
