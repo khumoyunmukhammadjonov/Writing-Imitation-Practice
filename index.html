@@ -1981,30 +1981,49 @@ let currentSentenceIndex = 0;
 let mistakeCount = 0;
 
 // 5. Core Practice Functions
+
 function processArticle() {
     let articleInput = document.getElementById("article-input").value;
-    
+
+    // Clear any previous progress and restart
     clearProgress();
     restartPractice();
 
-    sentences = articleInput.match(/[^\\.\\!\\?]+[\\.\\!\\?]+/g);
+    // Use the enhanced sentence splitting function
+    sentences = splitIntoSentences(articleInput);
+
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         mistakeCount = 0;
         updateProgressBar();
         showSentence();
-        
+
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
-        
-         // Add this line to start tracking the practice session
+
+        // Start tracking the practice session
         statisticsManager.startPracticeSession();
-        
+
+        // Save the progress
         saveProgress();
     } else {
         alert("Please paste a valid article.");
     }
+}
+
+// Enhanced Sentence Splitting Function
+function splitIntoSentences(text) {
+    const abbreviationRegex = /(?:\b(?:[A-Z][a-z]*|etc|vs|e\.g|i\.e)\.|\b(?:[A-Z]\.)){1,}/;
+    const regex = new RegExp(`(${abbreviationRegex.source}|[.!?])\\s+(?=[A-Z])`, 'g');
+
+    return text.split(regex).reduce((sentences, part, index, array) => {
+        if (index % 2 === 0) {
+            const sentence = array[index - 1] ? array[index - 1] + part : part;
+            sentences.push(sentence.trim());
+        }
+        return sentences;
+    }, []);
 }
 
 // 6. Text Processing Functions
