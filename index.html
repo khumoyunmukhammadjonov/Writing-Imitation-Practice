@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+<script src="https://unpkg.com/compromise"></script>
     <title>Writing Imitation Practice</title>
     <style>
       /* Base body styles - Sets up the main page layout and typography */
@@ -1981,50 +1982,36 @@ let currentSentenceIndex = 0;
 let mistakeCount = 0;
 
 // 5. Core Practice Functions
-
 function processArticle() {
-    let articleInput = document.getElementById("article-input").value;
+    const articleInput = document.getElementById("article-input").value;
 
-    // Clear any previous progress and restart
-    clearProgress();
-    restartPractice();
+    if (!articleInput.trim()) {
+        alert("Please paste a valid article.");
+        return;
+    }
 
-    // Use the enhanced sentence splitting function
-    sentences = splitIntoSentences(articleInput);
+    // Use compromise to split sentences while handling edge cases
+    const doc = nlp(articleInput);
+    const sentences = doc.sentences().out('array'); // Get sentences as an array
 
     if (sentences && sentences.length > 0) {
         currentSentenceIndex = 0;
         mistakeCount = 0;
+        clearProgress();
+        restartPractice();
         updateProgressBar();
-        showSentence();
 
+        sentences.forEach((sentence) => console.log(sentence)); // Debugging: View split sentences
+
+        showSentence();
         document.getElementById("practice-section").style.display = "block";
         document.getElementById("start-button").classList.add("hidden");
         document.getElementById("article-input").classList.add("hidden");
-
-        // Start tracking the practice session
-        statisticsManager.startPracticeSession();
-
-        // Save the progress
-        saveProgress();
     } else {
-        alert("Please paste a valid article.");
+        alert("Could not process the article. Please try again.");
     }
 }
 
-// Enhanced Sentence Splitting Function
-function splitIntoSentences(text) {
-    const abbreviationRegex = /(?:\b(?:[A-Z][a-z]*|etc|vs|e\.g|i\.e)\.|\b(?:[A-Z]\.)){1,}/;
-    const regex = new RegExp(`(${abbreviationRegex.source}|[.!?])\\s+(?=[A-Z])`, 'g');
-
-    return text.split(regex).reduce((sentences, part, index, array) => {
-        if (index % 2 === 0) {
-            const sentence = array[index - 1] ? array[index - 1] + part : part;
-            sentences.push(sentence.trim());
-        }
-        return sentences;
-    }, []);
-}
 
 // 6. Text Processing Functions
 function normalizeText(text) {
