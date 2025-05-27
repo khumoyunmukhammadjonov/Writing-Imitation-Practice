@@ -1682,11 +1682,6 @@ button#view-word-list-btn.word-list-btn:hover {
                 <p class="empty-state">No practice history available</p>
             </div>
         </div>
-
-<button onclick="statisticsManager.clearAllData()" class="delete-history-btn" 
-            style="margin: 0; padding: 6px 12px; font-size: 14px;">
-        <i class="fi fi-rr-trash"></i> Clear All Data
-    </button>
     </div>
 </div>
 
@@ -3571,44 +3566,6 @@ document.getElementById('theme-toggle-btn').onclick = function() {
     updateWarningTheme();
 };
 
-
-
-
-
-
-clearAllData() {
-    if (confirm('Are you sure you want to delete ALL saved data? This cannot be undone!')) {
-        // Clear all statistics
-        localStorage.removeItem('practiceStats');
-        localStorage.removeItem('todayStats');
-        localStorage.removeItem('activeSession');
-        localStorage.removeItem('lastStatsReset');
-        
-        // Clear word list
-        localStorage.removeItem('wordList');
-        
-        // Clear text controls settings
-        localStorage.removeItem('textControls');
-        
-        // Clear writing progress
-        localStorage.removeItem('writingProgress');
-        
-        // Reset all stats
-        this.stats = this.loadStats();
-        this.todayStats = this.loadTodayStats();
-        this.lastSavedTime = 0;
-        this.sessionStartTime = null;
-        
-        // Reset UI
-        this.stopTimer();
-        this.updateUI();
-        displayWordList();
-        clearProgress();
-        
-        // Reload the page to ensure clean state
-        setTimeout(() => location.reload(), 500);
-    }
-}
 </script>
 </body>
 </html>
