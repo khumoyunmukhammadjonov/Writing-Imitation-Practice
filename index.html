@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing Imitation Practice – Yozish oson bo‘lsin</title>
+  <title>IELTS yozish – yozishni sevdiruvchi kengaytma</title>
   <style>
-    /* Rang palitrasi va bazaviy o'lchamlar */
+    /* Asosiy ranglar va tipografiya */
     :root {
-      --primary: #2563eb;     /* Ko'k, asosiy rang */
-      --primary-hover: #1d4ed8; /* Hover holatidagi ko'k */
-      --text: #111827;         /* Asosiy matn ranglari */
-      --muted: #6b7280;        /* Ikkinchi darajali matn uchun */
-      --bg: #ffffff;           /* Sahifa foni */
-      --card-bg: #f9fafb;      /* Kartalar uchun fon */
-      --radius: 12px;
+      --primary: #2563eb;
+      --primary-dark: #1e3a8a;
+      --text: #0f172a;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --radius: 14px;
     }
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
     }
@@ -30,72 +30,98 @@
       color: inherit;
       text-decoration: none;
     }
+    /* Qulay container */
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      padding: 0 20px;
+      margin: 0 auto;
+    }
     /* Hero section */
     .hero {
+      background: linear-gradient(135deg, #e0e7ff, #f0f9ff);
+      padding: 60px 0;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
-      padding: 80px 20px;
       gap: 40px;
-      text-align: center;
     }
     @media (min-width: 768px) {
       .hero {
         flex-direction: row;
         justify-content: space-between;
         gap: 80px;
-        text-align: left;
       }
     }
-    .hero-content {
-      max-width: 600px;
-    }
-    .hero-title {
-      font-size: 2.8rem;
+    .hero h1 {
+      font-size: 2.6rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
-    .hero-tagline {
-      font-size: 1.2rem;
+    .hero p {
+      font-size: 1.1rem;
       color: var(--muted);
       margin-bottom: 30px;
+      max-width: 520px;
     }
     .cta {
       display: inline-block;
-      background: var(--primary);
+      background-color: var(--primary);
       color: #ffffff;
       padding: 14px 32px;
       border-radius: var(--radius);
       font-weight: 600;
-      transition: background 0.2s ease;
+      transition: background-color 0.2s;
     }
     .cta:hover {
-      background: var(--primary-hover);
+      background-color: var(--primary-dark);
     }
-    .hero-image {
-      max-width: 500px;
+    .hero img {
       width: 100%;
-      height: auto;
+      max-width: 500px;
       border-radius: var(--radius);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
-    /* Generic section styles */
-    .section {
-      padding: 60px 20px;
-      text-align: center;
-      max-width: 900px;
-      margin: 0 auto;
+    /* Section umumiy */
+    section {
+      padding: 80px 0;
     }
-    .section-title {
+    section h2 {
       font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+      text-align: center;
     }
-    .section-text {
+    section p.section-lead {
       font-size: 1rem;
       color: var(--muted);
       max-width: 700px;
+      text-align: center;
       margin: 0 auto 40px;
+    }
+    /* Muammo va yechim */
+    .two-col {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    @media (min-width: 768px) {
+      .two-col {
+        flex-direction: row;
+        gap: 60px;
+      }
+    }
+    .two-col > div {
+      flex: 1;
+    }
+    .two-col h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .two-col p {
+      font-size: 0.95rem;
+      color: var(--muted);
     }
     /* Features */
     .features {
@@ -104,21 +130,21 @@
       gap: 20px;
       justify-content: center;
     }
-    .feature {
-      background: var(--card-bg);
+    .feature-card {
+      background-color: var(--card-bg);
       padding: 30px;
       border-radius: var(--radius);
       flex: 1;
-      min-width: 260px;
-      max-width: 280px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      min-width: 240px;
+      max-width: 260px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
-    .feature-title {
-      font-size: 1.25rem;
+    .feature-card h4 {
+      font-size: 1.2rem;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
-    .feature-desc {
+    .feature-card p {
       font-size: 0.95rem;
       color: var(--muted);
     }
@@ -129,117 +155,146 @@
       gap: 20px;
       justify-content: center;
     }
-    .step {
-      background: var(--card-bg);
+    .step-card {
+      background-color: var(--card-bg);
       padding: 30px;
       border-radius: var(--radius);
       flex: 1;
-      min-width: 240px;
-      max-width: 280px;
+      min-width: 200px;
+      max-width: 260px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       text-align: left;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
-    .step-number {
-      font-size: 1.6rem;
+    .step-card .num {
+      font-size: 1.8rem;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 8px;
     }
-    .step-title {
-      font-size: 1.2rem;
+    .step-card h5 {
+      font-size: 1.1rem;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
-    .step-desc {
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-    /* Footer */
-    footer {
-      padding: 40px 20px;
-      text-align: center;
+    .step-card p {
       font-size: 0.9rem;
       color: var(--muted);
+    }
+    footer {
+      background-color: #f1f5f9;
+      text-align: center;
+      padding: 40px 0;
+      color: var(--muted);
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
-  <!-- Hero -->
   <header class="hero">
-    <div class="hero-content">
-      <h1 class="hero-title">Yozishni yangi usulda o‘rganing</h1>
-      <p class="hero-tagline">IELTS yozma topshirig‘i 2 uchun moslashgan shadowing va imitation asosidagi mashg‘ulot. So‘z boyligini oshiring, tuzilmani his eting va yuqori ballga erishing.</p>
-      <a href="Writing-Imitation-Practice.zip" class="cta" download>Chrome kengaytmasini yuklab oling</a>
+    <div class="container">
+      <div style="flex: 1;">
+        <h1>Yozishni sevdiruvchi kengaytma</h1>
+        <p>IELTS task 2 uchun yozishni osonlashtiring: shadowing va imitation metodlari orqali kirish va chiqish balansini toping, so‘ngra o‘z inshoingizni yarating.</p>
+        <a href="Writing%20Imitation%20Practice(2).zip" class="cta" download>Chrome kengaytmasini yuklab oling</a>
+      </div>
     </div>
-    <!-- If the screenshot file is available in the repo, it will display here -->
-    <img src="extension-screenshot.png" alt="Writing Imitation Practice kengaytmasi" class="hero-image" />
+    <div class="container">
+      <img src="extension-screenshot.png" alt="Kengaytmaning ko‘rinishi" />
+    </div>
   </header>
 
-  <!-- Section: Why is writing difficult? -->
-  <section class="section">
-    <h2 class="section-title">Nega yozish eng qiyin qism?</h2>
-    <p class="section-text">Ko‘plab IELTS talabalarining eng past balli bo‘limi yozishdir. Input – ya’ni o‘qish va eshitish ko‘pligi bo‘lmasa, mustaqil tarzda insho yozish qiynaladi. 2018-yil statistik ma’lumotlariga ko‘ra, IELTS Academic bo‘limida yozish o‘rtacha 5.6 bandni tashkil etganini ko‘rishimiz mumkin, listening esa 6.3 va reading 6.2 band【263775503522443†L118-L129】.</p>
-  </section>
-
-  <!-- Section: Solution -->
-  <section class="section">
-    <h2 class="section-title">Shadowing va imitation yondashuvi</h2>
-    <p class="section-text">Tilni o‘rganishda eng yaxshi natijalar avval ko‘p sifatli input – eshitish va o‘qish – orqali yig‘iladi. Shadowing (tinglab takrorlash) va imitation (namunani nusxa qilib yozish) metodlari yordamida siz tuzilma va iboralarni tabiiy ravishda qabul qilasiz. Ushbu kengaytma speakingda ishlaydigan yondashuvni yozishga ko‘chiradi.</p>
-  </section>
-
-  <!-- Section: Features -->
-  <section class="section">
-    <h2 class="section-title">Asosiy afzalliklar</h2>
-    <div class="features">
-      <div class="feature">
-        <div class="feature-title">Sifatli input</div>
-        <div class="feature-desc">Band 8–9 insho namunalari yordamida grammatik tuzilmalar va so‘z birikmalari xotirangizga chuqur o‘rnaydi.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-title">Oddiy va tez</div>
-        <div class="feature-desc">Kengaytmani bir necha soniyada o‘rnatib, darhol mashqni boshlashingiz mumkin. Ro‘yxatdan o‘tish yoki murakkab sozlamalar talab etilmaydi.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-title">Natijaga yo‘naltirilgan</div>
-        <div class="feature-desc">Tuzilmani va iboralarni takrorlagan holda, siz tez orada o‘z insholaringizni mustaqil va kreativ tarzda yozishga o'tasiz.</div>
+  <section>
+    <div class="container">
+      <h2>Nega yozish qiyin?</h2>
+      <p class="section-lead">Yozma topshiriqlarni boshlash azobdek ko‘rinishi mumkin. O‘qish va eshitish orqali etarli kirish ma’lumotlari bo‘lmasa, so‘z boyligi va tuzilmani bilmaslik sababli ko‘p talabalar task 2’da past natija oladi. IELTSning 2018-yil ma’lumotlarida yozish bo‘limining o‘rtacha bahosi 5.6 bo‘lgan, bu listening (6.3) va reading (6.2)dan ancha past【263775503522443†L118-L129】.</p>
+      <div class="two-col">
+        <div>
+          <h3>Boshidan yozish – stressli</h3>
+          <p>Kirish materiallari kam bo‘lsa, bo‘sh sahifa oldida o‘tirib, nima yozishni bilmay qolasiz. Qayta–qayta yozish ham yordam bermaydi – input yetarli bo‘lmasa, outputni kutib bo‘lmaydi.</p>
+        </div>
+        <div>
+          <h3>Writingdan past ball olish – oddiy holat</h3>
+          <p>Ko‘plab imtihon ishtirokchilari writingdan eng past ball oladi. Bu sizning yomonligingiz emas – faqatgina noto‘g‘ri usuldan foydalanishga misol.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Section: Steps -->
-  <section class="section">
-    <h2 class="section-title">Qanday ishlaydi?</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-title">Kengaytmani o‘rnating</div>
-        <div class="step-desc">Bir marta bosish bilan Chrome brauzeringizga o‘rnatib oling.</div>
+  <section style="background-color: #eef2ff;">
+    <div class="container">
+      <h2>Yechim: shadowing va imitation</h2>
+      <p class="section-lead">Bu usullar ilgari speaking ko‘nikmasida ishlatilgan – endi yozish uchun ham samarali. Avval matnni tinglab va qayta yozib tuzilmani his eting, keyin esa o‘z fikrlaringizni ifodalab, originallik qo‘shing.</p>
+      <div class="two-col">
+        <div>
+          <h3>Shadowing</h3>
+          <p>Tinglagan jumlalarni bir varaqga tushirib, talaffuz va tuzilma ustida ishlaysiz. Bu sizning quloq eshitish ko‘nikmangizni mustahkamlaydi.</p>
+        </div>
+        <div>
+          <h3>Imitation</h3>
+          <p>Yuqori ball insho namunalarini nusxa qilib yozish orqali til naqshlari va iboralarni o‘zingizga singdirasiz.</p>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-title">Namuna tanlang</div>
-        <div class="step-desc">Turli mavzulardagi yuqori ball insho namunalari ichidan mavzuni tanlang.</div>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-title">Takrorlang va yozing</div>
-        <div class="step-desc">Har bir jumlani o‘qib, uni o‘zingiz yozing. Tuzilma va til naqshlari ongizga singadi.</div>
-      </div>
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-title">O‘zingizning inshongizni yarating</div>
-        <div class="step-desc">Namunalardan ilhom olib, o‘z fikringizni band tuzilmasida ifoda qiling va natijada original insho yarating.</div>
-      </div>
-    </div>
-    <p class="section-text" style="margin-top: 40px;">Yangi metod bilan yozishga nisbatan ishonch va zavq paydo bo‘ladi. Bugunoq urinib ko‘ring!</p>
-    <div style="text-align: center; margin-top: 20px;">
-      <a href="Writing-Imitation-Practice.zip" class="cta" download>Yuklab olish</a>
     </div>
   </section>
 
-  <!-- Footer -->
+  <section>
+    <div class="container">
+      <h2>Afzalliklari</h2>
+      <div class="features">
+        <div class="feature-card">
+          <h4>Namuna asosida o‘rganish</h4>
+          <p>Band 8-9 insholar ustida ishlay turib, haqiqiy imtihon standartlaridan ilhom olasiz.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Soddalik</h4>
+          <p>Kengaytmadan foydalanish oson – murakkab ro‘yxatdan o‘tish shart emas, darhol ish boshlaysiz.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Ko‘nikma qurish</h4>
+          <p>Til naqshlari, grammatik formulalar va sinonimlar ongizga sekin–asta joylashadi, mustaqil yozish osonlashadi.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Natijaga yo‘naltirilgan</h4>
+          <p>Praktik mashqlar va progres kuzatuvi sizni real natijaga olib keladi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background-color: #eef2ff;">
+    <div class="container">
+      <h2>Qanday ishlaydi?</h2>
+      <div class="steps">
+        <div class="step-card">
+          <div class="num">1</div>
+          <h5>Kengaytmani o‘rnatish</h5>
+          <p>Chrome brauzeringizga bir marta bosish bilan o‘rnatib oling.</p>
+        </div>
+        <div class="step-card">
+          <div class="num">2</div>
+          <h5>Namuna tanlash</h5>
+          <p>Top insholar to‘plamidan mavzu tanlab, tinglang va o‘qing.</p>
+        </div>
+        <div class="step-card">
+          <div class="num">3</div>
+          <h5>Shadowing va imitation</h5>
+          <p>Jumlalarni eshitib, yozing. Til naqshlari ongizga yaxshiroq o‘rnaydi.</p>
+        </div>
+        <div class="step-card">
+          <div class="num">4</div>
+          <h5>O‘z inshoingiz</h5>
+          <p>Nafaqat nusxa ko‘chirish, balki o‘z fikringizni band tuzilmasida ifodalab, original insho yarating.</p>
+        </div>
+      </div>
+      <p class="section-lead" style="margin-top: 40px;">Yangi metod bilan yozishni o‘rganish izchil va yoqimli bo‘ladi. Bugunoq sinab ko‘ring!</p>
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="Writing%20Imitation%20Practice(2).zip" class="cta" download>Hoziroq yuklab olish</a>
+      </div>
+    </div>
+  </section>
+
   <footer>
-    <p>© 2026 Writing Imitation Practice. Barcha huquqlar himoyalangan.</p>
+    <p>© 2026 Writing Imitation Practice – Barcha huquqlar himoyalangan.</p>
   </footer>
 </body>
 </html>
