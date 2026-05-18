@@ -1,147 +1,672 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Writing Imitation Practice – Yozuv mashqi uchun chrome kengaytmasi</title>
-<style>
-/* basic resets and fonts */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  color: #2c2c2c;
-  background: #fdfdfd;
-}
-a {
-  color: #ffffff;
-  text-decoration: none;
-}
-header {
-  background: #2b4ca4;
-  color: #fff;
-  padding: 80px 20px;
-  text-align: center;
-}
-header h1 {
-  margin: 0 0 20px;
-  font-size: 2.8rem;
-}
-header p {
-  margin: 0 auto 30px;
-  max-width: 800px;
-  font-size: 1.2rem;
-}
-.cta-button {
-  background: #ff7043;
-  color: #fff;
-  padding: 15px 30px;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  border: none;
-}
-section {
-  padding: 60px 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-section h2 {
-  color: #2b4ca4;
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-section p, section li {
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-}
-.step-list {
-  list-style: none;
-  padding-left: 0;
-}
-.step-list li {
-  margin-bottom: 20px;
-}
-footer {
-  background: #f3f3f3;
-  color: #555;
-  text-align: center;
-  padding: 40px 20px;
-}
-footer p {
-  margin: 0;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Imitation Practice – Yozuv mashqi yangi darajaga olib chiqing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6759FF;
+      --secondary: #F5F3FF;
+      --tertiary: #EDE9FE;
+      --accent: #FF7043;
+      --dark: #2C1A70;
+      --text: #333;
+    }
+    *{ box-sizing: border-box; margin:0; padding:0;}
+    body { font-family:'Inter', sans-serif; color: var(--text); background: #ffffff; line-height:1.6; }
+    a { text-decoration: none; }
+    .container{ width:90%; max-width:1200px; margin: 0 auto; }
+    /* Nav Bar */
+    nav {
+      background:#fff;
+      border-bottom:1px solid #eee;
+      position: sticky;
+      top:0;
+      z-index: 1000;
+    }
+    nav .nav-content{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding:20px 0;
+    }
+    nav .logo {
+      font-size:1.5rem;
+      font-weight:600;
+      color: var(--primary);
+    }
+    nav ul {
+      list-style:none;
+      display:flex;
+      gap:30px;
+      align-items:center;
+    }
+    nav ul li a {
+      color:#333;
+      font-weight:500;
+    }
+    nav .download-btn {
+      background: var(--primary);
+      color:#fff;
+      padding:12px 24px;
+      border-radius:8px;
+      font-weight:600;
+    }
+    /* Hero Section */
+    .hero {
+      background: var(--secondary);
+      padding:80px 0;
+    }
+    .hero-content {
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .hero-text {
+      flex:1 1 500px;
+      max-width:600px;
+    }
+    .hero-text .tag {
+      display:inline-block;
+      background: var(--tertiary);
+      color: var(--primary);
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:0.85rem;
+      margin-bottom:20px;
+      font-weight:600;
+    }
+    .hero-text h1 {
+      font-size:2.6rem;
+      color: var(--dark);
+      margin-bottom:20px;
+      line-height:1.3;
+    }
+    .hero-text p {
+      font-size:1.1rem;
+      margin-bottom:30px;
+      color: #555;
+    }
+    .hero-text .btn {
+      display:inline-block;
+      background: var(--primary);
+      color:#fff;
+      padding:14px 28px;
+      border-radius:8px;
+      font-size:1rem;
+      font-weight:600;
+      transition: background .3s;
+    }
+    .hero-text .btn:hover {
+      background:#5744c5;
+    }
+    .hero-illustration {
+      flex:1 1 350px;
+      position: relative;
+      height:350px;
+    }
+    .hero-illustration .circle1,
+    .hero-illustration .circle2 {
+      position:absolute;
+      border-radius:50%;
+      opacity:0.2;
+    }
+    .hero-illustration .circle1 {
+      width:200px;
+      height:200px;
+      background: var(--primary);
+      top:20px;
+      right:50px;
+    }
+    .hero-illustration .circle2 {
+      width:150px;
+      height:150px;
+      background: var(--accent);
+      bottom:40px;
+      left:60px;
+    }
+    .hero-illustration .icon-book {
+      position:absolute;
+      font-size: 6rem;
+      color: var(--primary);
+      top:80px;
+      left:60px;
+    }
+    .hero-illustration .icon-pen {
+      position:absolute;
+      font-size:5rem;
+      color:#FFAA5C;
+      top:150px;
+      right:70px;
+    }
+    .hero-illustration .icon-leaf {
+      position:absolute;
+      font-size:4rem;
+      color:#59C36A;
+      bottom:60px;
+      left:30px;
+    }
+    .features {
+      display:flex;
+      gap:40px;
+      margin-top:40px;
+      flex-wrap:wrap;
+    }
+    .feature {
+      display:flex;
+      align-items:center;
+      gap:15px;
+      flex:1 1 200px;
+    }
+    .feature i {
+      background: var(--tertiary);
+      color: var(--primary);
+      border-radius:50%;
+      padding:12px;
+      font-size:1.2rem;
+    }
+    .feature span {
+      font-weight:500;
+      color:#444;
+    }
+    /* Section Styles */
+    section {
+      padding:80px 0;
+    }
+    .card {
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+      padding:40px;
+      display:flex;
+      gap:40px;
+      align-items:center;
+      margin-bottom:60px;
+    }
+    .card .number {
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      background: var(--primary);
+      color:#fff;
+      font-size:1.5rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      font-weight:600;
+    }
+    .card h3 {
+      margin-bottom:15px;
+      font-size:1.8rem;
+      color: var(--dark);
+    }
+    .card p {
+      font-size:1rem;
+      color:#555;
+    }
+    .card img {
+      max-width:300px;
+    }
+    /* Flow diagram in section 2 */
+    .flow {
+      display:flex;
+      align-items:center;
+      gap:20px;
+      margin-top:20px;
+      flex-wrap: wrap;
+    }
+    .flow .step {
+      text-align:center;
+      flex:1 1 150px;
+    }
+    .flow .step i {
+      font-size:2rem;
+      color: var(--primary);
+      margin-bottom:10px;
+    }
+    .flow .arrow {
+      font-size:1.5rem;
+      color: var(--primary);
+    }
+    /* Steps list in "how it works" */
+    .steps-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+      gap:30px;
+      margin-top:30px;
+    }
+    .steps-grid .step-card {
+      background: var(--secondary);
+      border-radius:12px;
+      padding:20px;
+      text-align:left;
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    }
+    .steps-grid .step-card .step-num {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background: var(--primary);
+      color:#fff;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:10px;
+    }
+    .steps-grid .step-card p {
+      font-size:0.95rem;
+      color:#555;
+    }
+    /* Triple cards row (spelling, intervals, IELTS) */
+    .triple-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap:30px;
+    }
+    .triple-grid .triple-card {
+      background:#fff;
+      padding:30px;
+      border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    }
+    .triple-grid .triple-card .number {
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      background: var(--primary);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:600;
+      margin-bottom:15px;
+    }
+    .triple-grid .triple-card h4 {
+      margin-bottom:10px;
+      font-size:1.4rem;
+      color: var(--dark);
+    }
+    .triple-grid .triple-card ul {
+      list-style: none;
+      padding-left:0;
+    }
+    .triple-grid .triple-card ul li {
+      padding-left:25px;
+      position:relative;
+      margin-bottom:8px;
+      font-size:0.95rem;
+      color:#555;
+    }
+    .triple-grid .triple-card ul li:before {
+      content:"\2022";
+      position:absolute;
+      left:0;
+      color: var(--primary);
+    }
+    /* Final CTA */
+    .final-cta {
+      background: var(--tertiary);
+      padding:80px 0;
+    }
+    .final-cta .cta-container {
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .final-cta .cta-text {
+      max-width:600px;
+    }
+    .final-cta .cta-text h3 {
+      font-size:2rem;
+      color: var(--dark);
+      margin-bottom:20px;
+    }
+    .final-cta .cta-text p {
+      font-size:1rem;
+      color:#555;
+      margin-bottom:30px;
+    }
+    .final-cta .cta-text .btn {
+      display:inline-block;
+      background: var(--primary);
+      color:#fff;
+      padding:14px 28px;
+      border-radius:8px;
+      font-weight:600;
+    }
+    .final-cta .cta-image {
+      position:relative;
+      flex:1 1 300px;
+      height:250px;
+    }
+    .final-cta .cta-image .circle1 {
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      background: var(--primary);
+      opacity:0.2;
+      position:absolute;
+      top:20px;
+      right:20px;
+    }
+    .final-cta .cta-image .icon-book {
+      position:absolute;
+      font-size:6rem;
+      color: var(--primary);
+      top:60px;
+      left:40px;
+    }
+    .final-cta .cta-image .icon-pen {
+      position:absolute;
+      font-size:5rem;
+      color:#FFAA5C;
+      top:120px;
+      right:40px;
+    }
+    /* Footer */
+    footer {
+      background:#6759FF;
+      color:#fff;
+      padding:60px 0;
+      margin-top:80px;
+    }
+    footer .footer-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap:30px;
+    }
+    footer .footer-column {
+      flex:1 1 200px;
+    }
+    footer h5 {
+      font-size:1.2rem;
+      margin-bottom:15px;
+    }
+    footer ul {
+      list-style:none;
+      padding-left:0;
+    }
+    footer ul li {
+      margin-bottom:8px;
+    }
+    footer ul li a {
+      color:#e0e0ff;
+      font-size:0.95rem;
+    }
+    footer .copyright {
+      text-align:center;
+      margin-top:40px;
+      font-size:0.9rem;
+      color:#ddd;
+    }
+    @media (max-width:768px) {
+      .hero-content {
+        flex-direction: column;
+      }
+      .final-cta .cta-container {
+        flex-direction: column;
+      }
+      nav ul {
+        display:none;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Shadowing usulini yozuv mashqiga aylantiring</h1>
-  <p>Writing Imitation Practice — ingliz tilida yozish ko’nikmasini rivojlantirish uchun yaratilgan Chrome kengaytmasi. U speaking’da samarali qo’llaniladigan shadowing va imitation usullarining mantiqini writing amaliyotiga moslashtiradi.</p>
-  <a class="cta-button" href="Writing%20Imitation%20Practice(2).zip" download>Kengaytmani yuklab olish</a>
-</header>
-
-<section id="problem">
-  <h2>Muammo nimada?</h2>
-  <p>Ingliz tilini o‘rganuvchilar ko‘pincha yozishni «shunchaki yozish» orqali o‘rganishga harakat qiladilar. Ular fikrlarni qanday bog‘lashni, grammatik strukturalarni qanday qo‘llashni va akademik uslubni qanday shakllantirishni to‘liq bilmaydi. Natijada ko‘p yozishsa ham, writing sifati sekin o‘sadi.</p>
-  <p>Yozish bu faqat fikr bildirish emas — bu gap tuzilmalari, bog‘lovchilar, akademik so‘zlar, mantiqiy oqim va tabiiy ifodalarni ichki o‘zlashtirish jarayonidir.</p>
-</section>
-
-<section id="shadowing">
-  <h2>Shadowing va imitation nima uchun ishlaydi?</h2>
-  <p>Speaking o‘rganishda shadowing va imitation usullari juda mashhur. O‘quvchi kuchli nutq namunalarini tinglaydi, pauza qiladi, takrorlaydi va talaffuz, ritm, intonatsiya hamda tabiiy ifodalarni o‘zlashtiradi.</p>
-  <p>Bu usulning kuchi shundaki, til qoidalarini quruq o‘rganish o‘rniga, o‘quvchi real gap tuzilmalarini va ifodalarni namuna asosida ichki his qiladi va nutqida qo‘llay boshlaydi.</p>
-</section>
-
-<section id="conversion">
-  <h2>Bu mantiqni yozishga moslashtirdik</h2>
-  <p>Writing Imitation Practice aynan shu g‘oyani writing uchun moslashtiradi. Speaking’da siz matnni eshitib takrorlasangiz, bu yerda siz yaxshi yozilgan matnlarni o‘qib, tushunib, keyin xotiradan yozasiz.</p>
-  <p>Maqsad — matnni passiv o‘qish emas, balki ongli ravishda gap tuzilmasi va iboralarni o‘zlashtirib, keyinchalik o‘z yozuvingizda ularni tabiiy qo‘llashdir.</p>
-</section>
-
-<section id="how-it-works">
-  <h2>Dastur qanday ishlaydi?</h2>
-  <ul class="step-list">
-    <li><strong>1. Matn joylaysiz:</strong> IELTS Writing Task 2 essayi, akademik paragraf yoki boshqa sifatli inglizcha matnni dasturga nusxa ko‘chirib joylaysiz.</li>
-    <li><strong>2. Gaplarga ajratish:</strong> Dastur matnni kichik gaplarga ajratadi, shunda siz har bir gapni alohida tahlil qilasiz.</li>
-    <li><strong>3. Avval o‘qiysiz va tushunasiz:</strong> Har bir gapni yozishdan oldin uni diqqat bilan o‘qiysiz. Gapning mazmuni, tuzilishi, bog‘lovchilar va akademik so‘zlarga e’tibor berasiz.</li>
-    <li><strong>4. Bilinmagan so‘zlarni o‘rganasiz:</strong> Noma’lum so‘zlarni belgilab, ta’rifini ko‘rishingiz yoki Word List’ga saqlab qo‘yishingiz mumkin.</li>
-    <li><strong>5. Yozishni boshlaganingizda matn yashiriladi:</strong> Siz yozishni boshlaganingizda original gap yashiriladi. Endi siz uni xotiradan yozasiz.</li>
-    <li><strong>6. Xato bo‘lsa, tizim ko‘rsatadi:</strong> Agar xato qilsangiz, dastur aynan qaysi joyda xato qilganingizni ko‘rsatadi va siz gapni qayta yozasiz.</li>
-    <li><strong>7. Faqat to‘g‘ri yozilgandan keyin keyingi gap:</strong> Maqsad — gapni to‘g‘ri va ongli yozish. Xato bo‘lmasa, keyingi gapga o‘tasiz.</li>
-  </ul>
-</section>
-
-<section id="spelling">
-  <h2>Imlo xatolarini alohida mustahkamlash</h2>
-  <p>Mashq davomida qilgan spelling xatolaringiz alohida tizimga tushadi. Bu xatolar uch bosqichda qayta o‘rganiladi:</p>
-  <ul class="step-list">
-    <li><strong>Copy:</strong> So‘zning to‘g‘ri yozilishini ko‘rib, uni nusxa sifatida yozasiz.</li>
-    <li><strong>Reconstruct:</strong> Harflarni bosib, so‘zni qayta tuzasiz — bu shaklni faol yodlab qolishdir.</li>
-    <li><strong>Recall:</strong> So‘z yashiriladi va siz uni xotiradan yozasiz.</li>
-  </ul>
-</section>
-
-<section id="spaced-repetition">
-  <h2>Interval bilan takrorlash</h2>
-  <p>Dastur spaced repetition mantiqidan foydalanadi. Siz xato qilgan so‘zlar yoki Word List’ga qo‘shgan so‘zlar ma’lum kunlar oralig‘ida qayta paydo bo‘ladi: 1 kun → 3 kun → 7 kun → 14 kun → 30 kun.</p>
-  <p>Bu yondashuv so‘zlarni uzoq muddatga eslab qolishingizga yordam beradi.</p>
-</section>
-
-<section id="ielts-focus">
-  <h2>IELTS Writing Task 2 uchun ayniqsa foydali</h2>
-  <p>IELTS Writing Task 2’da yuqori ball olish uchun grammatikani bilishdan tashqari, fikrlarni tartibli bayon qilish, akademik so‘zlardan tabiiy foydalanish, gaplarni bog‘lash va aniq yozish ko‘nikmalariga ega bo‛lish zarur.</p>
-  <p>Writing Imitation Practice sizga model essaylar orqali bu ko‘nikmalarni bosqichma-bosqich o‘zlashtirishga yordam beradi. Siz matnlarni shunchaki o‘qimaysiz — ularni tahlil qilasiz, tushunasiz, xotiradan qayta yozasiz va o‘z yozuv uslubingizni shakllantirasiz.</p>
-</section>
-
-<section id="final-cta">
-  <h2>Yaxshi yozish — tasodif emas, ongli mashq natijasi</h2>
-  <p>Agar siz har kuni sifatli matnlar bilan ishlasangiz, ularni tushunib, gapma-gap xotiradan yozsangiz va xatolaringizni muntazam takrorlasangiz, writing ko‘nikmangiz tabiiy ravishda rivojlanadi.</p>
-  <p>Writing Imitation Practice shu jarayonni sodda, tartibli va samarali qiladi.</p>
-  <a class="cta-button" href="Writing%20Imitation%20Practice(2).zip" download>Kengaytmani yuklab olish</a>
-</section>
-
-<footer>
-  <p>&copy; 2026 Writing Imitation Practice. Barcha huquqlar himoyalangan.</p>
-</footer>
-
+  <nav>
+    <div class="container nav-content">
+      <div class="logo">Writing Imitation Practice</div>
+      <ul>
+        <li><a href="#why">Nima uchun kerak?</a></li>
+        <li><a href="#shadowing">Kanday ishlaydi?</a></li>
+        <li><a href="#features">Xususiyatlar</a></li>
+        <li><a href="#benefits">Foyda</a></li>
+        <li><a href="#faq">Savollar</a></li>
+      </ul>
+      <a class="download-btn" href="Writing%20Imitation%20Practice(2).zip" download>Kengaytmani yuklab olish</a>
+    </div>
+  </nav>
+  <header class="hero" id="home">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <div class="tag">IELTS Writing Task 2 uchun maxsus</div>
+        <h1>Shadowing usulini yozuv mashqiga aylantiring</h1>
+        <p>Writing Imitation Practice — ingliz tilida yozish ko‘nikmasini rivojlantirish uchun yaratilgan Chrome kengaytmasi. U speaking’da samarali qo’llaniladigan shadowing va imitation usullarining asosiy mantiqini writing amaliyotiga moslashtiradi.</p>
+        <a href="Writing%20Imitation%20Practice(2).zip" class="btn" download>Kengaytmani yuklab olish</a>
+        <div class="features">
+          <div class="feature"><i class="fa-solid fa-heart"></i><span>Samimiy usul</span></div>
+          <div class="feature"><i class="fa-solid fa-flask"></i><span>Ilmiy asoslangan</span></div>
+          <div class="feature"><i class="fa-solid fa-bullseye"></i><span>Natijaga yo’naltirilgan</span></div>
+        </div>
+      </div>
+      <div class="hero-illustration">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <i class="fa-solid fa-book-open icon-book"></i>
+        <i class="fa-solid fa-pen-nib icon-pen"></i>
+        <i class="fa-solid fa-leaf icon-leaf"></i>
+      </div>
+    </div>
+  </header>
+  <main>
+    <!-- Section 1 -->
+    <section id="why">
+      <div class="container">
+        <div class="card">
+          <div class="number">1</div>
+          <div>
+            <h3>Nima uchun yozish sekin rivojlanadi?</h3>
+            <p>Ko‘pchilik talaba ingliz tilida ko‘p yozishga harakat qiladi. Biroq, ular gaplarni to‘g‘ri tuzishni, fikrlarni bog‘lashni, akademik so‘zlarni ishlatishni va tabiiy yozishni to‘liq bilmaydi. Natijada ular ko‘p yozadi, lekin yozuv sifati sekin o‘sadi.</p>
+            <p>Yozish bu faqat fikr bildirish emas — bu gap tuzilmalari, bog‘lovchilar, akademik so‘zlar va tabiiy ifodalarni ichki o‘zlashtirish jarayonidir.</p>
+          </div>
+          <img src="08e0a76e-39cc-46a1-98fd-95b2d39889c7.png" alt="Writing concept illustration">
+        </div>
+      </div>
+    </section>
+    <!-- Section 2 -->
+    <section id="shadowing">
+      <div class="container">
+        <div class="card">
+          <div class="number">2</div>
+          <div>
+            <h3>Shadowing va imitation nima uchun ishlaydi?</h3>
+            <p>Speaking o‘rganishda shadowing va imitation usullari juda mashhur. O‘quvchi kuchli nutq namunalarini tinglaydi, pauza qiladi, takrorlaydi va talaffuz, ritm, intonatsiya hamda tabiiy ifodalarni o‘zlashtiradi.</p>
+            <p>Bu usulning kuchi shundaki, o‘quvchi tilni quruq qoida sifatida emas, balki tayyor namuna orqali o‘rganadi. U ko‘radi, takrorlaydi va keyin o‘z nutqida qo‘llay boshlaydi.</p>
+            <div class="flow">
+              <div class="step">
+                <i class="fa-solid fa-ear-listen"></i>
+                <div>Eshitish</div>
+              </div>
+              <div class="arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="step">
+                <i class="fa-solid fa-pause"></i>
+                <div>Pauza</div>
+              </div>
+              <div class="arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="step">
+                <i class="fa-solid fa-microphone"></i>
+                <div>Takrorlash</div>
+              </div>
+              <div class="arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="step">
+                <i class="fa-solid fa-brain"></i>
+                <div>O‘zlashtirish</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Section 3 -->
+    <section id="conversion">
+      <div class="container">
+        <div class="card">
+          <div class="number">3</div>
+          <div>
+            <h3>Endi shu mantiq yozuvga ko‘chirildi</h3>
+            <p>Writing Imitation Practice aynan shu g‘oyani writing uchun moslashtiradi. Speaking’da siz matnni tinglab takrorlasangiz, bu yerda siz yaxshi yozilgan matnlarni o‘qib, tushunib, keyin xotiradan yozasiz.</p>
+            <p>Ma’no: matnni passiv o‘qish emas, balki ongli ravishda gap tuzilmasi va iboralarni o‘zlashtirib, keyinchalik o‘z writing’ingizda tabiiy qo‘llashdir.</p>
+            <div class="flow">
+              <div class="step">
+                <i class="fa-solid fa-book"></i>
+                <div>O‘qish</div>
+              </div>
+              <div class="arrow"><i class="fa-solid fa-arrow-down"></i></div>
+              <div class="step">
+                <i class="fa-solid fa-pen-fancy"></i>
+                <div>Xotiradan yozish</div>
+              </div>
+              <div class="arrow"><i class="fa-solid fa-arrow-down"></i></div>
+              <div class="step">
+                <i class="fa-solid fa-feather-pointed"></i>
+                <div>O‘zlashtirish</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Section 4: How it works -->
+    <section id="features">
+      <div class="container">
+        <h2 style="text-align:center;color:var(--dark);margin-bottom:40px;">Kengaytma qanday ishlaydi?</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <p><strong>Matn joylaysiz:</strong> IELTS Writing Task 2 esse, akademik paragraf yoki boshqa sifatli inglizcha matnni kengaytmaga joylaysiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <p><strong>Gaplarga ajratish:</strong> Dastur matnni bir-biridan mustaqil gaplarga ajratadi, shunda siz har bir gapni alohida tahlil qilasiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <p><strong>O‘qish va tushunish:</strong> Har bir gapni yozishdan oldin uni diqqat bilan o‘qiysiz. Gapning mazmuni, tuzilishi va akademik so‘zlarga e’tibor berasiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <p><strong>Noma’lum so‘zlarni o‘rganish:</strong> Bilinmagan so‘zlarni belgilab, ta’rifini ko‘rish yoki Word List’ga saqlash mumkin.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <p><strong>Matn yashiriladi:</strong> Yozishni boshlaganingizda original gap yashiriladi. Siz uni xotiradan yozasiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">6</div>
+            <p><strong>Xatolar ko‘rsatiladi:</strong> Agar xato qilsangiz, dastur aynan qaerda xato qilganingizni ko‘rsatadi va siz gapni qayta yozasiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">7</div>
+            <p><strong>Bitta gapda bitta xato:</strong> Xato ko‘payib ketmasligi uchun, gapni faqat bitta xato bilan yozganingizda keyingi gapga o‘tasiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">8</div>
+            <p><strong>Keyingi gapga o‘tish:</strong> To‘g‘ri yozilgandan so‘ng, navbatdagi gapga o‘tasiz.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">9</div>
+            <p><strong>Imlo xatolari tizimi:</strong> Qilgan spelling xatolaringiz alohida ro‘yxatda saqlanadi.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">10</div>
+            <p><strong>So‘zlar Word List’ga qo‘shiladi:</strong> Qiziqarli so‘zlarni Word List’ga saqlashingiz mumkin.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">11</div>
+            <p><strong>Takrorlash bilan mustahkamlash:</strong> Barcha so‘zlar va xatolar keyingi kunlarda takrorlab eslatiladi.</p>
+          </div>
+        </div>
+        <p style="margin-top:30px; text-align:center; color:#777;">Maqsad — tez tugatish emas, har bir gapni to‘g‘ri va ongli yozishga o‘rganish.</p>
+      </div>
+    </section>
+    <!-- Section 5,6,7 triple -->
+    <section id="benefits">
+      <div class="container">
+        <div class="triple-grid">
+          <div class="triple-card">
+            <div class="number">5</div>
+            <h4>Imlo xatolarini mustahkamlash</h4>
+            <ul>
+              <li>Copy — so‘zning to‘g‘ri yozilishini ko‘rib nusxasini yozish</li>
+              <li>Reconstruct — harflarni bosib so‘zni qayta tuzish</li>
+              <li>Recall — so‘z yashiriladi va xotiradan yozish</li>
+            </ul>
+          </div>
+          <div class="triple-card">
+            <div class="number">6</div>
+            <h4>Takrorlash intervallari</h4>
+            <ul>
+              <li>1 kun</li>
+              <li>3 kun</li>
+              <li>7 kun</li>
+              <li>14 kun</li>
+              <li>30 kun</li>
+            </ul>
+            <p style="margin-top:10px; color:#777;">Bu yondashuv so‘zlarni uzoq muddatga eslab qolishga yordam beradi.</p>
+          </div>
+          <div class="triple-card">
+            <div class="number">7</div>
+            <h4>IELTS Writing Task 2 uchun</h4>
+            <ul>
+              <li>Fikrlarni mantiqiy tartibda bayon qilish</li>
+              <li>Akademik so‘zlardan tabiiy foydalanish</li>
+              <li>Gaplarni bog‘lash va aniq yozish</li>
+              <li>Model essaylar orqali mustahkamlash</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Final CTA -->
+    <section class="final-cta">
+      <div class="container cta-container">
+        <div class="cta-text">
+          <h3>Yaxshi yozish — tasodif emas, ongli mashq natijasi</h3>
+          <p>Agar siz har kuni sifatli matnlar bilan ishlasangiz, ularni tushunib, gapma-gap xotiradan yozsangiz va xatolaringizni muntazam takrorlasangiz, writing ko‘nikmangiz tabiiy ravishda rivojlanadi.</p>
+          <p>Writing Imitation Practice shu jarayonni sodda, tartibli va samarali qiladi.</p>
+          <a href="Writing%20Imitation%20Practice(2).zip" class="btn" download>Kengaytmani yuklab olish</a>
+        </div>
+        <div class="cta-image">
+          <div class="circle1"></div>
+          <i class="fa-solid fa-book-open icon-book"></i>
+          <i class="fa-solid fa-pen-nib icon-pen"></i>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="container footer-container">
+      <div class="footer-column">
+        <h5>Writing Imitation Practice</h5>
+        <p>Yozuv mashqi yangi darajaga olib chiqing</p>
+      </div>
+      <div class="footer-column">
+        <h5>Havolalar</h5>
+        <ul>
+          <li><a href="#why">Nima uchun kerak?</a></li>
+          <li><a href="#shadowing">Kanday ishlaydi?</a></li>
+          <li><a href="#features">Xususiyatlar</a></li>
+          <li><a href="#benefits">Foyda</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h5>Bog‘lanish</h5>
+        <ul>
+          <li><a href="mailto:info@example.com">info@example.com</a></li>
+          <li><a href="#">Telegram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 Writing Imitation Practice. Barcha huquqlar himoyalangan.
+    </div>
+  </footer>
 </body>
 </html>
