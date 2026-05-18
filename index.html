@@ -1,130 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Writing Imitation Practice - Chrome Extension</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f7f9fb;
-    }
-    header {
-      background: #2b64ca;
-      color: white;
-      padding: 60px 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0 0 10px;
-      font-size: 2.5rem;
-    }
-    header p {
-      font-size: 1.2rem;
-      max-width: 600px;
-      margin: 0 auto 20px;
-    }
-    .download-btn {
-      background: #ff6a3d;
-      color: white;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 4px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 20px;
-    }
-    section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    section h2 {
-      margin-top: 0;
-      color: #2b64ca;
-    }
-    .steps {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .step {
-      flex: 1;
-      min-width: 250px;
-      background: white;
-      border-radius: 6px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .step img {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 15px;
-      border-radius: 4px;
-    }
-    footer {
-      background: #2b64ca;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-    }
-    a {
-      color: #2b64ca;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing Imitation Practice – Yozuv mashqi uchun chrome kengaytmasi</title>
+<style>
+/* basic resets and fonts */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #2c2c2c;
+  background: #fdfdfd;
+}
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+header {
+  background: #2b4ca4;
+  color: #fff;
+  padding: 80px 20px;
+  text-align: center;
+}
+header h1 {
+  margin: 0 0 20px;
+  font-size: 2.8rem;
+}
+header p {
+  margin: 0 auto 30px;
+  max-width: 800px;
+  font-size: 1.2rem;
+}
+.cta-button {
+  background: #ff7043;
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  border: none;
+}
+section {
+  padding: 60px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+section h2 {
+  color: #2b4ca4;
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+section p, section li {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+.step-list {
+  list-style: none;
+  padding-left: 0;
+}
+.step-list li {
+  margin-bottom: 20px;
+}
+footer {
+  background: #f3f3f3;
+  color: #555;
+  text-align: center;
+  padding: 40px 20px;
+}
+footer p {
+  margin: 0;
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Writing Imitation Practice</h1>
-    <p>Enhance your English writing skills through imitation, inspired by the shadowing technique used in language learning.</p>
-    <a class="download-btn" href="Writing%20Imitation%20Practice(2).zip" download>Download Chrome Extension</a>
-  </header>
+<header>
+  <h1>Shadowing usulini yozuv mashqiga aylantiring</h1>
+  <p>Writing Imitation Practice — ingliz tilida yozish ko’nikmasini rivojlantirish uchun yaratilgan Chrome kengaytmasi. U speaking’da samarali qo’llaniladigan shadowing va imitation usullarining mantiqini writing amaliyotiga moslashtiradi.</p>
+  <a class="cta-button" href="Writing%20Imitation%20Practice(2).zip" download>Kengaytmani yuklab olish</a>
+</header>
 
-  <section>
-    <h2>What is Writing Imitation Practice?</h2>
-    <p>Writing Imitation Practice adapts the shadowing technique—where learners repeat audio to improve pronunciation—into a writing context. By imitating well-crafted sentences and structures, you internalize grammar, vocabulary, and cohesive essay patterns. This method is especially helpful for preparing for IELTS Writing Task 2 and other academic or professional writing tasks.</p>
-  </section>
+<section id="problem">
+  <h2>Muammo nimada?</h2>
+  <p>Ingliz tilini o‘rganuvchilar ko‘pincha yozishni «shunchaki yozish» orqali o‘rganishga harakat qiladilar. Ular fikrlarni qanday bog‘lashni, grammatik strukturalarni qanday qo‘llashni va akademik uslubni qanday shakllantirishni to‘liq bilmaydi. Natijada ko‘p yozishsa ham, writing sifati sekin o‘sadi.</p>
+  <p>Yozish bu faqat fikr bildirish emas — bu gap tuzilmalari, bog‘lovchilar, akademik so‘zlar, mantiqiy oqim va tabiiy ifodalarni ichki o‘zlashtirish jarayonidir.</p>
+</section>
 
-  <section>
-    <h2>How It Works</h2>
-    <p>After installing the extension, you can paste any sample essay or text into the practice area. The extension breaks the text into manageable chunks, allowing you to retype each sentence from memory. By comparing your output with the original, you identify mistakes and learn correct structures. The built-in timer and statistics help track your progress and keep you motivated.</p>
-  </section>
+<section id="shadowing">
+  <h2>Shadowing va imitation nima uchun ishlaydi?</h2>
+  <p>Speaking o‘rganishda shadowing va imitation usullari juda mashhur. O‘quvchi kuchli nutq namunalarini tinglaydi, pauza qiladi, takrorlaydi va talaffuz, ritm, intonatsiya hamda tabiiy ifodalarni o‘zlashtiradi.</p>
+  <p>Bu usulning kuchi shundaki, til qoidalarini quruq o‘rganish o‘rniga, o‘quvchi real gap tuzilmalarini va ifodalarni namuna asosida ichki his qiladi va nutqida qo‘llay boshlaydi.</p>
+</section>
 
-  <section>
-    <h2>Why It Helps</h2>
-    <p>Imitating strong writing exposes you to a variety of sentence patterns, linking words, and academic vocabulary. Over time, this practice improves your fluency, accuracy, and confidence. Whether you're aiming for a higher band score in IELTS or simply want to enhance your English writing, this technique provides a structured and effective path.</p>
-  </section>
+<section id="conversion">
+  <h2>Bu mantiqni yozishga moslashtirdik</h2>
+  <p>Writing Imitation Practice aynan shu g‘oyani writing uchun moslashtiradi. Speaking’da siz matnni eshitib takrorlasangiz, bu yerda siz yaxshi yozilgan matnlarni o‘qib, tushunib, keyin xotiradan yozasiz.</p>
+  <p>Maqsad — matnni passiv o‘qish emas, balki ongli ravishda gap tuzilmasi va iboralarni o‘zlashtirib, keyinchalik o‘z yozuvingizda ularni tabiiy qo‘llashdir.</p>
+</section>
 
-  <section>
-    <h2>How to Install</h2>
-    <div class="steps">
-      <div class="step">
-        <img src="8a4a16d5-f321-4b57-9881-7577bc9fdb0a.png" alt="Extract ZIP">
-        <h3>1. Extract the Zip</h3>
-        <p>After downloading, locate <strong>Writing Imitation Practice(2).zip</strong> in your downloads folder. Extract the zip file to a convenient location on your computer.</p>
-      </div>
-      <div class="step">
-        <img src="f0e8d823-736e-4891-993f-fa19fd8c28cd.png" alt="Open Extensions Page">
-        <h3>2. Open Extensions Page</h3>
-        <p>Open Google Chrome and navigate to <code>chrome://extensions</code>. In the top-right corner, enable <strong>Developer mode</strong>.</p>
-      </div>
-      <div class="step">
-        <img src="08e0a76e-39cc-46a1-98fd-95b2d398c7.png" alt="Load Unpacked">
-        <h3>3. Load Unpacked</h3>
-        <p>Click <strong>Load unpacked</strong>, then browse to the folder you extracted earlier. Select the folder to install the extension. You’re ready to start practicing!</p>
-      </div>
-    </div>
-  </section>
+<section id="how-it-works">
+  <h2>Dastur qanday ishlaydi?</h2>
+  <ul class="step-list">
+    <li><strong>1. Matn joylaysiz:</strong> IELTS Writing Task 2 essayi, akademik paragraf yoki boshqa sifatli inglizcha matnni dasturga nusxa ko‘chirib joylaysiz.</li>
+    <li><strong>2. Gaplarga ajratish:</strong> Dastur matnni kichik gaplarga ajratadi, shunda siz har bir gapni alohida tahlil qilasiz.</li>
+    <li><strong>3. Avval o‘qiysiz va tushunasiz:</strong> Har bir gapni yozishdan oldin uni diqqat bilan o‘qiysiz. Gapning mazmuni, tuzilishi, bog‘lovchilar va akademik so‘zlarga e’tibor berasiz.</li>
+    <li><strong>4. Bilinmagan so‘zlarni o‘rganasiz:</strong> Noma’lum so‘zlarni belgilab, ta’rifini ko‘rishingiz yoki Word List’ga saqlab qo‘yishingiz mumkin.</li>
+    <li><strong>5. Yozishni boshlaganingizda matn yashiriladi:</strong> Siz yozishni boshlaganingizda original gap yashiriladi. Endi siz uni xotiradan yozasiz.</li>
+    <li><strong>6. Xato bo‘lsa, tizim ko‘rsatadi:</strong> Agar xato qilsangiz, dastur aynan qaysi joyda xato qilganingizni ko‘rsatadi va siz gapni qayta yozasiz.</li>
+    <li><strong>7. Faqat to‘g‘ri yozilgandan keyin keyingi gap:</strong> Maqsad — gapni to‘g‘ri va ongli yozish. Xato bo‘lmasa, keyingi gapga o‘tasiz.</li>
+  </ul>
+</section>
 
-  <footer>
-    <p>&copy; 2026 Khumoyun Mukhammadjonov. This project is open source on <a href="https://github.com/khumoyunmukhammadjonov/Writing-Imitation-Practice">GitHub</a>.</p>
-  </footer>
+<section id="spelling">
+  <h2>Imlo xatolarini alohida mustahkamlash</h2>
+  <p>Mashq davomida qilgan spelling xatolaringiz alohida tizimga tushadi. Bu xatolar uch bosqichda qayta o‘rganiladi:</p>
+  <ul class="step-list">
+    <li><strong>Copy:</strong> So‘zning to‘g‘ri yozilishini ko‘rib, uni nusxa sifatida yozasiz.</li>
+    <li><strong>Reconstruct:</strong> Harflarni bosib, so‘zni qayta tuzasiz — bu shaklni faol yodlab qolishdir.</li>
+    <li><strong>Recall:</strong> So‘z yashiriladi va siz uni xotiradan yozasiz.</li>
+  </ul>
+</section>
+
+<section id="spaced-repetition">
+  <h2>Interval bilan takrorlash</h2>
+  <p>Dastur spaced repetition mantiqidan foydalanadi. Siz xato qilgan so‘zlar yoki Word List’ga qo‘shgan so‘zlar ma’lum kunlar oralig‘ida qayta paydo bo‘ladi: 1 kun → 3 kun → 7 kun → 14 kun → 30 kun.</p>
+  <p>Bu yondashuv so‘zlarni uzoq muddatga eslab qolishingizga yordam beradi.</p>
+</section>
+
+<section id="ielts-focus">
+  <h2>IELTS Writing Task 2 uchun ayniqsa foydali</h2>
+  <p>IELTS Writing Task 2’da yuqori ball olish uchun grammatikani bilishdan tashqari, fikrlarni tartibli bayon qilish, akademik so‘zlardan tabiiy foydalanish, gaplarni bog‘lash va aniq yozish ko‘nikmalariga ega bo‛lish zarur.</p>
+  <p>Writing Imitation Practice sizga model essaylar orqali bu ko‘nikmalarni bosqichma-bosqich o‘zlashtirishga yordam beradi. Siz matnlarni shunchaki o‘qimaysiz — ularni tahlil qilasiz, tushunasiz, xotiradan qayta yozasiz va o‘z yozuv uslubingizni shakllantirasiz.</p>
+</section>
+
+<section id="final-cta">
+  <h2>Yaxshi yozish — tasodif emas, ongli mashq natijasi</h2>
+  <p>Agar siz har kuni sifatli matnlar bilan ishlasangiz, ularni tushunib, gapma-gap xotiradan yozsangiz va xatolaringizni muntazam takrorlasangiz, writing ko‘nikmangiz tabiiy ravishda rivojlanadi.</p>
+  <p>Writing Imitation Practice shu jarayonni sodda, tartibli va samarali qiladi.</p>
+  <a class="cta-button" href="Writing%20Imitation%20Practice(2).zip" download>Kengaytmani yuklab olish</a>
+</section>
+
+<footer>
+  <p>&copy; 2026 Writing Imitation Practice. Barcha huquqlar himoyalangan.</p>
+</footer>
+
 </body>
 </html>
