@@ -1,23 +1,245 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Writing Imitation Practice — IELTS Writing uchun chrome extension</title>
-<meta name="description" content="IELTS Writing Task 2 uchun shadowing va imitation usuliga asoslangan chrome extension." />
-<style>
-:root{--bg:#f8faf7;--paper:#fff;--ink:#171717;--muted:#686f68;--line:#e6e8e2;--green:#39a84c;--green-dark:#24823a;--soft:#edf7ee;--shadow:0 24px 70px rgba(20,24,18,.10)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 16% 8%,rgba(57,168,76,.10),transparent 28%),linear-gradient(180deg,#fff 0%,var(--bg) 55%,#fff 100%);color:var(--ink);line-height:1.65}a{color:inherit}.wrap{width:min(1120px,calc(100% - 42px));margin:0 auto}.nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(230,232,226,.75)}.nav-inner{height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;font-weight:850;letter-spacing:-.04em}.mark{width:38px;height:38px;border-radius:14px;background:var(--soft);color:var(--green-dark);display:grid;place-items:center;font-weight:900}.nav-links{display:flex;align-items:center;gap:24px;font-size:14px;font-weight:700;color:#5d625e}.nav-links a{text-decoration:none}.nav-links a:hover{color:var(--green-dark)}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 22px;border-radius:999px;text-decoration:none;font-weight:800;letter-spacing:-.02em;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;white-space:nowrap}.button:hover{transform:translateY(-2px)}.primary{background:var(--green);color:#fff;box-shadow:0 16px 36px rgba(57,168,76,.22)}.primary:hover{background:var(--green-dark)}.secondary{background:#fff;border:1px solid var(--line);color:#2f332f}.hero{padding:92px 0 78px;text-align:center}.badge{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line);background:rgba(255,255,255,.74);border-radius:999px;font-size:13px;font-weight:800;color:#4b534c;box-shadow:0 10px 24px rgba(17,24,39,.04)}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 6px rgba(57,168,76,.10)}h1,h2,h3{margin:0;letter-spacing:-.055em;line-height:1.04}h1{max-width:930px;margin:24px auto 0;font-size:clamp(44px,7vw,84px);font-weight:900}.green-text{color:var(--green-dark)}.lead{max-width:760px;margin:24px auto 0;color:var(--muted);font-size:clamp(17px,2vw,21px)}.hero-actions{margin-top:34px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap}.screen-card{margin:56px auto 0;padding:16px;border-radius:32px;background:rgba(255,255,255,.72);border:1px solid rgba(230,232,226,.9);box-shadow:var(--shadow);max-width:1040px}.screen-card img{display:block;width:100%;height:auto;border-radius:22px;border:1px solid #d6d6cf;background:#edf2f4}.caption{margin-top:14px;color:#787f79;font-size:14px;font-weight:650}section{padding:84px 0}.section-head{text-align:center;max-width:760px;margin:0 auto 34px}.label{color:var(--green-dark);font-weight:850;font-size:14px;margin-bottom:12px}h2{font-size:clamp(34px,5vw,56px);font-weight:900}.section-head p{margin:18px 0 0;color:var(--muted);font-size:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:var(--paper);border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:0 18px 52px rgba(17,24,39,.05)}.icon{width:48px;height:48px;border-radius:17px;display:grid;place-items:center;background:var(--soft);margin-bottom:20px;font-size:22px}.card h3{font-size:24px;font-weight:850;margin-bottom:12px}.card p{color:var(--muted);margin:0}.story{display:grid;grid-template-columns:.95fr 1.05fr;gap:18px;align-items:stretch}.story-main{border-radius:34px;padding:34px;background:#151916;color:#fff;box-shadow:var(--shadow)}.story-main h2{color:#fff;font-size:clamp(34px,5vw,58px)}.story-main p{color:rgba(255,255,255,.74);font-size:18px;margin:20px 0 0}.story-side{display:grid;gap:14px}.mini{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px}.mini strong{display:block;margin-bottom:7px;font-size:18px;letter-spacing:-.03em}.mini span{color:var(--muted)}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:step}.step{counter-increment:step;position:relative}.step:before{content:counter(step);width:38px;height:38px;border-radius:14px;display:grid;place-items:center;background:var(--soft);color:var(--green-dark);font-weight:900;margin-bottom:18px}.cta{margin:40px 0 34px;text-align:center;border-radius:38px;background:linear-gradient(180deg,#fff,#f2f8f2);border:1px solid var(--line);padding:56px 24px;box-shadow:var(--shadow)}.cta p{max-width:660px;margin:18px auto 30px;color:var(--muted);font-size:18px}footer{padding:38px 0 48px;color:#8a908b;text-align:center;font-size:14px}@media(max-width:900px){.nav-links{display:none}.grid-3,.story,.flow{grid-template-columns:1fr}.hero{padding-top:58px}.screen-card{margin-top:38px;padding:10px;border-radius:24px}.screen-card img{border-radius:16px}}@media(max-width:560px){.wrap{width:min(100% - 26px,1120px)}.brand span{display:none}.nav-inner>.button{padding:0 15px;font-size:14px;min-height:44px}h1{font-size:39px}section{padding:60px 0}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Imitation Practice – Yozish oson bo‘lsin</title>
+  <style>
+    /* Rang palitrasi va bazaviy o'lchamlar */
+    :root {
+      --primary: #2563eb;     /* Ko'k, asosiy rang */
+      --primary-hover: #1d4ed8; /* Hover holatidagi ko'k */
+      --text: #111827;         /* Asosiy matn ranglari */
+      --muted: #6b7280;        /* Ikkinchi darajali matn uchun */
+      --bg: #ffffff;           /* Sahifa foni */
+      --card-bg: #f9fafb;      /* Kartalar uchun fon */
+      --radius: 12px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    /* Hero section */
+    .hero {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      padding: 80px 20px;
+      gap: 40px;
+      text-align: center;
+    }
+    @media (min-width: 768px) {
+      .hero {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 80px;
+        text-align: left;
+      }
+    }
+    .hero-content {
+      max-width: 600px;
+    }
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .hero-tagline {
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+    .cta {
+      display: inline-block;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 14px 32px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    .cta:hover {
+      background: var(--primary-hover);
+    }
+    .hero-image {
+      max-width: 500px;
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+    /* Generic section styles */
+    .section {
+      padding: 60px 20px;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .section-text {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+    /* Features */
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .feature {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: var(--radius);
+      flex: 1;
+      min-width: 260px;
+      max-width: 280px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .feature-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    /* Steps */
+    .steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .step {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: var(--radius);
+      flex: 1;
+      min-width: 240px;
+      max-width: 280px;
+      text-align: left;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    .step-number {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .step-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .step-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
-<header class="nav"><div class="wrap nav-inner"><div class="brand"><div class="mark">W</div><span>Writing Imitation Practice</span></div><nav class="nav-links" aria-label="Page navigation"><a href="#problem">Muammo</a><a href="#method">Metod</a><a href="#how">Qanday ishlaydi?</a></nav><a class="button primary" href="Writing%20Imitation%20Practice(2).zip" download>Download</a></div></header>
-<main>
-<section class="hero wrap"><div class="badge"><span class="dot"></span>IELTS Writing Task 2 uchun chrome extension</div><h1>Noldan yozib qiynalmang. Avval <span class="green-text">imitate</span> qiling.</h1><p class="lead">Writing Imitation Practice speaking’dagi shadowing va imitation mantig‘ini writing uchun moslashtiradi: kuchli model gapni ko‘rasiz, tushunasiz, keyin xotiradan yozib, xatoni darhol tuzatasiz.</p><div class="hero-actions"><a class="button primary" href="Writing%20Imitation%20Practice(2).zip" download>Chrome extension’ni yuklab olish</a><a class="button secondary" href="#how">Qanday ishlashini ko‘rish</a></div><div class="screen-card"><img src="data:image/webp;base64,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" alt="Writing Imitation Practice chrome extension screenshot"><div class="caption">Extension ko‘rinishi: bitta gapni o‘qing, xotiradan yozing, tekshiring va davom eting.</div></div></section>
-<section id="problem"><div class="wrap story"><div class="story-main"><h2>Writing nega shunchalik qiyin?</h2><p>Ko‘p o‘quvchilar “faqat ko‘p yoz” degan maslahatni eshitadi. Lekin agar ichingizda yetarli input bo‘lmasa — yaxshi gap tuzilmalari, akademik iboralar, fikrni tartiblash usuli — output ham kuchli chiqmaydi.</p><p>Shuning uchun noldan essay yozish og‘riqli bo‘ladi: o‘quvchi nima yozishni ham, qanday yozishni ham bir vaqtning o‘zida o‘ylaydi. Bu esa writing’ni juda og‘ir his qildiradi.</p></div><div class="story-side"><div class="mini"><strong>Input yo‘q → output kuchsiz</strong><span>Avval yaxshi model ko‘rilmasa, o‘quvchi ko‘pincha bir xil xatolarni qayta-qayta takrorlaydi.</span></div><div class="mini"><strong>Random yozish yetarli emas</strong><span>Ko‘proq yozish foydali, lekin faqat to‘g‘ri namuna va aniq feedback bilan.</span></div><div class="mini"><strong>Writing ham imitation talab qiladi</strong><span>Speaking’da shadowing ishlasa, writing’da ham kuchli matnni ongli ravishda imitate qilish kerak.</span></div></div></div></section>
-<section id="method"><div class="wrap"><div class="section-head"><div class="label">Asosiy g‘oya</div><h2>Shadowing metodini writing’ga aylantirish</h2><p>Speaking’da o‘quvchi avval tayyor nutqni eshitadi va takrorlaydi. Bu extension esa o‘sha jarayonni yozuvga olib keladi: model gap → xotira → yozish → tekshirish.</p></div><div class="grid-3"><article class="card"><div class="icon">👀</div><h3>Ko‘rish</h3><p>Yuqori sifatli model sentence yoki essay’ni ko‘rasiz va uning qanday qurilganini tushunasiz.</p></article><article class="card"><div class="icon">🧠</div><h3>Ichki o‘zlashtirish</h3><p>Gapni shunchaki ko‘chirmaysiz — uni xotirada ushlab, tuzilmasini ongli ravishda o‘rganasiz.</p></article><article class="card"><div class="icon">✍️</div><h3>Yozish</h3><p>Original gap yashiriladi. Siz uni xotiradan yozasiz va xato bo‘lsa, qayta tuzatasiz.</p></article></div></div></section>
-<section id="how"><div class="wrap"><div class="section-head"><div class="label">Oddiy jarayon</div><h2>Qiyin emas. Har safar bitta gap.</h2><p>Dastur o‘quvchini katta essay bilan bosmaydi. Mashq kichik, aniq va boshqariladigan bosqichlarga bo‘linadi.</p></div><div class="flow"><article class="card step"><h3>Model text qo‘ying</h3><p>IELTS Writing Task 2 essay yoki kuchli paragraphni extension’ga joylaysiz.</p></article><article class="card step"><h3>Gapni tushuning</h3><p>Har bir sentence alohida ko‘rinadi. Siz ma’no, grammar va style’ni ko‘rasiz.</p></article><article class="card step"><h3>Xotiradan yozing</h3><p>Original gap yashiriladi va siz uni o‘zingiz qayta yozasiz.</p></article><article class="card step"><h3>Xatoni tuzating</h3><p>Natijani tekshirasiz. Ko‘p xato bo‘lsa, gapni yana yozasiz.</p></article></div></div></section>
-<section><div class="wrap cta"><h2>Grant uchun ko‘rsatishga tayyor landing page</h2><p>Bu sahifa loyiha nima ekanini tushuntiradi va tekshiruvchi odamga chrome extension’ni darhol yuklab olish imkonini beradi.</p><a class="button primary" href="Writing%20Imitation%20Practice(2).zip" download>Chrome extension’ni yuklab olish</a></div></section>
-</main>
-<footer class="wrap">© 2026 Writing Imitation Practice — IELTS learners uchun yaratilgan.</footer>
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Yozishni yangi usulda o‘rganing</h1>
+      <p class="hero-tagline">IELTS yozma topshirig‘i 2 uchun moslashgan shadowing va imitation asosidagi mashg‘ulot. So‘z boyligini oshiring, tuzilmani his eting va yuqori ballga erishing.</p>
+      <a href="Writing-Imitation-Practice.zip" class="cta" download>Chrome kengaytmasini yuklab oling</a>
+    </div>
+    <!-- If the screenshot file is available in the repo, it will display here -->
+    <img src="extension-screenshot.png" alt="Writing Imitation Practice kengaytmasi" class="hero-image" />
+  </header>
+
+  <!-- Section: Why is writing difficult? -->
+  <section class="section">
+    <h2 class="section-title">Nega yozish eng qiyin qism?</h2>
+    <p class="section-text">Ko‘plab IELTS talabalarining eng past balli bo‘limi yozishdir. Input – ya’ni o‘qish va eshitish ko‘pligi bo‘lmasa, mustaqil tarzda insho yozish qiynaladi. 2018-yil statistik ma’lumotlariga ko‘ra, IELTS Academic bo‘limida yozish o‘rtacha 5.6 bandni tashkil etganini ko‘rishimiz mumkin, listening esa 6.3 va reading 6.2 band【263775503522443†L118-L129】.</p>
+  </section>
+
+  <!-- Section: Solution -->
+  <section class="section">
+    <h2 class="section-title">Shadowing va imitation yondashuvi</h2>
+    <p class="section-text">Tilni o‘rganishda eng yaxshi natijalar avval ko‘p sifatli input – eshitish va o‘qish – orqali yig‘iladi. Shadowing (tinglab takrorlash) va imitation (namunani nusxa qilib yozish) metodlari yordamida siz tuzilma va iboralarni tabiiy ravishda qabul qilasiz. Ushbu kengaytma speakingda ishlaydigan yondashuvni yozishga ko‘chiradi.</p>
+  </section>
+
+  <!-- Section: Features -->
+  <section class="section">
+    <h2 class="section-title">Asosiy afzalliklar</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-title">Sifatli input</div>
+        <div class="feature-desc">Band 8–9 insho namunalari yordamida grammatik tuzilmalar va so‘z birikmalari xotirangizga chuqur o‘rnaydi.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Oddiy va tez</div>
+        <div class="feature-desc">Kengaytmani bir necha soniyada o‘rnatib, darhol mashqni boshlashingiz mumkin. Ro‘yxatdan o‘tish yoki murakkab sozlamalar talab etilmaydi.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-title">Natijaga yo‘naltirilgan</div>
+        <div class="feature-desc">Tuzilmani va iboralarni takrorlagan holda, siz tez orada o‘z insholaringizni mustaqil va kreativ tarzda yozishga o'tasiz.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Steps -->
+  <section class="section">
+    <h2 class="section-title">Qanday ishlaydi?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-title">Kengaytmani o‘rnating</div>
+        <div class="step-desc">Bir marta bosish bilan Chrome brauzeringizga o‘rnatib oling.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-title">Namuna tanlang</div>
+        <div class="step-desc">Turli mavzulardagi yuqori ball insho namunalari ichidan mavzuni tanlang.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-title">Takrorlang va yozing</div>
+        <div class="step-desc">Har bir jumlani o‘qib, uni o‘zingiz yozing. Tuzilma va til naqshlari ongizga singadi.</div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-title">O‘zingizning inshongizni yarating</div>
+        <div class="step-desc">Namunalardan ilhom olib, o‘z fikringizni band tuzilmasida ifoda qiling va natijada original insho yarating.</div>
+      </div>
+    </div>
+    <p class="section-text" style="margin-top: 40px;">Yangi metod bilan yozishga nisbatan ishonch va zavq paydo bo‘ladi. Bugunoq urinib ko‘ring!</p>
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="Writing-Imitation-Practice.zip" class="cta" download>Yuklab olish</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Writing Imitation Practice. Barcha huquqlar himoyalangan.</p>
+  </footer>
 </body>
 </html>
