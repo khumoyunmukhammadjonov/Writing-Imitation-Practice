@@ -1,257 +1,531 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Writing Imitation Practice – Improve Your IELTS Writing</title>
-    <!-- Import a modern sans‑serif font for a clean look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        --primary: #6366f1;
-        --primary-dark: #4f46e5;
-        --text: #111827;
-        --muted: #6b7280;
-        --bg: #f9fafb;
-        --white: #ffffff;
-        --radius: 12px;
-      }
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      .container {
-        width: 100%;
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 1.25rem;
-      }
-      /* Hero section */
-      .hero {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2.5rem;
-        padding: 5rem 0 3rem;
-        background: linear-gradient(120deg, #eef2ff 0%, #f5f3ff 100%);
-      }
-      @media (min-width: 768px) {
-        .hero {
-          flex-direction: row;
-          justify-content: space-between;
-          padding: 6rem 0 4rem;
-        }
-      }
-      .hero-text {
-        flex: 1;
-        max-width: 550px;
-      }
-      .hero-text h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-      }
-      .hero-text p {
-        font-size: 1.125rem;
-        color: var(--muted);
-        margin-bottom: 2rem;
-      }
-      .cta-btn {
-        display: inline-block;
-        background-color: var(--primary);
-        color: var(--white);
-        padding: 0.875rem 1.75rem;
-        border-radius: var(--radius);
-        font-weight: 600;
-        transition: background-color 0.2s ease;
-      }
-      .cta-btn:hover {
-        background-color: var(--primary-dark);
-      }
-      .hero-image {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-      }
-      .hero-image img {
-        width: 100%;
-        max-width: 480px;
-        border-radius: var(--radius);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      }
-      /* Section utilities */
-      section {
-        padding: 4rem 0;
-      }
-      section h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 1rem;
-      }
-      section p.section-lead {
-        max-width: 700px;
-        margin: 0 auto 3rem;
-        font-size: 1rem;
-        color: var(--muted);
-        text-align: center;
-      }
-      /* Feature cards */
-      .features {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        justify-content: center;
-      }
-      .feature-card {
-        background-color: var(--white);
-        padding: 2rem;
-        border-radius: var(--radius);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        flex: 1;
-        min-width: 250px;
-        max-width: 260px;
-        text-align: left;
-      }
-      .feature-card h3 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-      .feature-card p {
-        font-size: 0.95rem;
-        color: var(--muted);
-      }
-      /* Steps */
-      .steps {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        justify-content: center;
-      }
-      .step-card {
-        background-color: var(--white);
-        padding: 2rem;
-        border-radius: var(--radius);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        flex: 1;
-        min-width: 220px;
-        max-width: 240px;
-        text-align: left;
-      }
-      .step-number {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 0.5rem;
-      }
-      .step-card h4 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-      .step-card p {
-        font-size: 0.9rem;
-        color: var(--muted);
-      }
-      /* Footer */
-      footer {
-        background-color: #f3f4f6;
-        text-align: center;
-        padding: 2rem 0;
-        font-size: 0.85rem;
-        color: var(--muted);
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Hero Section -->
-    <header class="hero">
-      <div class="container hero-text">
-        <h1>Unlock Your Writing Potential</h1>
-        <p>Master IELTS Task 2 writing with our Chrome extension. Learn by listening, reading and imitating top band essays, then confidently craft your own.</p>
-        <a href="Writing%20Imitation%20Practice.zip" class="cta-btn" download>Download Extension</a>
+<html lang='uz'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Writing Imitation Practice — IELTS Writing uchun yangi mashq tizimi</title>
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap' rel='stylesheet'>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: rgba(15, 23, 42, .10);
+      --soft: #f8fafc;
+      --card: rgba(255,255,255,.82);
+      --brand: #635bff;
+      --brand-dark: #4f46e5;
+      --aqua: #06b6d4;
+      --green: #10b981;
+      --rose: #f43f5e;
+      --shadow: 0 24px 70px rgba(15, 23, 42, .12);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(99,91,255,.16), transparent 32%),
+        radial-gradient(circle at 88% 14%, rgba(6,182,212,.15), transparent 30%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 46%, #ffffff 100%);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,.74);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--aqua));
+      box-shadow: 0 14px 30px rgba(99,91,255,.26);
+    }
+    .nav-links { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .94rem; font-weight: 700; }
+    .nav-links a { padding: 9px 12px; border-radius: 999px; }
+    .nav-links a:hover { background: rgba(99,91,255,.08); color: var(--ink); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 22px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+      white-space: nowrap;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      box-shadow: 0 16px 40px rgba(99,91,255,.32);
+    }
+    .button-primary:hover { box-shadow: 0 22px 54px rgba(99,91,255,.42); }
+    .button-ghost {
+      color: var(--ink);
+      background: rgba(255,255,255,.8);
+      border: 1px solid var(--line);
+    }
+
+    .hero { padding: 80px 0 64px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.03fr .97fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      border: 1px solid rgba(99,91,255,.18);
+      border-radius: 999px;
+      color: var(--brand-dark);
+      background: rgba(99,91,255,.08);
+      font-weight: 900;
+      font-size: .84rem;
+    }
+    h1 {
+      margin: 22px 0 20px;
+      font-size: clamp(2.8rem, 6vw, 5.7rem);
+      line-height: .93;
+      letter-spacing: -.085em;
+      max-width: 820px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--brand), var(--aqua));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero-lead {
+      color: var(--muted);
+      font-size: clamp(1.08rem, 1.7vw, 1.35rem);
+      max-width: 680px;
+      margin: 0 0 28px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin: 26px 0 24px; }
+    .trust-row { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-weight: 800; font-size: .92rem; }
+    .pill {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.76);
+      border: 1px solid var(--line);
+    }
+
+    .showcase {
+      position: relative;
+      padding: 16px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.62));
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+    }
+    .showcase::before {
+      content: '';
+      position: absolute;
+      inset: -22px;
+      z-index: -1;
+      border-radius: 46px;
+      background: linear-gradient(135deg, rgba(99,91,255,.2), rgba(6,182,212,.12));
+      filter: blur(22px);
+    }
+    .browser-bar {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+      padding: 0 4px 12px;
+    }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; background: #cbd5e1; }
+    .dot:nth-child(1) { background: #fb7185; }
+    .dot:nth-child(2) { background: #fbbf24; }
+    .dot:nth-child(3) { background: #34d399; }
+    .showcase img {
+      width: 100%;
+      display: block;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 50px rgba(15,23,42,.16);
+    }
+    .floating-card {
+      position: absolute;
+      right: -18px;
+      bottom: -22px;
+      width: min(260px, 58%);
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(15, 23, 42, .92);
+      color: white;
+      box-shadow: 0 24px 60px rgba(15,23,42,.34);
+    }
+    .floating-card strong { display: block; font-size: 1.05rem; margin-bottom: 3px; }
+    .floating-card span { color: rgba(255,255,255,.70); font-size: .88rem; }
+
+    .stats { padding: 18px 0 54px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .stat-card {
+      padding: 24px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(15,23,42,.08);
+      box-shadow: 0 18px 45px rgba(15,23,42,.06);
+    }
+    .stat-card b { display: block; font-size: 2rem; letter-spacing: -.05em; }
+    .stat-card span { color: var(--muted); font-weight: 700; }
+
+    section { padding: 72px 0; }
+    .section-head { text-align: center; max-width: 780px; margin: 0 auto 34px; }
+    .section-kicker { color: var(--brand-dark); font-weight: 900; letter-spacing: .08em; text-transform: uppercase; font-size: .78rem; }
+    h2 {
+      margin: 8px 0 12px;
+      font-size: clamp(2rem, 3.6vw, 3.5rem);
+      line-height: 1.02;
+      letter-spacing: -.065em;
+    }
+    .section-head p { margin: 0; color: var(--muted); font-size: 1.08rem; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card {
+      padding: 26px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.82);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 52px rgba(15,23,42,.07);
+    }
+    .icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(99,91,255,.10);
+      color: var(--brand-dark);
+      font-size: 1.25rem;
+      margin-bottom: 14px;
+    }
+    .card h3 { margin: 0 0 9px; font-size: 1.25rem; letter-spacing: -.025em; }
+    .card p { margin: 0; color: var(--muted); }
+
+    .problem-layout {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 22px;
+      align-items: start;
+    }
+    .sticky-note {
+      position: sticky;
+      top: 96px;
+      padding: 30px;
+      border-radius: var(--radius-xl);
+      background: #111827;
+      color: white;
+      box-shadow: var(--shadow);
+    }
+    .sticky-note h2 { color: white; margin-top: 0; }
+    .sticky-note p { color: rgba(255,255,255,.72); }
+    .story {
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .story-block { padding: 30px; border-bottom: 1px solid var(--line); }
+    .story-block:last-child { border-bottom: 0; }
+    .story-block h3 { margin: 0 0 12px; font-size: 1.35rem; letter-spacing: -.03em; }
+    .story-block p { margin: 0 0 14px; color: #334155; }
+    .story-block p:last-child { margin-bottom: 0; }
+    .highlight {
+      padding: 22px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(99,91,255,.10), rgba(6,182,212,.08));
+      border: 1px solid rgba(99,91,255,.14);
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .process-card {
+      padding: 22px;
+      min-height: 180px;
+      border-radius: 24px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 42px rgba(15,23,42,.06);
+    }
+    .step { color: var(--brand-dark); font-size: .82rem; font-weight: 900; letter-spacing: .08em; }
+    .process-card h3 { margin: 9px 0 8px; font-size: 1.08rem; line-height: 1.2; }
+    .process-card p { margin: 0; color: var(--muted); font-size: .92rem; }
+
+    .download-panel {
+      position: relative;
+      overflow: hidden;
+      padding: 42px;
+      border-radius: 36px;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255,255,255,.24), transparent 30%),
+        linear-gradient(135deg, #111827 0%, #312e81 58%, #0891b2 100%);
+      color: white;
+      box-shadow: 0 30px 86px rgba(49,46,129,.30);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+    }
+    .download-panel h2 { margin: 0 0 12px; color: white; }
+    .download-panel p { margin: 0; color: rgba(255,255,255,.74); max-width: 690px; }
+    .download-panel .button { background: white; color: #312e81; box-shadow: 0 18px 46px rgba(0,0,0,.22); }
+
+    footer { padding: 34px 0 50px; color: var(--muted); text-align: center; font-weight: 700; }
+
+    @media (max-width: 980px) {
+      .hero-grid, .problem-layout, .download-panel { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .process { grid-template-columns: 1fr 1fr; }
+      .sticky-note { position: relative; top: 0; }
+      .floating-card { right: 10px; bottom: 10px; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 28px, 1160px); }
+      .nav-links a:not(.button) { display: none; }
+      .hero { padding: 54px 0 36px; }
+      .hero-actions { flex-direction: column; }
+      .button { width: 100%; }
+      .stats-grid, .cards, .process { grid-template-columns: 1fr; }
+      .download-panel { padding: 28px; }
+      .floating-card { position: static; width: 100%; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class='nav'>
+    <div class='container nav-inner'>
+      <a class='logo' href='#top' aria-label='Writing Imitation Practice'>
+        <span class='logo-mark'>✍️</span>
+        <span>Writing Imitation Practice</span>
+      </a>
+      <div class='nav-links'>
+        <a href='#why'>Muammo</a>
+        <a href='#method'>Metod</a>
+        <a href='#how'>Qanday ishlaydi</a>
+        <a class='button button-primary' href='Writing%20Imitation%20Practice(2).zip' download>⬇️ Download ZIP</a>
       </div>
-      <div class="container hero-image">
-        <!-- Use the provided screenshot to showcase the extension -->
-        <img src="extension.png" alt="Writing Imitation Practice extension screenshot" />
+    </div>
+  </nav>
+
+  <main id='top'>
+    <header class='hero'>
+      <div class='container hero-grid'>
+        <div>
+          <span class='eyebrow'>IELTS Writing Task 2 uchun Chrome extension</span>
+          <h1>Writingni <span class='gradient-text'>imitation</span> orqali o‘rganing.</h1>
+          <p class='hero-lead'>Speaking uchun Shadowing qanday ishlasa, bu dastur Writing uchun shunday ishlaydi: o‘quvchi kuchli essay gaplarini ko‘radi, eslab qoladi va xotiradan xatosiz qayta yozadi.</p>
+          <div class='hero-actions'>
+            <a class='button button-primary' href='Writing%20Imitation%20Practice(2).zip' download>⬇️ Writing Imitation Practice.zip</a>
+            <a class='button button-ghost' href='#how'>Qanday ishlashini ko‘rish</a>
+          </div>
+          <div class='trust-row'>
+            <span class='pill'>Bitta gapdan mashq</span>
+            <span class='pill'>Darhol xato ko‘rsatish</span>
+            <span class='pill'>Spaced Repetition</span>
+          </div>
+        </div>
+
+        <div class='showcase'>
+          <div class='browser-bar'>
+            <div class='dots'><span class='dot'></span><span class='dot'></span><span class='dot'></span></div>
+            <span>Chrome extension preview</span>
+          </div>
+          <img src='extension.png' alt='Writing Imitation Practice Chrome extension ko‘rinishi'>
+          <div class='floating-card'>
+            <strong>2 ta asosiy vazifa</strong>
+            <span>Metodni tushuntirish va ZIP faylni yuklab olish.</span>
+          </div>
+        </div>
       </div>
     </header>
 
-    <!-- Why it works section -->
+    <section class='stats'>
+      <div class='container stats-grid'>
+        <div class='stat-card'><b>1</b><span>gap bir vaqtda ko‘rsatiladi</span></div>
+        <div class='stat-card'><b>100%</b><span>to‘g‘ri yozilmaguncha davom etmaydi</span></div>
+        <div class='stat-card'><b>1–30</b><span>kunlik oraliqli takrorlash</span></div>
+      </div>
+    </section>
+
+    <section id='why'>
+      <div class='container'>
+        <div class='section-head'>
+          <span class='section-kicker'>Asosiy muammo</span>
+          <h2>Nega IELTS Writing ko‘pchilik uchun eng qiyin qism?</h2>
+          <p>O‘quvchi o‘zida hali shakllanmagan akademik jumla, mantiqiy struktura va professional bog‘lovchilarni birdaniga ixtiro qila olmaydi.</p>
+        </div>
+        <div class='cards'>
+          <article class='card'>
+            <div class='icon'>📉</div>
+            <h3>Writing past ball olib keladi</h3>
+            <p>Ko‘pchilik Listening va Readingdan yuqori natija olsa ham, Writing 5.0–5.5 atrofida qolib ketadi.</p>
+          </article>
+          <article class='card'>
+            <div class='icon'>🔁</div>
+            <h3>Random yozish yetarli emas</h3>
+            <p>Faqat qayta-qayta yozish o‘quvchining past darajadagi odatlarini mustahkamlab qo‘yishi mumkin.</p>
+          </article>
+          <article class='card'>
+            <div class='icon'>🤖</div>
+            <h3>AI tekshiruv to‘liq yechim emas</h3>
+            <p>AI grammatikani tuzatishi mumkin, lekin o‘quvchiga kuchli jumlalarni o‘zi tuzish qobiliyatini avtomatik bermaydi.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id='method'>
+      <div class='container problem-layout'>
+        <aside class='sticky-note'>
+          <span class='section-kicker'>Yangi yondashuv</span>
+          <h2>Speakingdagi imitation endi Writingda.</h2>
+          <p>Bu landing page ikkita ishni qiladi: Writing Imitation Practice nima ekanini tushuntiradi va Chrome extension ZIP faylini yuklab olish imkonini beradi.</p>
+          <a class='button button-primary' href='Writing%20Imitation%20Practice(2).zip' download>⬇️ Extensionni yuklab olish</a>
+        </aside>
+
+        <article class='story'>
+          <div class='story-block'>
+            <h3>IELTS Writing Task 2 — muammo</h3>
+            <p>IELTS Writing Task 2 — butun dunyo bo‘yicha eng past ball olinadigan qism. O‘zbekistonda esa bu muammo yanada chuqur: ko‘pchilik o‘quvchilar Listening va Reading’dan 7–8 ball olsa ham, Writing 5.0–5.5 da qolib ketadi. Bu bitta past ball umumiy natijani pastga tortadi va ko‘plab yoshlarning universitetga kirish yoki viza olish imkoniyatini yo‘q qiladi. Buning sababi juda oddiy: yozish ko‘nikmasini tez va samarali rivojlantirish uchun isbotlangan tizim mavjud emas.</p>
+          </div>
+          <div class='story-block'>
+            <h3>Shadowing / Imitation nimaga kuchli?</h3>
+            <p>Gapirish ko‘nikmasini (Speaking) rivojlantirishda ilmiy tasdiqlangan va butun dunyoda keng qo‘llaniladigan Shadowing / Imitation usullari mavjud. Imitation usulida o‘quvchi ingliz tilida so‘zlashuvchining gapini tinglaydi, audioni to‘xtatadi (pauza) va gapni qanday eshitgan bo‘lsa, xuddi shunday takrorlaydi.</p>
+            <p>Bu usul orqali talaffuz, intonatsiya, grammatik struktura va lug‘at boyligi tabiiy ravishda o‘zlashtiriladi. Miya to‘g‘ri tuzilgan gaplarni eshitib, to‘xtab, qayta ishlashi natijasida millionlab odamlar aynan shu yo‘l bilan ingliz tilida ravon gapirishni o‘rgangan.</p>
+          </div>
+          <div class='story-block'>
+            <h3>Nega bu usul Writing uchun yo‘q edi?</h3>
+            <p>Biroq, nima uchun yozish ko‘nikmasi uchun bunday usul shu paytgacha yaratilmagan? Shadowing va Imitation faqat og‘zaki nutq uchun qo‘llanib kelingan. Yozma nutqni xuddi shunday tabiiy va avtomatlashtirilgan tarzda o‘rganish uchun hech qanday platforma yo‘q.</p>
+            <p class='highlight'>Men birinchi bo‘lib ushbu muvaffaqiyatli metodni yozish ko‘nikmasiga tatbiq etdim va <strong>Writing Imitation Practice (Chrome extension)</strong> dasturini yaratdim.</p>
+          </div>
+          <div class='story-block'>
+            <h3>Nima uchun yozish qiyin?</h3>
+            <p>Asosiy muammo shundaki, o‘quvchi o‘z xotirasida va ongida yo‘q narsani qog‘ozga tushira olmaydi. Agar o‘quvchining lug‘at boyligi va gap qurish qobiliyati ma’lum bir (masalan, 5.5) darajada bo‘lsa, u kutilmaganda Band 9 darajasidagi jumlalarni, murakkab akademik so‘zlarni va professional bog‘lovchilarni o‘zidan ixtiro qila olmaydi.</p>
+          </div>
+          <div class='story-block'>
+            <h3>Noto‘g‘ri maslahatlar</h3>
+            <p>Ko‘plab o‘qituvchilar shunday maslahat berishadi: “Qayta-qayta yozishni mashq qilaver”. Bu mutlaqo ishlamaydigan usul. Nega? Chunki o‘quvchi har gal yozganida faqat o‘ziga ma’lum bo‘lgan, chegaralangan va ehtimol xato bo‘lgan bilimidan foydalanadi. U shunchaki o‘zining past darajasini va noto‘g‘ri odatlarini qayta-qayta takrorlab, miyasida mustahkamlaydi, xolos.</p>
+            <p>Ikkinchi keng tarqalgan xato maslahat: “Esseni yoz va AI (sun’iy intellekt) orqali tekshirtir”. AI faqatgina o‘quvchi yozgan gapning grammatikasini to‘g‘rilab berishi mumkin. Lekin o‘quvchining darajasi past bo‘lsa, uning yozgan matni juda sodda, tartibsiz va yaxshi rivojlanmagan bo‘ladi.</p>
+            <p>Bunday sodda va tuzilmasi zaif gaplarning grammatikasi 100% to‘g‘ri bo‘lganida ham, u baribir past darajali, “yomon” esse hisoblanadi. Shunchaki grammatikani to‘g‘rilash o‘quvchiga murakkab, chuqur fikrli va akademik darajada mukammal gaplarni tuza olish qobiliyatini bermaydi. Sun’iy intellekt to‘g‘rilab bergan matnni o‘qish ham to‘liq yechim emas, chunki o‘quvchi uni o‘zi yozmadi, keyingi safar yana xuddi o‘sha xatoga yo‘l qo‘yadi. Yagona to‘g‘ri yechim — o‘quvchini professional darajadagi esselarni bevosita o‘zi yozib, o‘zlashtirishga o‘rgatishdir.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id='how'>
+      <div class='container'>
+        <div class='section-head'>
+          <span class='section-kicker'>Dastur qanday ishlaydi?</span>
+          <h2>Band 9 gaplarini xotira orqali yozishga majbur qiladi.</h2>
+          <p>O‘quvchi professional andozalarni faqat o‘qib qo‘ymaydi — ularni o‘zi yozib, miyasiga va yozish odatiga joylaydi.</p>
+        </div>
+        <div class='process'>
+          <article class='process-card'>
+            <span class='step'>01</span>
+            <h3>Essay kiritiladi</h3>
+            <p>O‘quvchi Band 9 darajasidagi esseni dasturga kiritadi.</p>
+          </article>
+          <article class='process-card'>
+            <span class='step'>02</span>
+            <h3>Gaplarga ajratiladi</h3>
+            <p>Tizim matnni bitta gapdan iborat bo‘laklarga ajratadi.</p>
+          </article>
+          <article class='process-card'>
+            <span class='step'>03</span>
+            <h3>Asl matn yashirinadi</h3>
+            <p>O‘quvchi yozishni boshlashi bilan asl gap ko‘rinmaydi.</p>
+          </article>
+          <article class='process-card'>
+            <span class='step'>04</span>
+            <h3>Xato darhol ko‘rinadi</h3>
+            <p>Dastur qaysi so‘z xato ekanini ko‘rsatadi, lekin javobni berib qo‘ymaydi.</p>
+          </article>
+          <article class='process-card'>
+            <span class='step'>05</span>
+            <h3>Takrorlash qaytadi</h3>
+            <p>Xato qilingan so‘zlar 1, 3, 7, 14 va 30 kundan so‘ng yana mashq qildiriladi.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section>
-      <div class="container">
-        <h2>Why Imitation Works</h2>
-        <p class="section-lead">Writing becomes easier when you have quality input. Our method combines shadowing (listening and writing what you hear) with imitation (copying high‑scoring essays) so you internalise vocabulary, structure and style before producing your own responses.</p>
-        <div class="features">
-          <div class="feature-card">
-            <h3>Learn from the Best</h3>
-            <p>Study band 8–9 sample essays with built‑in audio and transcripts. Gain insight into real IELTS standards.</p>
+      <div class='container'>
+        <div class='download-panel'>
+          <div>
+            <h2>Extensionni hoziroq yuklab oling.</h2>
+            <p>Natijada, o‘quvchi o‘zining past darajali fikrlarini AIda to‘g‘rilashga urinmaydi, balki to‘g‘ridan-to‘g‘ri professional andozalarni bevosita o‘zi yozish orqali mushak xotirasiga muhrlaydi. Bu yozish ko‘nikmasini rivojlantirishdagi butunlay yangi va isbotlangan yondashuvdir.</p>
           </div>
-          <div class="feature-card">
-            <h3>Simple &amp; Interactive</h3>
-            <p>Easy to use straight out of the box. No complex setup—just install and start practising.</p>
-          </div>
-          <div class="feature-card">
-            <h3>Build Muscle Memory</h3>
-            <p>Repeatedly hearing and writing quality sentences helps embed patterns, grammar and synonyms in your mind.</p>
-          </div>
-          <div class="feature-card">
-            <h3>Real Progress</h3>
-            <p>Structured practice and progress tracking guide you from imitation to confident independent writing.</p>
-          </div>
+          <a class='button' href='Writing%20Imitation%20Practice(2).zip' download>⬇️ Download ZIP</a>
         </div>
       </div>
     </section>
+  </main>
 
-    <!-- How it works section -->
-    <section style="background-color: #eef2ff;">
-      <div class="container">
-        <h2>How It Works</h2>
-        <div class="steps">
-          <div class="step-card">
-            <div class="step-number">1</div>
-            <h4>Install the Extension</h4>
-            <p>Add Writing Imitation Practice to your Chrome browser with a single click.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">2</div>
-            <h4>Select a Sample</h4>
-            <p>Choose from curated high‑scoring essays on topics that interest you.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">3</div>
-            <h4>Listen &amp; Imitate</h4>
-            <p>Listen to each sentence and write it down. Feel the rhythm and structure as you go.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">4</div>
-            <h4>Write Your Response</h4>
-            <p>Apply what you've learned by crafting your own original essay using the same structure.</p>
-          </div>
-        </div>
-        <p class="section-lead" style="margin-top: 2rem;">Experience a smarter way to practise writing. Start today and see your confidence soar.</p>
-        <div style="text-align: center; margin-top: 1rem;">
-          <a href="Writing%20Imitation%20Practice.zip" class="cta-btn" download>Get Started Now</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <p>&copy; 2026 Writing Imitation Practice. All rights reserved.</p>
-    </footer>
-  </body>
+  <footer>
+    <div class='container'>© 2026 Writing Imitation Practice. Chrome extension landing page.</div>
+  </footer>
+</body>
 </html>
