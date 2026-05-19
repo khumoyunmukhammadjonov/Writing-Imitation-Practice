@@ -1,300 +1,257 @@
 <!DOCTYPE html>
-<html lang="uz">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IELTS yozish – yozishni sevdiruvchi kengaytma</title>
-  <style>
-    /* Asosiy ranglar va tipografiya */
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1e3a8a;
-      --text: #0f172a;
-      --muted: #64748b;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --radius: 14px;
-    }
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    /* Qulay container */
-    .container {
-      width: 100%;
-      max-width: 1080px;
-      padding: 0 20px;
-      margin: 0 auto;
-    }
-    /* Hero section */
-    .hero {
-      background: linear-gradient(135deg, #e0e7ff, #f0f9ff);
-      padding: 60px 0;
-      display: flex;
-      flex-direction: column-reverse;
-      align-items: center;
-      gap: 40px;
-    }
-    @media (min-width: 768px) {
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Writing Imitation Practice – Improve Your IELTS Writing</title>
+    <!-- Import a modern sans‑serif font for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --text: #111827;
+        --muted: #6b7280;
+        --bg: #f9fafb;
+        --white: #ffffff;
+        --radius: 12px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .container {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+      }
+      /* Hero section */
       .hero {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+        padding: 5rem 0 3rem;
+        background: linear-gradient(120deg, #eef2ff 0%, #f5f3ff 100%);
       }
-    }
-    .hero h1 {
-      font-size: 2.6rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--muted);
-      margin-bottom: 30px;
-      max-width: 520px;
-    }
-    .cta {
-      display: inline-block;
-      background-color: var(--primary);
-      color: #ffffff;
-      padding: 14px 32px;
-      border-radius: var(--radius);
-      font-weight: 600;
-      transition: background-color 0.2s;
-    }
-    .cta:hover {
-      background-color: var(--primary-dark);
-    }
-    .hero img {
-      width: 100%;
-      max-width: 500px;
-      border-radius: var(--radius);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    }
-    /* Section umumiy */
-    section {
-      padding: 80px 0;
-    }
-    section h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    section p.section-lead {
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 700px;
-      text-align: center;
-      margin: 0 auto 40px;
-    }
-    /* Muammo va yechim */
-    .two-col {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-    @media (min-width: 768px) {
-      .two-col {
-        flex-direction: row;
-        gap: 60px;
+      @media (min-width: 768px) {
+        .hero {
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 6rem 0 4rem;
+        }
       }
-    }
-    .two-col > div {
-      flex: 1;
-    }
-    .two-col h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .two-col p {
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-    /* Features */
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-    .feature-card {
-      background-color: var(--card-bg);
-      padding: 30px;
-      border-radius: var(--radius);
-      flex: 1;
-      min-width: 240px;
-      max-width: 260px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-    .feature-card h4 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .feature-card p {
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-    /* Steps */
-    .steps {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-    .step-card {
-      background-color: var(--card-bg);
-      padding: 30px;
-      border-radius: var(--radius);
-      flex: 1;
-      min-width: 200px;
-      max-width: 260px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      text-align: left;
-    }
-    .step-card .num {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-    .step-card h5 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .step-card p {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-    footer {
-      background-color: #f1f5f9;
-      text-align: center;
-      padding: 40px 0;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-  </style>
-</head>
-<body>
-  <header class="hero">
-    <div class="container">
-      <div style="flex: 1;">
-        <h1>Yozishni sevdiruvchi kengaytma</h1>
-        <p>IELTS task 2 uchun yozishni osonlashtiring: shadowing va imitation metodlari orqali kirish va chiqish balansini toping, so‘ngra o‘z inshoingizni yarating.</p>
-        <a href="Writing%20Imitation%20Practice(2).zip" class="cta" download>Chrome kengaytmasini yuklab oling</a>
+      .hero-text {
+        flex: 1;
+        max-width: 550px;
+      }
+      .hero-text h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      .hero-text p {
+        font-size: 1.125rem;
+        color: var(--muted);
+        margin-bottom: 2rem;
+      }
+      .cta-btn {
+        display: inline-block;
+        background-color: var(--primary);
+        color: var(--white);
+        padding: 0.875rem 1.75rem;
+        border-radius: var(--radius);
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+      }
+      .cta-btn:hover {
+        background-color: var(--primary-dark);
+      }
+      .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      .hero-image img {
+        width: 100%;
+        max-width: 480px;
+        border-radius: var(--radius);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      }
+      /* Section utilities */
+      section {
+        padding: 4rem 0;
+      }
+      section h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      section p.section-lead {
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        font-size: 1rem;
+        color: var(--muted);
+        text-align: center;
+      }
+      /* Feature cards */
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+      .feature-card {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        min-width: 250px;
+        max-width: 260px;
+        text-align: left;
+      }
+      .feature-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .feature-card p {
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+      /* Steps */
+      .steps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+      .step-card {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: var(--radius);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        min-width: 220px;
+        max-width: 240px;
+        text-align: left;
+      }
+      .step-number {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+      .step-card h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .step-card p {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      /* Footer */
+      footer {
+        background-color: #f3f4f6;
+        text-align: center;
+        padding: 2rem 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="container hero-text">
+        <h1>Unlock Your Writing Potential</h1>
+        <p>Master IELTS Task 2 writing with our Chrome extension. Learn by listening, reading and imitating top band essays, then confidently craft your own.</p>
+        <a href="Writing%20Imitation%20Practice.zip" class="cta-btn" download>Download Extension</a>
       </div>
-    </div>
-    <div class="container">
-      <img src="extension-screenshot.png" alt="Kengaytmaning ko‘rinishi" />
-    </div>
-  </header>
+      <div class="container hero-image">
+        <!-- Use the provided screenshot to showcase the extension -->
+        <img src="extension.png" alt="Writing Imitation Practice extension screenshot" />
+      </div>
+    </header>
 
-  <section>
-    <div class="container">
-      <h2>Nega yozish qiyin?</h2>
-      <p class="section-lead">Yozma topshiriqlarni boshlash azobdek ko‘rinishi mumkin. O‘qish va eshitish orqali etarli kirish ma’lumotlari bo‘lmasa, so‘z boyligi va tuzilmani bilmaslik sababli ko‘p talabalar task 2’da past natija oladi. IELTSning 2018-yil ma’lumotlarida yozish bo‘limining o‘rtacha bahosi 5.6 bo‘lgan, bu listening (6.3) va reading (6.2)dan ancha past【263775503522443†L118-L129】.</p>
-      <div class="two-col">
-        <div>
-          <h3>Boshidan yozish – stressli</h3>
-          <p>Kirish materiallari kam bo‘lsa, bo‘sh sahifa oldida o‘tirib, nima yozishni bilmay qolasiz. Qayta–qayta yozish ham yordam bermaydi – input yetarli bo‘lmasa, outputni kutib bo‘lmaydi.</p>
-        </div>
-        <div>
-          <h3>Writingdan past ball olish – oddiy holat</h3>
-          <p>Ko‘plab imtihon ishtirokchilari writingdan eng past ball oladi. Bu sizning yomonligingiz emas – faqatgina noto‘g‘ri usuldan foydalanishga misol.</p>
+    <!-- Why it works section -->
+    <section>
+      <div class="container">
+        <h2>Why Imitation Works</h2>
+        <p class="section-lead">Writing becomes easier when you have quality input. Our method combines shadowing (listening and writing what you hear) with imitation (copying high‑scoring essays) so you internalise vocabulary, structure and style before producing your own responses.</p>
+        <div class="features">
+          <div class="feature-card">
+            <h3>Learn from the Best</h3>
+            <p>Study band 8–9 sample essays with built‑in audio and transcripts. Gain insight into real IELTS standards.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Simple &amp; Interactive</h3>
+            <p>Easy to use straight out of the box. No complex setup—just install and start practising.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Build Muscle Memory</h3>
+            <p>Repeatedly hearing and writing quality sentences helps embed patterns, grammar and synonyms in your mind.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Real Progress</h3>
+            <p>Structured practice and progress tracking guide you from imitation to confident independent writing.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section style="background-color: #eef2ff;">
-    <div class="container">
-      <h2>Yechim: shadowing va imitation</h2>
-      <p class="section-lead">Bu usullar ilgari speaking ko‘nikmasida ishlatilgan – endi yozish uchun ham samarali. Avval matnni tinglab va qayta yozib tuzilmani his eting, keyin esa o‘z fikrlaringizni ifodalab, originallik qo‘shing.</p>
-      <div class="two-col">
-        <div>
-          <h3>Shadowing</h3>
-          <p>Tinglagan jumlalarni bir varaqga tushirib, talaffuz va tuzilma ustida ishlaysiz. Bu sizning quloq eshitish ko‘nikmangizni mustahkamlaydi.</p>
+    <!-- How it works section -->
+    <section style="background-color: #eef2ff;">
+      <div class="container">
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h4>Install the Extension</h4>
+            <p>Add Writing Imitation Practice to your Chrome browser with a single click.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h4>Select a Sample</h4>
+            <p>Choose from curated high‑scoring essays on topics that interest you.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h4>Listen &amp; Imitate</h4>
+            <p>Listen to each sentence and write it down. Feel the rhythm and structure as you go.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h4>Write Your Response</h4>
+            <p>Apply what you've learned by crafting your own original essay using the same structure.</p>
+          </div>
         </div>
-        <div>
-          <h3>Imitation</h3>
-          <p>Yuqori ball insho namunalarini nusxa qilib yozish orqali til naqshlari va iboralarni o‘zingizga singdirasiz.</p>
+        <p class="section-lead" style="margin-top: 2rem;">Experience a smarter way to practise writing. Start today and see your confidence soar.</p>
+        <div style="text-align: center; margin-top: 1rem;">
+          <a href="Writing%20Imitation%20Practice.zip" class="cta-btn" download>Get Started Now</a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="container">
-      <h2>Afzalliklari</h2>
-      <div class="features">
-        <div class="feature-card">
-          <h4>Namuna asosida o‘rganish</h4>
-          <p>Band 8-9 insholar ustida ishlay turib, haqiqiy imtihon standartlaridan ilhom olasiz.</p>
-        </div>
-        <div class="feature-card">
-          <h4>Soddalik</h4>
-          <p>Kengaytmadan foydalanish oson – murakkab ro‘yxatdan o‘tish shart emas, darhol ish boshlaysiz.</p>
-        </div>
-        <div class="feature-card">
-          <h4>Ko‘nikma qurish</h4>
-          <p>Til naqshlari, grammatik formulalar va sinonimlar ongizga sekin–asta joylashadi, mustaqil yozish osonlashadi.</p>
-        </div>
-        <div class="feature-card">
-          <h4>Natijaga yo‘naltirilgan</h4>
-          <p>Praktik mashqlar va progres kuzatuvi sizni real natijaga olib keladi.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section style="background-color: #eef2ff;">
-    <div class="container">
-      <h2>Qanday ishlaydi?</h2>
-      <div class="steps">
-        <div class="step-card">
-          <div class="num">1</div>
-          <h5>Kengaytmani o‘rnatish</h5>
-          <p>Chrome brauzeringizga bir marta bosish bilan o‘rnatib oling.</p>
-        </div>
-        <div class="step-card">
-          <div class="num">2</div>
-          <h5>Namuna tanlash</h5>
-          <p>Top insholar to‘plamidan mavzu tanlab, tinglang va o‘qing.</p>
-        </div>
-        <div class="step-card">
-          <div class="num">3</div>
-          <h5>Shadowing va imitation</h5>
-          <p>Jumlalarni eshitib, yozing. Til naqshlari ongizga yaxshiroq o‘rnaydi.</p>
-        </div>
-        <div class="step-card">
-          <div class="num">4</div>
-          <h5>O‘z inshoingiz</h5>
-          <p>Nafaqat nusxa ko‘chirish, balki o‘z fikringizni band tuzilmasida ifodalab, original insho yarating.</p>
-        </div>
-      </div>
-      <p class="section-lead" style="margin-top: 40px;">Yangi metod bilan yozishni o‘rganish izchil va yoqimli bo‘ladi. Bugunoq sinab ko‘ring!</p>
-      <div style="text-align: center; margin-top: 20px;">
-        <a href="Writing%20Imitation%20Practice(2).zip" class="cta" download>Hoziroq yuklab olish</a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>© 2026 Writing Imitation Practice – Barcha huquqlar himoyalangan.</p>
-  </footer>
-</body>
+    <footer>
+      <p>&copy; 2026 Writing Imitation Practice. All rights reserved.</p>
+    </footer>
+  </body>
 </html>
