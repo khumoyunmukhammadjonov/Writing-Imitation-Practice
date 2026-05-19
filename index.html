@@ -9,15 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --text: #101828;
-      --muted: #667085;
-      --line: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
       --soft: #f8fafc;
+      --soft-2: #eef2ff;
+      --line: #e5e7eb;
       --white: #ffffff;
       --blue: #2563eb;
       --blue-dark: #1d4ed8;
-      --radius: 24px;
-      --shadow: 0 20px 60px rgba(16, 24, 40, 0.08);
+      --ink-soft: #1f2937;
+      --radius: 26px;
+      --shadow: 0 22px 70px rgba(17, 24, 39, 0.09);
     }
 
     * { box-sizing: border-box; }
@@ -26,111 +28,158 @@
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 48%, #ffffff 100%);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, .10), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 42%, #ffffff 100%);
       line-height: 1.75;
     }
 
     a { color: inherit; text-decoration: none; }
-    .wrap { width: min(980px, calc(100% - 40px)); margin: 0 auto; }
+    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+    .narrow { width: min(900px, calc(100% - 40px)); margin: 0 auto; }
 
-    header { padding: 34px 0 54px; }
+    header { padding: 30px 0 50px; }
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 70px;
+      margin-bottom: 58px;
     }
-    .brand { font-weight: 800; letter-spacing: -0.03em; }
-    .small-link { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+    .brand {
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      font-size: 1.02rem;
+    }
+    .top-actions { display: flex; align-items: center; gap: 18px; }
+    .small-link {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.94rem;
+    }
     .small-link:hover { color: var(--blue); }
 
-    .hero { text-align: center; }
+    .download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 13px 19px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+      font-size: .96rem;
+      box-shadow: 0 15px 34px rgba(37, 99, 235, 0.22);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+      white-space: nowrap;
+    }
+    .download:hover {
+      transform: translateY(-2px);
+      background: var(--blue-dark);
+      box-shadow: 0 18px 44px rgba(37, 99, 235, 0.28);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: .92fr 1.08fr;
+      gap: 46px;
+      align-items: center;
+    }
+    .hero-copy { text-align: left; }
     .label {
       display: inline-flex;
       padding: 7px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--white);
+      background: rgba(255, 255, 255, .82);
       color: var(--muted);
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin-bottom: 18px;
+      font-size: 0.86rem;
+      font-weight: 650;
+      margin-bottom: 20px;
     }
     h1 {
-      margin: 0 auto 18px;
-      max-width: 780px;
-      font-size: clamp(2.3rem, 6vw, 4.9rem);
-      line-height: 0.98;
-      letter-spacing: -0.07em;
+      margin: 0 0 18px;
+      max-width: 560px;
+      font-size: clamp(2.8rem, 6vw, 5.6rem);
+      line-height: .94;
+      letter-spacing: -0.085em;
     }
     .lead {
-      max-width: 700px;
-      margin: 0 auto 30px;
+      max-width: 540px;
+      margin: 0 0 28px;
       color: var(--muted);
-      font-size: clamp(1.05rem, 2vw, 1.22rem);
+      font-size: clamp(1.04rem, 1.6vw, 1.22rem);
     }
-    .download {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 22px;
-      border-radius: 999px;
-      background: var(--blue);
-      color: #fff;
-      font-weight: 800;
-      box-shadow: 0 16px 36px rgba(37, 99, 235, 0.22);
-      transition: transform .2s ease, background .2s ease;
-    }
-    .download:hover { transform: translateY(-2px); background: var(--blue-dark); }
 
     .screenshot {
-      margin: 52px auto 0;
       padding: 10px;
-      border-radius: 28px;
-      background: var(--white);
-      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid rgba(229, 231, 235, .9);
       box-shadow: var(--shadow);
     }
     .screenshot img {
       display: block;
       width: 100%;
-      border-radius: 20px;
+      border-radius: 22px;
       border: 1px solid var(--line);
     }
 
-    section { padding: 54px 0; }
+    section { padding: 50px 0; }
+    .section-title {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 30px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+    .section-title span {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: .9rem;
+      letter-spacing: .02em;
+    }
     h2 {
-      margin: 0 0 16px;
+      margin: 0;
       font-size: clamp(1.8rem, 4vw, 3rem);
       line-height: 1.08;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.055em;
     }
-    h3 { margin: 0 0 8px; font-size: 1.15rem; letter-spacing: -0.02em; }
-    p { margin: 0 0 18px; color: #344054; }
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.025em;
+    }
+    p { margin: 0 0 18px; color: #374151; }
     p:last-child { margin-bottom: 0; }
 
     .content-card {
-      background: var(--white);
+      background: rgba(255, 255, 255, .88);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: clamp(24px, 4vw, 42px);
+      padding: clamp(24px, 4vw, 44px);
       box-shadow: var(--shadow);
     }
-    .simple-grid {
+    .text-flow {
+      max-width: 750px;
+      margin-left: auto;
+    }
+    .text-flow p { font-size: 1.02rem; }
+
+    .note-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 22px;
+      gap: 16px;
+      margin-top: 24px;
     }
-    .mini {
+    .note {
       padding: 22px;
       border: 1px solid var(--line);
-      border-radius: 20px;
-      background: var(--soft);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffffff, var(--soft));
     }
-    .mini p { color: var(--muted); font-size: 0.96rem; }
+    .note p { color: var(--muted); font-size: .96rem; }
 
     .video-box {
       aspect-ratio: 16 / 9;
@@ -139,11 +188,30 @@
       text-align: center;
       border: 1px dashed #cbd5e1;
       border-radius: var(--radius);
-      background: #f8fafc;
+      background:
+        linear-gradient(135deg, rgba(238, 242, 255, .8), rgba(248, 250, 252, .96));
       color: var(--muted);
       padding: 28px;
+      margin-top: 22px;
     }
-    .video-box strong { display: block; color: var(--text); font-size: 1.25rem; margin-bottom: 6px; }
+    .play {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--blue);
+      box-shadow: 0 14px 35px rgba(17, 24, 39, .10);
+      margin: 0 auto 14px;
+      font-size: 1.2rem;
+    }
+    .video-box strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.22rem;
+      margin-bottom: 6px;
+    }
 
     .photo-grid {
       display: grid;
@@ -156,34 +224,59 @@
       border-radius: 22px;
       background: var(--white);
       overflow: hidden;
-      box-shadow: 0 12px 35px rgba(16, 24, 40, 0.06);
+      box-shadow: 0 14px 40px rgba(17, 24, 39, 0.06);
     }
     .photo-placeholder {
-      height: 190px;
+      min-height: 185px;
       display: grid;
       place-items: center;
       text-align: center;
-      color: var(--muted);
-      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      color: #7c3aed;
+      background:
+        linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
       border-bottom: 1px solid var(--line);
       padding: 18px;
-      font-weight: 700;
+      font-weight: 800;
     }
-    .photo-card div:last-child { padding: 16px; }
-    .photo-card p { font-size: 0.94rem; color: var(--muted); }
+    .photo-body { padding: 18px; }
+    .photo-body p { font-size: 0.94rem; color: var(--muted); }
+
+    .final-download {
+      margin-top: 30px;
+      padding: 28px;
+      border-radius: var(--radius);
+      background: var(--ink-soft);
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+    }
+    .final-download p { color: rgba(255,255,255,.72); margin: 4px 0 0; }
+    .final-download .download { background: #fff; color: var(--ink-soft); box-shadow: none; }
 
     footer {
-      padding: 36px 0 52px;
+      padding: 34px 0 52px;
       color: var(--muted);
       text-align: center;
       font-size: 0.92rem;
     }
 
-    @media (max-width: 760px) {
-      .topbar { margin-bottom: 48px; }
-      .simple-grid, .photo-grid { grid-template-columns: 1fr; }
-      .wrap { width: min(100% - 28px, 980px); }
-      header { padding-top: 24px; }
+    @media (max-width: 850px) {
+      .hero-grid, .section-title { grid-template-columns: 1fr; }
+      .hero-copy { text-align: left; }
+      .text-flow { margin-left: 0; }
+      .note-row, .photo-grid { grid-template-columns: 1fr; }
+      .final-download { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 620px) {
+      .wrap, .narrow { width: min(100% - 28px, 1080px); }
+      .topbar { margin-bottom: 40px; }
+      .top-actions .small-link { display: none; }
+      .download { width: 100%; }
+      .top-actions .download { width: auto; padding: 11px 15px; }
+      header { padding-top: 22px; }
+      section { padding: 38px 0; }
     }
   </style>
 </head>
@@ -192,93 +285,125 @@
     <div class="wrap">
       <div class="topbar">
         <a class="brand" href="#top">Writing Imitation Practice</a>
-        <a class="small-link" href="#guide">Qo‘llanma</a>
+        <div class="top-actions">
+          <a class="small-link" href="#guide">Qo‘llanma</a>
+          <a class="download" href="Writing%20Imitation%20Practice(2).zip" download>Download</a>
+        </div>
       </div>
 
-      <div class="hero">
-        <span class="label">Chrome extension program</span>
-        <h1>IELTS Writing uchun imitation mashqi</h1>
-        <p class="lead">Bu dastur Speakingdagi shadowing / imitation g‘oyasini Writingga moslashtiradi: o‘quvchi kuchli essay gaplarini ko‘radi, eslab qoladi va xotiradan qayta yozadi.</p>
-        <a class="download" href="Writing%20Imitation%20Practice(2).zip" download>Download extension</a>
-      </div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="label">Chrome extension program</span>
+          <h1>Writing Imitation Practice</h1>
+          <p class="lead">Bu dastur Speakingdagi shadowing/imitation metodini Writingga moslashtiradi.</p>
+          <a class="download" href="Writing%20Imitation%20Practice(2).zip" download>Download extension</a>
+        </div>
 
-      <div class="screenshot">
-        <img src="extension.png" alt="Writing Imitation Practice Chrome extension ko‘rinishi">
+        <div class="screenshot">
+          <img src="extension.png" alt="Writing Imitation Practice Chrome extension ko‘rinishi">
+        </div>
       </div>
     </div>
   </header>
 
   <main>
     <section>
-      <div class="wrap content-card">
-        <h2>Bu nima?</h2>
-        <p><strong>Writing Imitation Practice</strong> — IELTS Writing Task 2 uchun yaratilgan Chrome extension. Maqsad oddiy: o‘quvchi professional darajadagi essay gaplarini faqat o‘qib chiqmaydi, balki ularni xotiradan yozib, o‘zlashtiradi.</p>
-        <p>IELTS Writing ko‘pchilik uchun eng qiyin qism. O‘quvchi Listening va Readingdan yaxshi ball olsa ham, Writingda 5.0–5.5 atrofida qolib ketishi mumkin. Sababi: u o‘zida hali shakllanmagan Band 8–9 darajadagi jumlalarni birdaniga o‘zi yaratib bera olmaydi.</p>
-        <p>Shunchaki “ko‘proq yoz” deyish ham, faqat AI orqali grammatikani tekshirtirish ham to‘liq yechim emas. Chunki grammatikasi to‘g‘ri bo‘lgan sodda gap baribir kuchli akademik essayga aylanmaydi. O‘quvchi avval kuchli andozalarni o‘z qo‘li bilan yozib, miyaga singdirishi kerak.</p>
+      <div class="narrow content-card">
+        <div class="section-title">
+          <span>01 — Tushuntirish</span>
+          <h2>Bu nima?</h2>
+        </div>
+        <div class="text-flow">
+          <p><strong>Writing Imitation Practice</strong> — IELTS Writing Task 2 uchun yaratilgan Chrome extension. Bu dastur o‘quvchini professional darajadagi essay gaplarini bevosita o‘zi yozib o‘zlashtirishga o‘rgatadi.</p>
+          <p>IELTS Writing ko‘pchilik uchun eng qiyin qism. O‘quvchi Listening va Readingdan yaxshi ball olsa ham, Writingda 5.0–5.5 atrofida qolib ketishi mumkin. Sababi oddiy: o‘quvchi o‘z xotirasida va ongida hali shakllanmagan Band 8–9 darajadagi jumlalarni birdaniga o‘zi yaratib bera olmaydi.</p>
+          <p>Shunchaki “ko‘proq yoz” deyish ham, faqat AI orqali grammatikani tekshirtirish ham to‘liq yechim emas. Chunki grammatikasi to‘g‘ri bo‘lgan sodda gap baribir kuchli akademik essayga aylanmaydi. O‘quvchi avval kuchli andozalarni o‘z qo‘li bilan yozib, miyasiga singdirishi kerak.</p>
 
-        <div class="simple-grid">
-          <div class="mini">
-            <h3>Asosiy g‘oya</h3>
-            <p>Speakingda shadowing qanday ishlasa, Writingda ham imitation shunday ishlaydi: avval kuchli namunani ko‘rish, keyin uni xotiradan qayta tiklash.</p>
-          </div>
-          <div class="mini">
-            <h3>Nega foydali?</h3>
-            <p>O‘quvchi tayyor akademik strukturani, bog‘lovchilarni va tabiiy gap qurilishini amaliy yozish orqali o‘zlashtiradi.</p>
+          <div class="note-row">
+            <div class="note">
+              <h3>Asosiy g‘oya</h3>
+              <p>Speakingda shadowing qanday ishlasa, Writingda ham imitation shunday ishlaydi: kuchli namunani ko‘rish, eslab qolish va xotiradan qayta yozish.</p>
+            </div>
+            <div class="note">
+              <h3>Nega kerak?</h3>
+              <p>O‘quvchi akademik gap qurilishi, bog‘lovchilar va tabiiy yozish ritmini amaliy yozish orqali o‘zlashtiradi.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <section>
-      <div class="wrap content-card">
-        <h2>Qanday ishlaydi?</h2>
-        <p>O‘quvchi Band 9 darajasidagi esseni dasturga kiritadi. Dastur matnni bitta-bitta gaplarga ajratadi. Ekranda faqat bitta gap ko‘rinadi.</p>
-        <p>O‘quvchi gapni o‘qib, eslab qoladi. Yozishni boshlashi bilan asl matn yashirinadi. Endi u gapni xotirasidan qayta yozishi kerak. Agar xato qilsa, dastur xato so‘zni ko‘rsatadi, lekin javobni ochib bermaydi.</p>
-        <p>Gap to‘g‘ri yozilmaguncha keyingi gapga o‘tilmaydi. Xato qilingan so‘zlar esa keyinroq yana qaytariladi, shunda o‘quvchi ularni unutmaydi.</p>
+      <div class="narrow content-card">
+        <div class="section-title">
+          <span>02 — Jarayon</span>
+          <h2>Qanday ishlaydi?</h2>
+        </div>
+        <div class="text-flow">
+          <p>O‘quvchi Band 9 darajasidagi esseni dasturga kiritadi. Dastur matnni bitta-bitta gaplarga ajratadi va ekranda faqat bitta gap ko‘rsatadi.</p>
+          <p>O‘quvchi gapni o‘qib, eslab qoladi. Yozishni boshlashi bilan asl matn yashirinadi. Endi u gapni xotirasidan qayta yozishi kerak. Agar xato qilsa, dastur xato so‘zni ko‘rsatadi, lekin javobni ochib bermaydi.</p>
+          <p>Gap to‘g‘ri yozilmaguncha keyingi gapga o‘tilmaydi. Xato qilingan so‘zlar keyinroq yana qaytariladi, shunda o‘quvchi ularni unutmaydi.</p>
+        </div>
       </div>
     </section>
 
     <section id="guide">
-      <div class="wrap">
-        <div class="content-card">
+      <div class="narrow content-card">
+        <div class="section-title">
+          <span>03 — Video</span>
           <h2>Video qo‘llanma joyi</h2>
-          <p>Bu yerga keyin siz extensionni qanday yuklab olish va qanday ishlatishni tushuntiradigan videoni qo‘yasiz.</p>
+        </div>
+        <div class="text-flow">
+          <p>Bu yerga keyin extensionni qanday yuklab olish va qanday ishlatishni tushuntiradigan videoni qo‘yasiz.</p>
           <div class="video-box">
             <div>
+              <div class="play">▶</div>
               <strong>Video shu yerda bo‘ladi</strong>
               <span>YouTube yoki boshqa video havolasini keyin qo‘shish mumkin.</span>
             </div>
           </div>
         </div>
+      </div>
 
-        <div style="height: 22px"></div>
+      <div style="height: 24px"></div>
 
-        <div class="content-card">
+      <div class="narrow content-card">
+        <div class="section-title">
+          <span>04 — Rasmlar</span>
           <h2>O‘rnatish rasmlari joyi</h2>
+        </div>
+        <div class="text-flow">
           <p>Keyin bu uchta bo‘sh joyga ZIP faylni ochish, Chrome Extensions sahifasiga kirish va Load unpacked orqali o‘rnatish bo‘yicha rasmlarni qo‘shasiz.</p>
-          <div class="photo-grid">
-            <article class="photo-card">
-              <div class="photo-placeholder">Rasm 1<br>ZIP faylni extract qilish</div>
-              <div>
-                <h3>1. Extract</h3>
-                <p>Yuklab olingan ZIP faylni alohida papkaga chiqarish.</p>
-              </div>
-            </article>
-            <article class="photo-card">
-              <div class="photo-placeholder">Rasm 2<br>Chrome extensions sahifasi</div>
-              <div>
-                <h3>2. Extensions</h3>
-                <p>Chrome’da Manage extensions sahifasini ochish.</p>
-              </div>
-            </article>
-            <article class="photo-card">
-              <div class="photo-placeholder">Rasm 3<br>Load unpacked bosish</div>
-              <div>
-                <h3>3. Load unpacked</h3>
-                <p>Extract qilingan papkani tanlab extensionni o‘rnatish.</p>
-              </div>
-            </article>
+        </div>
+        <div class="photo-grid">
+          <article class="photo-card">
+            <div class="photo-placeholder">Rasm 1<br>ZIP faylni extract qilish</div>
+            <div class="photo-body">
+              <h3>1. Extract</h3>
+              <p>Yuklab olingan ZIP faylni alohida papkaga chiqarish.</p>
+            </div>
+          </article>
+          <article class="photo-card">
+            <div class="photo-placeholder">Rasm 2<br>Chrome extensions sahifasi</div>
+            <div class="photo-body">
+              <h3>2. Extensions</h3>
+              <p>Chrome’da Manage extensions sahifasini ochish.</p>
+            </div>
+          </article>
+          <article class="photo-card">
+            <div class="photo-placeholder">Rasm 3<br>Load unpacked bosish</div>
+            <div class="photo-body">
+              <h3>3. Load unpacked</h3>
+              <p>Extract qilingan papkani tanlab extensionni o‘rnatish.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="final-download">
+          <div>
+            <h3>Extensionni yuklab olish</h3>
+            <p>ZIP faylni yuklab oling, extract qiling va Chrome’ga Load unpacked orqali qo‘shing.</p>
           </div>
+          <a class="download" href="Writing%20Imitation%20Practice(2).zip" download>Download ZIP</a>
         </div>
       </div>
     </section>
